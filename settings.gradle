@@ -1,0 +1,5 @@
+include ':main', ':mainNight'
+include ':librarys:SkinLibrary'
+include ':librarys:SkinSupportCompat'
+include ':librarys:SkinSupportConstraintLayout'
+include ':librarys:SkinSupportDesign'
