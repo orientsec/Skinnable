@@ -9,9 +9,9 @@ import androidx.annotation.StyleRes
 import com.google.android.material.textfield.TextInputLayout
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
+import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
-import com.util.skin.library.res.SkinResourcesManager
 import com.util.skinnable.support.compat.widget.SkinCompatEditText
 import com.util.skinnable.support.design.R
 
@@ -157,7 +157,7 @@ class SkinMaterialTextInputLayout @JvmOverloads constructor(
 
     private fun setDefaultTextColor(colors: ColorStateList) {
         try {
-            val defaultTextColor = TextInputLayout::class.java!!.getDeclaredField("mDefaultTextColor")
+            val defaultTextColor = TextInputLayout::class.java.getDeclaredField("mDefaultTextColor")
             defaultTextColor.isAccessible = true
             defaultTextColor.set(this, colors)
             updateLabelState()

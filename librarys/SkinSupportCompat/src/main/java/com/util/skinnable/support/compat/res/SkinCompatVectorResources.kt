@@ -40,22 +40,25 @@ object SkinCompatVectorResources : SkinResources {
                     }
             }
             if (!SkinUserThemeManager.isDrawableEmpty) {
-                SkinUserThemeManager.getDrawable(resId)?.let {
-                    return it
-                }
+                SkinUserThemeManager.getDrawable(resId)
+                    ?.let {
+                        return it
+                    }
             }
             return SkinResourcesManager.getStrategyDrawable(context, resId)
                 ?: AppCompatResources.getDrawable(context, resId)
         } else {
             if (!SkinUserThemeManager.isColorEmpty) {
-                SkinUserThemeManager.getColorStateList(resId)?.apply {
-                    return ColorDrawable(defaultColor)
-                }
+                SkinUserThemeManager.getColorStateList(resId)
+                    ?.apply {
+                        return ColorDrawable(defaultColor)
+                    }
             }
             if (!SkinUserThemeManager.isDrawableEmpty) {
-                SkinUserThemeManager.getDrawable(resId)?.let {
-                    return it
-                }
+                SkinUserThemeManager.getDrawable(resId)
+                    ?.let {
+                        return it
+                    }
             }
             SkinResourcesManager.getStrategyDrawable(context, resId)
                 ?.let {
@@ -64,9 +67,10 @@ object SkinCompatVectorResources : SkinResources {
             if (!SkinResourcesManager.isDefaultSkin) {
                 val targetResId = SkinResourcesManager.getTargetResId(context, resId)
                 if (targetResId != 0) {
-                    return SkinResourcesManager.skinResources?.run {
-                        ResourcesCompat.getDrawable(this, targetResId, context.theme)
-                    }
+                    return SkinResourcesManager.skinResources
+                        ?.run {
+                            ResourcesCompat.getDrawable(this, targetResId, context.theme)
+                        } ?: ResourcesCompat.getDrawable(context.resources, resId, context.theme)
                 }
             }
             return ResourcesCompat.getDrawable(context.resources, resId, context.theme)

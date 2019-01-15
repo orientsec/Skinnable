@@ -103,7 +103,7 @@ object SkinThemeUtils {
         }
     }
 
-    internal fun getThemeAttrColor(context: Context, attr: Int, alpha: Float): Int {
+    private fun getThemeAttrColor(context: Context, attr: Int, alpha: Float): Int {
         val color = getThemeAttrColor(context, attr)
         val originalAlpha = Color.alpha(color)
         return ColorUtils.setAlphaComponent(color, Math.round(originalAlpha * alpha))

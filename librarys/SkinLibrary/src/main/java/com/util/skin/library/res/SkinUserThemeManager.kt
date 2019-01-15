@@ -25,13 +25,13 @@ import java.util.*
 object SkinUserThemeManager {
 
     private val mColorNameStateMap = HashMap<String, ColorState>()
-    private val mColorCacheLock = Any()
+    private val mColorCacheLock = java.lang.Object()
     private val mColorCaches = WeakHashMap<Int, WeakReference<ColorStateList>>()
     var isColorEmpty: Boolean = false
         private set
 
     private val mDrawablePathAndAngleMap = HashMap<String, String>()
-    private val mDrawableCacheLock = Any()
+    private val mDrawableCacheLock = java.lang.Object()
     private val mDrawableCaches = WeakHashMap<Int, WeakReference<Drawable>>()
     var isDrawableEmpty: Boolean = false
         private set

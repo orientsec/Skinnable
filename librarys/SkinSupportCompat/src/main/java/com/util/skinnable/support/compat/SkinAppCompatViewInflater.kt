@@ -24,47 +24,42 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
     }
 
     private fun createViewFromFV(context: Context, name: String, attrs: AttributeSet): View? {
-        var view: View? = null
         if (name.contains(".")) {
             return null
         }
-        when (name) {
-            "View" -> view = SkinCompatView(context, attrs)
-            "LinearLayout" -> view = SkinCompatLinearLayout(context, attrs)
-            "RelativeLayout" -> view = SkinCompatRelativeLayout(context, attrs)
-            "FrameLayout" -> view = SkinCompatFrameLayout(context, attrs)
-            "TextView" -> view = SkinCompatTextView(context, attrs)
-            "ImageView" -> view = SkinCompatImageView(context, attrs)
-            "Button" -> view = SkinCompatButton(context, attrs)
-            "EditText" -> view = SkinCompatEditText(context, attrs)
-            "Spinner" -> view = SkinCompatSpinner(context, attrs)
-            "ImageButton" -> view = SkinCompatImageButton(context, attrs)
-            "CheckBox" -> view = SkinCompatCheckBox(context, attrs)
-            "RadioButton" -> view = SkinCompatRadioButton(context, attrs)
-            "RadioGroup" -> view = SkinCompatRadioGroup(context, attrs)
-            "CheckedTextView" -> view = SkinCompatCheckedTextView(context, attrs)
-            "AutoCompleteTextView" -> view = SkinCompatAutoCompleteTextView(context, attrs)
-            "MultiAutoCompleteTextView" -> view = SkinCompatMultiAutoCompleteTextView(context, attrs)
-            "RatingBar" -> view = SkinCompatRatingBar(context, attrs)
-            "SeekBar" -> view = SkinCompatSeekBar(context, attrs)
-            "ProgressBar" -> view = SkinCompatProgressBar(context, attrs)
-            "ScrollView" -> view = SkinCompatScrollView(context, attrs)
-            else -> {
-            }
+        return when (name) {
+            "View" -> SkinCompatView(context, attrs)
+            "LinearLayout" -> SkinCompatLinearLayout(context, attrs)
+            "RelativeLayout" -> SkinCompatRelativeLayout(context, attrs)
+            "FrameLayout" -> SkinCompatFrameLayout(context, attrs)
+            "TextView" -> SkinCompatTextView(context, attrs)
+            "ImageView" -> SkinCompatImageView(context, attrs)
+            "Button" -> SkinCompatButton(context, attrs)
+            "EditText" -> SkinCompatEditText(context, attrs)
+            "Spinner" -> SkinCompatSpinner(context, attrs)
+            "ImageButton" -> SkinCompatImageButton(context, attrs)
+            "CheckBox" -> SkinCompatCheckBox(context, attrs)
+            "RadioButton" -> SkinCompatRadioButton(context, attrs)
+            "RadioGroup" -> SkinCompatRadioGroup(context, attrs)
+            "CheckedTextView" -> SkinCompatCheckedTextView(context, attrs)
+            "AutoCompleteTextView" -> SkinCompatAutoCompleteTextView(context, attrs)
+            "MultiAutoCompleteTextView" -> SkinCompatMultiAutoCompleteTextView(context, attrs)
+            "RatingBar" -> SkinCompatRatingBar(context, attrs)
+            "SeekBar" -> SkinCompatSeekBar(context, attrs)
+            "ProgressBar" -> SkinCompatProgressBar(context, attrs)
+            "ScrollView" -> SkinCompatScrollView(context, attrs)
+            else -> null
         }
-        return view
     }
 
     private fun createViewFromV7(context: Context, name: String, attrs: AttributeSet): View? {
-        var view: View? = null
-        when (name) {
-            "androidx.appcompat.widget.Toolbar" -> view = SkinCompatToolbar(context, attrs)
-            else -> {
-            }
+        return when (name) {
+            "androidx.appcompat.widget.Toolbar" -> SkinCompatToolbar(context, attrs)
+            else -> null
         }
-        return view
     }
 
+    @SuppressLint("RestrictedApi")
     override fun wrapContext(context: Context, parent: View?, attrs: AttributeSet): Context {
         var tempContext = context
         val isPre21 = Build.VERSION.SDK_INT < 21
@@ -108,7 +103,8 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
                     // call, therefore we should inherit. This works as the inflated layout is only
                     // added to the hierarchy at the end of the inflate() call.
                     return true
-                } else if (viewParent === windowDecor || viewParent !is View
+                } else if (viewParent === windowDecor
+                    || viewParent !is View
                     || ViewCompat.isAttachedToWindow((viewParent as View?)!!)
                 ) {
                     // We have either hit the window's decor view, a parent which isn't a View

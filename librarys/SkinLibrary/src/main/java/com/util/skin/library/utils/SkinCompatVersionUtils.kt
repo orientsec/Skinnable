@@ -61,6 +61,7 @@ object SkinCompatVersionUtils {
                     sV4WrappedDrawableGetM = sV4WrappedDrawableClass!!.getDeclaredMethod("getWrappedDrawable")
                     sV4WrappedDrawableGetM!!.isAccessible = true
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "getV4WrappedDrawableWrappedDrawable No Such Method")
                     }
@@ -71,6 +72,7 @@ object SkinCompatVersionUtils {
                 try {
                     return sV4WrappedDrawableGetM!!.invoke(drawable) as Drawable
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "getV4WrappedDrawableWrappedDrawable invoke error: $e")
                     }
@@ -88,6 +90,7 @@ object SkinCompatVersionUtils {
                     sV4WrappedDrawableSetM = sV4WrappedDrawableClass!!.getDeclaredMethod("setWrappedDrawable", Drawable::class.java)
                     sV4WrappedDrawableSetM!!.isAccessible = true
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "setV4WrappedDrawableWrappedDrawable No Such Method")
                     }
@@ -98,6 +101,7 @@ object SkinCompatVersionUtils {
                 try {
                     sV4WrappedDrawableSetM!!.invoke(drawable, inner)
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "setV4WrappedDrawableWrappedDrawable invoke error: $e")
                     }
@@ -122,6 +126,7 @@ object SkinCompatVersionUtils {
                     sV4DrawableWrapperGetM = sV4DrawableWrapperClass!!.getDeclaredMethod("getWrappedDrawable")
                     sV4DrawableWrapperGetM!!.isAccessible = true
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "getV4DrawableWrapperWrappedDrawable No Such Method")
                     }
@@ -132,6 +137,7 @@ object SkinCompatVersionUtils {
                 try {
                     return sV4DrawableWrapperGetM!!.invoke(drawable) as Drawable
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "getV4DrawableWrapperWrappedDrawable invoke error: $e")
                     }
@@ -149,6 +155,7 @@ object SkinCompatVersionUtils {
                     sV4DrawableWrapperSetM = sV4DrawableWrapperClass!!.getDeclaredMethod("setWrappedDrawable", Drawable::class.java)
                     sV4DrawableWrapperSetM!!.isAccessible = true
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "setV4DrawableWrapperWrappedDrawable No Such Method")
                     }
@@ -159,6 +166,7 @@ object SkinCompatVersionUtils {
                 try {
                     sV4DrawableWrapperSetM!!.invoke(drawable, inner)
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "setV4DrawableWrapperWrappedDrawable invoke error: $e")
                     }
@@ -183,6 +191,7 @@ object SkinCompatVersionUtils {
                     sV7DrawableWrapperGetM = sV7DrawableWrapperClass!!.getDeclaredMethod("getWrappedDrawable")
                     sV7DrawableWrapperGetM!!.isAccessible = true
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "getV7DrawableWrapperWrappedDrawable No Such Method")
                     }
@@ -193,6 +202,7 @@ object SkinCompatVersionUtils {
                 try {
                     return sV7DrawableWrapperGetM!!.invoke(drawable) as Drawable
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "getV7DrawableWrapperWrappedDrawable invoke error: $e")
                     }
@@ -210,6 +220,7 @@ object SkinCompatVersionUtils {
                     sV7DrawableWrapperSetM = sV7DrawableWrapperClass!!.getDeclaredMethod("setWrappedDrawable", Drawable::class.java)
                     sV7DrawableWrapperSetM!!.isAccessible = true
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "setV7DrawableWrapperWrappedDrawable No Such Method")
                     }
@@ -220,6 +231,7 @@ object SkinCompatVersionUtils {
                 try {
                     sV7DrawableWrapperSetM!!.invoke(drawable, inner)
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     if (Slog.DEBUG) {
                         Slog.i(TAG, "setV7DrawableWrapperWrappedDrawable invoke error: $e")
                     }

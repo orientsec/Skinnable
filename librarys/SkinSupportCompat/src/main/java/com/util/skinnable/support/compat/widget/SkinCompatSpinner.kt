@@ -48,6 +48,7 @@ class SkinCompatSpinner @JvmOverloads constructor(
                             mode1 = aa.getInt(0, MODE_DIALOG)
                         }
                     } catch (e: Exception) {
+                        e.printStackTrace()
                         Log.i(TAG, "Could not read android:spinnerMode", e)
                     } finally {
                         aa?.recycle()

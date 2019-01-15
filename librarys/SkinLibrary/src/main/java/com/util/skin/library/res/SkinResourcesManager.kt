@@ -81,17 +81,15 @@ object SkinResourcesManager {
 
     private fun getSkinColor(context: Context, resId: Int): Int {
         if (!SkinUserThemeManager.isColorEmpty) {
-            SkinUserThemeManager.getColorStateList(resId)?.apply {
+            SkinUserThemeManager.getColorStateList(resId)
+                ?.apply {
+                    return defaultColor
+                }
+        }
+        strategy?.getColor(context, mSkinName, resId)
+            ?.apply {
                 return defaultColor
             }
-        }
-        if (strategy != null) {
-            val colorStateList = strategy!!.getColor(
-                context,
-                mSkinName, resId
-            )
-            return colorStateList!!.defaultColor
-        }
         if (!isDefaultSkin) {
             val targetResId = getTargetResId(context, resId)
             if (targetResId != 0) {
@@ -103,21 +101,19 @@ object SkinResourcesManager {
 
     private fun getSkinColorStateList(context: Context, resId: Int): ColorStateList? {
         if (!SkinUserThemeManager.isColorEmpty) {
-            return SkinUserThemeManager.getColorStateList(resId)
+            SkinUserThemeManager.getColorStateList(resId)
+                ?.let { return it }
         }
-        if (strategy != null) {
-            return strategy!!.getColorStateList(
-                context,
-                mSkinName, resId
-            )!!
-        }
+        strategy?.getColorStateList(context, mSkinName, resId)
+            ?.let { return it }
         if (!isDefaultSkin) {
             val targetResId = getTargetResId(context, resId)
             if (targetResId != 0) {
-                return ResourcesCompat.getColorStateList(skinResources!!, targetResId, context.theme)!!
+                return ResourcesCompat.getColorStateList(skinResources!!, targetResId, context.theme)
+                    ?: ResourcesCompat.getColorStateList(context.resources, resId, context.theme)
             }
         }
-        return ResourcesCompat.getColorStateList(context.resources, resId, context.theme)!!
+        return ResourcesCompat.getColorStateList(context.resources, resId, context.theme)
     }
 
     private fun getSkinDrawable(context: Context, resId: Int): Drawable? {
@@ -136,18 +132,14 @@ object SkinResourcesManager {
             val targetResId = getTargetResId(context, resId)
             if (targetResId != 0) {
                 return ResourcesCompat.getDrawable(skinResources!!, targetResId, context.theme)
+                    ?: ResourcesCompat.getDrawable(context.resources!!, resId, context.theme)
             }
         }
         return ResourcesCompat.getDrawable(context.resources!!, resId, context.theme)
     }
 
     fun getStrategyDrawable(context: Context, resId: Int): Drawable? {
-        return if (strategy != null) {
-            strategy!!.getDrawable(
-                context,
-                mSkinName, resId
-            )
-        } else null
+        return strategy?.getDrawable(context, mSkinName, resId)
     }
 
     private fun getSkinXml(context: Context, resId: Int): XmlResourceParser {
@@ -155,6 +147,7 @@ object SkinResourcesManager {
             val targetResId = getTargetResId(context, resId)
             if (targetResId != 0) {
                 return skinResources!!.getXml(targetResId)
+                    ?: context.resources.getXml(resId)
             }
         }
         return context.resources.getXml(resId)

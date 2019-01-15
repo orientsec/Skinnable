@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.text.TextUtils
-
 import com.util.skin.library.app.SkinActivityLifecycle
 import com.util.skin.library.app.SkinLayoutInflater
 import com.util.skin.library.app.SkinWrapper
@@ -17,8 +16,9 @@ import com.util.skin.library.scope.BaseScope
 import com.util.skin.library.utils.SkinPreference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-
 import java.util.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.set
 import kotlin.coroutines.CoroutineContext
 
 @SuppressLint("StaticFieldLeak")
@@ -28,7 +28,9 @@ object SkinManager : SkinObservable(), CoroutineScope {
     private val mInflaters = ArrayList<SkinLayoutInflater>()
     val strategies = HashMap<SkinLoaderStrategyType, SkinLoaderStrategy>()
     private var mSkinAllActivityEnable = true
-    private var mSkinWindowBackgroundColorEnable = true
+    private var mSkinWindowBackgroundColorEnable = false
+
+    private var skinLoading = false
 
     private val scope: BaseScope = BaseScope()
     override val coroutineContext: CoroutineContext
@@ -138,7 +140,9 @@ object SkinManager : SkinObservable(), CoroutineScope {
      */
     fun loadSkin(skinName: String, strategy: SkinLoaderStrategyType, listener: SkinLoaderListener? = null) {
         val loaderStrategy = strategies[strategy] ?: return
+        if (skinLoading) return
         launch {
+            skinLoading = true
             listener?.onStart()
             try {
                 // 加载资源
@@ -154,6 +158,7 @@ object SkinManager : SkinObservable(), CoroutineScope {
                 SkinPreference.setSkinName("").setSkinStrategy(SkinLoaderStrategyType.Default).commitEditor()
                 listener?.onFailed("皮肤资源获取失败")
             }
+            skinLoading = false
         }
     }
 

@@ -8,10 +8,10 @@ import android.view.LayoutInflater
 import androidx.core.view.LayoutInflaterCompat
 import com.util.skin.library.SkinManager
 import com.util.skin.library.annotation.Skinnable
+import com.util.skin.library.helpers.SkinHelper.Companion.checkResourceIdValid
 import com.util.skin.library.observe.LazySkinObserver
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.res.SkinThemeUtils
-import com.util.skin.library.helpers.SkinHelper.Companion.checkResourceIdValid
 import com.util.skin.library.widget.SkinSupportable
 import java.lang.ref.WeakReference
 import java.util.*
@@ -67,8 +67,8 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
     override fun onActivityDestroyed(activity: Activity) {
         if (isContextSkinEnable(activity)) {
             SkinManager.deleteObserver(getObserver(activity))
-            mSkinObserverMap!!.remove(activity)
-            mSkinDelegateMap!!.remove(activity)
+            mSkinObserverMap?.remove(activity)
+            mSkinDelegateMap?.remove(activity)
         }
     }
 
@@ -94,11 +94,8 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
             mSkinDelegateMap = WeakHashMap()
         }
 
-        var mSkinDelegate = mSkinDelegateMap!![context]
-        if (mSkinDelegate == null) {
-            mSkinDelegate = SkinDelegate.create(context)
-            mSkinDelegateMap!![context] = mSkinDelegate
-        }
+        val mSkinDelegate = mSkinDelegateMap!![context] ?: SkinDelegate.create(context)
+        mSkinDelegateMap!![context] = mSkinDelegate
         return mSkinDelegate
     }
 
@@ -106,11 +103,8 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
         if (mSkinObserverMap == null) {
             mSkinObserverMap = WeakHashMap()
         }
-        var observer = mSkinObserverMap!![context]
-        if (observer == null) {
-            observer = LazySkinObserver(context)
-            mSkinObserverMap!![context] = observer
-        }
+        val observer = mSkinObserverMap!![context] ?: LazySkinObserver(context)
+        mSkinObserverMap!![context] = observer
         return observer
     }
 
@@ -118,10 +112,8 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
         if (SkinManager.isSkinWindowBackgroundEnable()) {
             val windowBackgroundResId = SkinThemeUtils.getWindowBackgroundResId(activity)
             if (checkResourceIdValid(windowBackgroundResId)) {
-                val drawable = SkinResourcesManager.getDrawable(activity, windowBackgroundResId)
-                if (drawable != null) {
-                    activity.window.setBackgroundDrawable(drawable)
-                }
+                SkinResourcesManager.getDrawable(activity, windowBackgroundResId)
+                    ?.let { activity.window.setBackgroundDrawable(it) }
             }
         }
     }

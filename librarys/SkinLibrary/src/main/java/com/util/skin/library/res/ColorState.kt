@@ -110,6 +110,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -123,6 +124,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -136,6 +138,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -149,6 +152,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -162,6 +166,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -175,6 +180,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -188,6 +194,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -201,6 +208,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -214,6 +222,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -227,6 +236,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -240,6 +250,7 @@ class ColorState {
                     stateColorCount++
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -260,6 +271,7 @@ class ColorState {
             }
             return ColorStateList(states, colors)
         } catch (e: Exception) {
+            e.printStackTrace()
             if (Slog.DEBUG) {
                 Slog.i(TAG, "$colorName parse failure.")
             }

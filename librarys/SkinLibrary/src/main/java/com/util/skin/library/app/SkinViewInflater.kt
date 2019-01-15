@@ -14,8 +14,6 @@ import java.lang.reflect.Method
 
 class SkinViewInflater {
 
-    private val mConstructorArgs = arrayOfNulls<Any>(2)
-
     fun createView(name: String, context: Context, attrs: AttributeSet): View? {
         val view = createViewFromInflater(context, name, attrs) ?: createViewFromTag(context, name, attrs)
         view?.apply {
@@ -25,6 +23,9 @@ class SkinViewInflater {
         return view
     }
 
+    /**
+     * 根据name重建View
+     */
     private fun createViewFromInflater(context: Context, name: String, attrs: AttributeSet): View? {
         var view: View? = null
         for (inflater in SkinManager.inflaters) {
@@ -45,28 +46,20 @@ class SkinViewInflater {
         }
 
         try {
-            mConstructorArgs[0] = context
-            mConstructorArgs[1] = attrs
-
-            if (-1 == tempName.indexOf('.')) {
-                for (i in sClassPrefixList.indices) {
-                    val view = createView(context, tempName, sClassPrefixList[i])
-                    if (view != null) {
-                        return view
-                    }
+            if (!tempName.contains('.')) {
+                for (cls in sClassPrefixList) {
+                    createView(context, tempName, cls, attrs)
+                        ?.let { return it }
                 }
                 return null
             } else {
-                return createView(context, tempName, null)
+                return createView(context, tempName, null, attrs)
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             // We do not want to catch these, lets return null and let the actual LayoutInflater
             // try
             return null
-        } finally {
-            // Don't retain references on context.
-            mConstructorArgs[0] = null
-            mConstructorArgs[1] = null
         }
     }
 
@@ -93,21 +86,26 @@ class SkinViewInflater {
         a.recycle()
     }
 
-    private fun createView(context: Context, name: String, prefix: String?): View? {
-        var constructor = sConstructorMap[name]
-
+    private fun createView(
+        context: Context,
+        name: String,
+        prefix: String?,
+        attrs: AttributeSet
+    ): View? {
         try {
-            if (constructor == null) {
-                // Class not found in the cache, see if it's real, and try to add it
-                val clazz = context.classLoader.loadClass(
-                    if (prefix != null) prefix + name else name
-                ).asSubclass(View::class.java)
-
-                constructor = clazz.getConstructor(*sConstructorSignature)
-                sConstructorMap[name] = constructor!!
-            }
-            constructor.isAccessible = true
-            return constructor.newInstance(*mConstructorArgs)
+            (sConstructorMap[name]
+                ?: context.classLoader
+                    .loadClass(if (prefix != null) prefix + name else name)
+                    .asSubclass(View::class.java)
+                    .getConstructor(*sConstructorSignature)
+                    .let {
+                        sConstructorMap[name] = it
+                        it
+                    })
+                .apply {
+                    isAccessible = true
+                    return newInstance(context, attrs)
+                }
         } catch (e: Exception) {
             e.printStackTrace()
             // We do not want to catch these, lets return null and let the actual LayoutInflater
@@ -133,7 +131,7 @@ class SkinViewInflater {
             }
 
             try {
-                mResolvedMethod!!.invoke(mResolvedContext, v)
+                mResolvedMethod?.invoke(mResolvedContext, v)
             } catch (e: IllegalAccessException) {
                 throw IllegalStateException(
                     "Could not execute non-public method for android:onClick", e
@@ -158,6 +156,7 @@ class SkinViewInflater {
                     }
                 } catch (e: NoSuchMethodException) {
                     // Failed to find method, keep searching up the hierarchy.
+                    e.printStackTrace()
                 }
 
                 tempContext = if (tempContext is ContextWrapper) {

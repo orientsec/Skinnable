@@ -9,8 +9,11 @@ import com.util.skin.library.widget.SkinSupportable
 import java.lang.ref.WeakReference
 import java.util.*
 
-class SkinDelegate private constructor(private val mContext: Context) : LayoutInflater.Factory2 {
-    private val mSkinCompatViewInflater: SkinViewInflater = SkinViewInflater()
+/**
+ * [LayoutInflater.onCreateView] 方法监听并转发
+ */
+internal class SkinDelegate private constructor(private val mContext: Context) : LayoutInflater.Factory2 {
+    private val mSkinCompatViewInflater = SkinViewInflater()
     private val mSkinHelpers = ArrayList<WeakReference<SkinSupportable>>()
 
     override fun onCreateView(name: String?, context: Context?, attrs: AttributeSet?): View? {
@@ -21,6 +24,7 @@ class SkinDelegate private constructor(private val mContext: Context) : LayoutIn
         val view = createView(parent, name, context, attrs) ?: return null
 
         if (view is SkinSupportable) {
+            // 记录支持换肤功能的View
             mSkinHelpers.add(WeakReference(view as SkinSupportable))
         }
 

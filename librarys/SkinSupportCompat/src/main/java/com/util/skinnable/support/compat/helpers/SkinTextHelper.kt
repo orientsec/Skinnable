@@ -88,8 +88,8 @@ open class SkinTextHelper(internal val mView: TextView) : SkinHelper() {
             // TODO: HTC_U-3u OS:8.0上调用framework的getColorStateList方法，有可能抛出异常，暂时没有找到更好的解决办法.
             // issue: https://github.com/ximsfei/Android-skin-support/issues/110
             try {
-                val color = SkinResourcesManager.getColorStateList(mView.context, mTextColorHintResId)
-                mView.setHintTextColor(color)
+                SkinResourcesManager.getColorStateList(mView.context, mTextColorHintResId)
+                    ?.let { mView.setHintTextColor(it) }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -102,9 +102,10 @@ open class SkinTextHelper(internal val mView: TextView) : SkinHelper() {
             // TODO: HTC_U-3u OS:8.0上调用framework的getColorStateList方法，有可能抛出异常，暂时没有找到更好的解决办法.
             // issue: https://github.com/ximsfei/Android-skin-support/issues/110
             try {
-                val color = SkinResourcesManager.getColorStateList(mView.context, textColorResId)
-                mView.setTextColor(color)
+                SkinResourcesManager.getColorStateList(mView.context, textColorResId)
+                    ?.let { mView.setTextColor(it) }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }

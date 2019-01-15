@@ -81,7 +81,7 @@ internal object SkinCompatDrawableManager {
         return getDrawable(context, resId, false)
     }
 
-    fun getDrawable(
+    private fun getDrawable(
         context: Context, @DrawableRes resId: Int,
         failIfNotKnown: Boolean
     ): Drawable? {
@@ -121,7 +121,7 @@ internal object SkinCompatDrawableManager {
             mTypedValue = TypedValue()
         }
         mTypedValue?.let { tv ->
-            SkinResourcesManager.getValue(context, resId, tv, true)
+            //            SkinResourcesManager.getValue(context, resId, tv, true)
             val key = createCacheKey(tv)
 
             var dr = getCachedDrawable(context, key)
@@ -137,7 +137,11 @@ internal object SkinCompatDrawableManager {
                         getDrawable(
                             context,
                             com.util.skinnable.support.compat.R.drawable.abc_cab_background_internal_bg
-                        ), getDrawable(context, com.util.skinnable.support.compat.R.drawable.abc_cab_background_top_mtrl_alpha)
+                        ),
+                        getDrawable(
+                            context,
+                            com.util.skinnable.support.compat.R.drawable.abc_cab_background_top_mtrl_alpha
+                        )
                     )
                 )
             }
@@ -238,7 +242,7 @@ internal object SkinCompatDrawableManager {
                 mTypedValue = TypedValue()
             }
             mTypedValue?.let { tv ->
-                SkinResourcesManager.getValue(context, resId, tv, true)
+                //                SkinResourcesManager.getValue(context, resId, tv, true)
 
                 val key = createCacheKey(tv)
 
@@ -294,6 +298,7 @@ internal object SkinCompatDrawableManager {
                             }
                         }
                     } catch (e: Exception) {
+                        e.printStackTrace()
                         Log.e(TAG, "Exception while inflating drawable", e)
                     }
 
@@ -568,6 +573,7 @@ internal object SkinCompatDrawableManager {
                 VectorDrawableCompat
                     .createFromXmlInner(context.resources, parser, attrs, theme)
             } catch (e: Exception) {
+                e.printStackTrace()
                 Log.e("VdcInflateDelegate", "Exception while inflating <vector>", e)
                 null
             }
@@ -584,12 +590,13 @@ internal object SkinCompatDrawableManager {
             context: Context, parser: XmlPullParser,
             attrs: AttributeSet, theme: Resources.Theme?
         ): Drawable? {
-            try {
-                return AnimatedVectorDrawableCompat
+            return try {
+                AnimatedVectorDrawableCompat
                     .createFromXmlInner(context, context.resources, parser, attrs, theme)
             } catch (e: Exception) {
+                e.printStackTrace()
                 Log.e("AvdcInflateDelegate", "Exception while inflating <animated-vector>", e)
-                return null
+                null
             }
 
         }
