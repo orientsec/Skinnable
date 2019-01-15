@@ -10,7 +10,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skinnable.support.compat.widget.SkinCompatEditText
 import com.util.skinnable.support.design.R
@@ -21,7 +21,7 @@ class SkinMaterialTextInputLayout @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : TextInputLayout(context, attrs, defStyleAttr), SkinSupportable {
-    private val mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
     private var mPasswordToggleResId = INVALID_ID
     private var mCounterTextColorResId = INVALID_ID
     private var mErrorTextColorResId = INVALID_ID

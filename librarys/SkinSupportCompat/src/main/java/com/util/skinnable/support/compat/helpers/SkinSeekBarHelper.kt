@@ -3,11 +3,11 @@ package com.util.skinnable.support.compat.helpers
 import android.annotation.SuppressLint
 import android.util.AttributeSet
 import android.widget.SeekBar
-import com.util.skin.library.R
+import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 @SuppressLint("PrivateResource")
-class SkinCompatSeekBarHelper(private val mView: SeekBar) : SkinCompatProgressBarHelper(mView) {
+class SkinSeekBarHelper(private val mView: SeekBar) : SkinProgressBarHelper(mView) {
 
     private var mThumbResId = INVALID_ID
 

@@ -4,12 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatCheckedTextView
-import com.util.skin.library.R
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
-import com.util.skinnable.support.compat.helpers.SkinCompatTextHelper
+import com.util.skinnable.support.compat.R
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinTextHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 class SkinCompatCheckedTextView @JvmOverloads constructor(
@@ -19,8 +19,8 @@ class SkinCompatCheckedTextView @JvmOverloads constructor(
 ) : AppCompatCheckedTextView(context, attrs, defStyleAttr), SkinSupportable {
     private var mCheckMarkResId = INVALID_ID
 
-    private val mTextHelper = SkinCompatTextHelper.create(this)
-    private val mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+    private val mTextHelper = SkinTextHelper.create(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
@@ -39,7 +39,7 @@ class SkinCompatCheckedTextView @JvmOverloads constructor(
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper.onSetBackgroundResource(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun setTextAppearance(resId: Int) {

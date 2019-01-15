@@ -5,12 +5,12 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.Toolbar
-import com.util.skin.library.R
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
+import com.util.skinnable.support.compat.R
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 @SuppressLint("CustomViewStyleable", "PrivateResource")
@@ -22,10 +22,10 @@ class SkinCompatToolbar @JvmOverloads constructor(
     private var mTitleTextColorResId = INVALID_ID
     private var mSubtitleTextColorResId = INVALID_ID
     private var mNavigationIconResId = INVALID_ID
-    private val mBackgroundTintHelper: SkinCompatBackgroundHelper?
+    private val mBackgroundTintHelper: SkinBackgroundHelper?
 
     init {
-        mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+        mBackgroundTintHelper = SkinBackgroundHelper(this)
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
 
         var a = context.obtainStyledAttributes(attrs, R.styleable.Toolbar, defStyleAttr, 0)
@@ -77,7 +77,7 @@ class SkinCompatToolbar @JvmOverloads constructor(
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper?.onSetBackgroundResource(resId)
+        mBackgroundTintHelper?.setSrcId(resId)
     }
 
     override fun setNavigationIcon(@DrawableRes resId: Int) {

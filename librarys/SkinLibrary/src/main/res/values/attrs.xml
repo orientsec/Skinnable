@@ -9,7 +9,7 @@
         <attr name="srcCompat" />
     </declare-styleable>
 
-    <declare-styleable name="SkinCompatTextHelper">
+    <declare-styleable name="SkinTextHelper">
         <attr name="android:drawableLeft" />
         <attr name="android:drawableTop" />
         <attr name="android:drawableRight" />

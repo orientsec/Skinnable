@@ -3,7 +3,7 @@ package com.util.skinnable.support.compat.widget
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.LinearLayoutCompat
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skin.library.widget.SkinSupportable
 
 class SkinCompatLinearLayout @JvmOverloads constructor(
@@ -11,7 +11,7 @@ class SkinCompatLinearLayout @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayoutCompat(context, attrs, defStyleAttr), SkinSupportable {
-    private val mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
@@ -19,7 +19,7 @@ class SkinCompatLinearLayout @JvmOverloads constructor(
 
     override fun setBackgroundResource(resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper.onSetBackgroundResource(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun applySkin() {

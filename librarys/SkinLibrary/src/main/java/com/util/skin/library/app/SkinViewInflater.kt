@@ -4,33 +4,24 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
 import android.util.AttributeSet
-import android.view.InflateException
 import android.view.View
-
+import androidx.collection.ArrayMap
+import androidx.core.view.ViewCompat
 import com.util.skin.library.SkinManager
-
 import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
-import androidx.collection.ArrayMap
-import androidx.core.view.ViewCompat
 
 class SkinViewInflater {
 
     private val mConstructorArgs = arrayOfNulls<Any>(2)
 
     fun createView(name: String, context: Context, attrs: AttributeSet): View? {
-        var view = createViewFromInflater(context, name, attrs)
-
-        if (view == null) {
-            view = createViewFromTag(context, name, attrs)
-        }
-
-        if (view != null) {
+        val view = createViewFromInflater(context, name, attrs) ?: createViewFromTag(context, name, attrs)
+        view?.apply {
             // If we have created a view, check it's android:onClick
-            checkOnClickListener(view, attrs)
+            checkOnClickListener(this, attrs)
         }
-
         return view
     }
 
@@ -102,7 +93,6 @@ class SkinViewInflater {
         a.recycle()
     }
 
-    @Throws(ClassNotFoundException::class, InflateException::class)
     private fun createView(context: Context, name: String, prefix: String?): View? {
         var constructor = sConstructorMap[name]
 
@@ -110,7 +100,8 @@ class SkinViewInflater {
             if (constructor == null) {
                 // Class not found in the cache, see if it's real, and try to add it
                 val clazz = context.classLoader.loadClass(
-                        if (prefix != null) prefix + name else name).asSubclass(View::class.java)
+                    if (prefix != null) prefix + name else name
+                ).asSubclass(View::class.java)
 
                 constructor = clazz.getConstructor(*sConstructorSignature)
                 sConstructorMap[name] = constructor!!
@@ -118,6 +109,7 @@ class SkinViewInflater {
             constructor.isAccessible = true
             return constructor.newInstance(*mConstructorArgs)
         } catch (e: Exception) {
+            e.printStackTrace()
             // We do not want to catch these, lets return null and let the actual LayoutInflater
             // try
             return null
@@ -129,7 +121,8 @@ class SkinViewInflater {
      * An implementation of OnClickListener that attempts to lazily load a
      * named click handling method from a parent or ancestor context.
      */
-    private class DeclaredOnClickListener(private val mHostView: View, private val mMethodName: String) : View.OnClickListener {
+    private class DeclaredOnClickListener(private val mHostView: View, private val mMethodName: String) :
+        View.OnClickListener {
 
         private var mResolvedMethod: Method? = null
         private var mResolvedContext: Context? = null
@@ -143,10 +136,12 @@ class SkinViewInflater {
                 mResolvedMethod!!.invoke(mResolvedContext, v)
             } catch (e: IllegalAccessException) {
                 throw IllegalStateException(
-                        "Could not execute non-public method for android:onClick", e)
+                    "Could not execute non-public method for android:onClick", e
+                )
             } catch (e: InvocationTargetException) {
                 throw IllegalStateException(
-                        "Could not execute method for android:onClick", e)
+                    "Could not execute method for android:onClick", e
+                )
             }
 
         }
@@ -178,9 +173,11 @@ class SkinViewInflater {
                 ""
             else
                 " with id '" + mHostView.context.resources.getResourceEntryName(id) + "'"
-            throw IllegalStateException("Could not find method " + mMethodName
-                    + "(View) in a parent or ancestor Context for android:onClick "
-                    + "attribute defined on view " + mHostView.javaClass + idText)
+            throw IllegalStateException(
+                "Could not find method " + mMethodName
+                        + "(View) in a parent or ancestor Context for android:onClick "
+                        + "attribute defined on view " + mHostView.javaClass + idText
+            )
         }
     }
 

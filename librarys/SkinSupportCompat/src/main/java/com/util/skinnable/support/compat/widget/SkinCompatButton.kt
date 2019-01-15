@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatButton
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
-import com.util.skinnable.support.compat.helpers.SkinCompatTextHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinTextHelper
 import com.util.skin.library.widget.SkinSupportable
 
 class SkinCompatButton @JvmOverloads constructor(
@@ -13,9 +13,9 @@ class SkinCompatButton @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = androidx.appcompat.R.attr.buttonStyle
 ) : AppCompatButton(context, attrs, defStyleAttr), SkinSupportable {
-    private val mTextHelper: SkinCompatTextHelper = SkinCompatTextHelper.create(this)
-    private val mBackgroundTintHelper: SkinCompatBackgroundHelper =
-        SkinCompatBackgroundHelper(this)
+    private val mTextHelper: SkinTextHelper = SkinTextHelper.create(this)
+    private val mBackgroundTintHelper: SkinBackgroundHelper =
+        SkinBackgroundHelper(this)
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
@@ -24,7 +24,7 @@ class SkinCompatButton @JvmOverloads constructor(
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper.onSetBackgroundResource(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun setTextAppearance(resId: Int) {

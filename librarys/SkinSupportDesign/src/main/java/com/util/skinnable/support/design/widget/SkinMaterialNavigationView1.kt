@@ -13,7 +13,7 @@ import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.res.SkinThemeUtils
 import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.compat.util.SkinCompatV7ThemeUtils
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skinnable.support.design.R
@@ -28,7 +28,7 @@ class SkinMaterialNavigationView @JvmOverloads constructor(
     private var mTextColorResId = INVALID_ID
     private var mDefaultTintResId = INVALID_ID
     private var mIconTintResId = INVALID_ID
-    private val mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, 0)

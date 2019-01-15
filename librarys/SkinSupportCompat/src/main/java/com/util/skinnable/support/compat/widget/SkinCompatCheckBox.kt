@@ -4,22 +4,21 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatCheckBox
-import com.util.skin.library.R
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
-import com.util.skinnable.support.compat.helpers.SkinCompatTextHelper
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatCompoundButtonHelper
-
+import com.util.skinnable.support.compat.R
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinCompoundButtonHelper
+import com.util.skinnable.support.compat.helpers.SkinTextHelper
 
 class SkinCompatCheckBox @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.checkboxStyle
 ) : AppCompatCheckBox(context, attrs, defStyleAttr), SkinSupportable {
-    private val mCompoundButtonHelper= SkinCompatCompoundButtonHelper(this)
-    private val mTextHelper = SkinCompatTextHelper.create(this)
-    private val mBackgroundTintHelper: SkinCompatBackgroundHelper =
-        SkinCompatBackgroundHelper(this)
+    private val mCompoundButtonHelper = SkinCompoundButtonHelper(this)
+    private val mTextHelper = SkinTextHelper.create(this)
+    private val mBackgroundTintHelper: SkinBackgroundHelper =
+        SkinBackgroundHelper(this)
 
     init {
         mCompoundButtonHelper.loadFromAttributes(attrs, defStyleAttr)
@@ -29,12 +28,12 @@ class SkinCompatCheckBox @JvmOverloads constructor(
 
     override fun setButtonDrawable(@DrawableRes resId: Int) {
         super.setButtonDrawable(resId)
-        mCompoundButtonHelper.setButtonDrawable(resId)
+        mCompoundButtonHelper.setSrcId(resId)
     }
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper.onSetBackgroundResource(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun setTextAppearance(resId: Int) {

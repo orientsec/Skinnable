@@ -9,6 +9,9 @@ import com.util.skin.library.SkinManager
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.utils.SkinFileUtils
 
+/**
+ * SD卡中加载器
+ */
 abstract class SkinSDCardLoader : SkinLoaderStrategy {
     override fun loadSkinInBackground(context: Context, skinName: String): String? {
         if (TextUtils.isEmpty(skinName)) {
@@ -20,10 +23,11 @@ abstract class SkinSDCardLoader : SkinLoaderStrategy {
             val resources = SkinManager.getSkinResources(skinPkgPath)
             if (resources != null && !TextUtils.isEmpty(pkgName)) {
                 SkinResourcesManager.setupSkin(
-                        resources,
-                        pkgName,
-                        skinName,
-                        this)
+                    resources,
+                    pkgName,
+                    skinName,
+                    this
+                )
                 return skinName
             }
         }

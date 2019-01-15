@@ -6,13 +6,13 @@ import android.util.AttributeSet
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
-import com.util.skin.library.R
 import com.util.skin.library.helpers.SkinHelper
+import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 @RequiresApi(17)
 @TargetApi(17)
-class SkinCompatTextHelperV17(view: TextView) : SkinCompatTextHelper(view) {
+class SkinTextHelperV17(view: TextView) : SkinTextHelper(view) {
     private var mDrawableStartResId = INVALID_ID
     private var mDrawableEndResId = INVALID_ID
 
@@ -20,14 +20,14 @@ class SkinCompatTextHelperV17(view: TextView) : SkinCompatTextHelper(view) {
         val context = mView.context
 
         val a = context.obtainStyledAttributes(
-            attrs, R.styleable.SkinCompatTextHelper,
+            attrs, R.styleable.SkinTextHelper,
             defStyleAttr, 0
         )
-        if (a.hasValue(R.styleable.SkinCompatTextHelper_android_drawableStart)) {
-            mDrawableStartResId = a.getResourceId(R.styleable.SkinCompatTextHelper_android_drawableStart, INVALID_ID)
+        if (a.hasValue(R.styleable.SkinTextHelper_android_drawableStart)) {
+            mDrawableStartResId = a.getResourceId(R.styleable.SkinTextHelper_android_drawableStart, INVALID_ID)
         }
-        if (a.hasValue(R.styleable.SkinCompatTextHelper_android_drawableEnd)) {
-            mDrawableEndResId = a.getResourceId(R.styleable.SkinCompatTextHelper_android_drawableEnd, INVALID_ID)
+        if (a.hasValue(R.styleable.SkinTextHelper_android_drawableEnd)) {
+            mDrawableEndResId = a.getResourceId(R.styleable.SkinTextHelper_android_drawableEnd, INVALID_ID)
         }
         a.recycle()
         super.loadFromAttributes(attrs, defStyleAttr)

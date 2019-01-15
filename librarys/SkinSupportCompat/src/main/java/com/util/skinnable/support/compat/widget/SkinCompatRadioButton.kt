@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatRadioButton
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
-import com.util.skinnable.support.compat.helpers.SkinCompatTextHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinTextHelper
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatCompoundButtonHelper
+import com.util.skinnable.support.compat.helpers.SkinCompoundButtonHelper
 
 
 class SkinCompatRadioButton @JvmOverloads constructor(
@@ -15,9 +15,9 @@ class SkinCompatRadioButton @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = com.util.skinnable.support.compat.R.attr.radioButtonStyle
 ) : AppCompatRadioButton(context, attrs, defStyleAttr), SkinSupportable {
-    private val mTextHelper= SkinCompatTextHelper.create(this)
-    private val mCompoundButtonHelper= SkinCompatCompoundButtonHelper(this)
-    private val mBackgroundTintHelper= SkinCompatBackgroundHelper(this)
+    private val mTextHelper= SkinTextHelper.create(this)
+    private val mCompoundButtonHelper= SkinCompoundButtonHelper(this)
+    private val mBackgroundTintHelper= SkinBackgroundHelper(this)
 
     init {
         mCompoundButtonHelper.loadFromAttributes(attrs, defStyleAttr)
@@ -27,7 +27,7 @@ class SkinCompatRadioButton @JvmOverloads constructor(
 
     override fun setButtonDrawable(@DrawableRes resId: Int) {
         super.setButtonDrawable(resId)
-        mCompoundButtonHelper.setButtonDrawable(resId)
+        mCompoundButtonHelper.setSrcId(resId)
     }
 
     override fun setTextAppearance(resId: Int) {
@@ -55,7 +55,7 @@ class SkinCompatRadioButton @JvmOverloads constructor(
 
     override fun setBackgroundResource(resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper.onSetBackgroundResource(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun applySkin() {

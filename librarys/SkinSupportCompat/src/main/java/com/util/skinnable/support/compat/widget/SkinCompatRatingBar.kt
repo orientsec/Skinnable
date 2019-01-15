@@ -3,23 +3,23 @@ package com.util.skinnable.support.compat.widget
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatRatingBar
-import com.util.skin.library.R
-import com.util.skinnable.support.compat.helpers.SkinCompatProgressBarHelper
 import com.util.skin.library.widget.SkinSupportable
+import com.util.skinnable.support.compat.R
+import com.util.skinnable.support.compat.helpers.SkinProgressBarHelper
 
 class SkinCompatRatingBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.ratingBarStyle
 ) : AppCompatRatingBar(context, attrs, defStyleAttr), SkinSupportable {
-    private val mSkinCompatProgressBarHelper = SkinCompatProgressBarHelper(this)
+    private val mSkinCompatProgressBarHelper = SkinProgressBarHelper(this)
 
     init {
-        mSkinCompatProgressBarHelper!!.loadFromAttributes(attrs, defStyleAttr)
+        mSkinCompatProgressBarHelper.loadFromAttributes(attrs, defStyleAttr)
     }
 
     override fun applySkin() {
-        mSkinCompatProgressBarHelper?.applySkin()
+        mSkinCompatProgressBarHelper.applySkin()
     }
 
 }

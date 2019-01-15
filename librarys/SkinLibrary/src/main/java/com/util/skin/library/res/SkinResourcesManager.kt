@@ -8,15 +8,12 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.util.TypedValue
-
-import com.util.skin.library.SkinManager
-
-import java.util.ArrayList
-
 import androidx.annotation.AnyRes
 import androidx.core.content.res.ResourcesCompat
+import com.util.skin.library.SkinManager
 import com.util.skin.library.loader.SkinLoaderStrategy
 import com.util.skin.library.loader.SkinLoaderStrategyType
+import java.util.*
 
 object SkinResourcesManager {
     var skinResources: Resources? = null
@@ -67,16 +64,13 @@ object SkinResourcesManager {
         return try {
             var resName: String? = null
             if (strategy != null) {
-                resName = strategy!!.getTargetResourceEntryName(context,
-                    mSkinName, resId)
+                resName = strategy!!.getTargetResourceEntryName(context, mSkinName, resId)
             }
             if (TextUtils.isEmpty(resName)) {
                 resName = context.resources.getResourceEntryName(resId)
             }
             val type = context.resources.getResourceTypeName(resId)
-            skinResources!!.getIdentifier(resName, type,
-                skinPkgName
-            )
+            skinResources!!.getIdentifier(resName, type, skinPkgName)
         } catch (e: Exception) {
             // 换肤失败不至于应用崩溃.
             e.printStackTrace()
@@ -92,8 +86,10 @@ object SkinResourcesManager {
             }
         }
         if (strategy != null) {
-            val colorStateList = strategy!!.getColor(context,
-                mSkinName, resId)
+            val colorStateList = strategy!!.getColor(
+                context,
+                mSkinName, resId
+            )
             return colorStateList!!.defaultColor
         }
         if (!isDefaultSkin) {
@@ -110,8 +106,10 @@ object SkinResourcesManager {
             return SkinUserThemeManager.getColorStateList(resId)
         }
         if (strategy != null) {
-            return strategy!!.getColorStateList(context,
-                mSkinName, resId)!!
+            return strategy!!.getColorStateList(
+                context,
+                mSkinName, resId
+            )!!
         }
         if (!isDefaultSkin) {
             val targetResId = getTargetResId(context, resId)
@@ -131,9 +129,8 @@ object SkinResourcesManager {
         if (!SkinUserThemeManager.isDrawableEmpty) {
             return SkinUserThemeManager.getDrawable(resId)
         }
-        if (strategy != null) {
-            return strategy!!.getDrawable(context,
-                mSkinName, resId)
+        strategy?.apply {
+            return getDrawable(context, mSkinName, resId)
         }
         if (!isDefaultSkin) {
             val targetResId = getTargetResId(context, resId)
@@ -146,8 +143,10 @@ object SkinResourcesManager {
 
     fun getStrategyDrawable(context: Context, resId: Int): Drawable? {
         return if (strategy != null) {
-            strategy!!.getDrawable(context,
-                mSkinName, resId)
+            strategy!!.getDrawable(
+                context,
+                mSkinName, resId
+            )
         } else null
     }
 

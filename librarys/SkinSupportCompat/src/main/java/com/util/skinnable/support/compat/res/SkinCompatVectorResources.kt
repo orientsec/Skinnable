@@ -34,19 +34,18 @@ object SkinCompatVectorResources : SkinResources {
             // SkinCompatDrawableManager.get().getDrawable(context, resId) 中会调用getSkinDrawable等方法。
             // 这里只需要拦截使用默认皮肤的情况。
             if (!SkinUserThemeManager.isColorEmpty) {
-                SkinUserThemeManager.getColorStateList(resId)?.apply {
-                    return ColorDrawable(defaultColor)
-                }
+                SkinUserThemeManager.getColorStateList(resId)
+                    ?.apply {
+                        return ColorDrawable(defaultColor)
+                    }
             }
             if (!SkinUserThemeManager.isDrawableEmpty) {
                 SkinUserThemeManager.getDrawable(resId)?.let {
                     return it
                 }
             }
-            return SkinResourcesManager.getStrategyDrawable(context, resId) ?: AppCompatResources.getDrawable(
-                context,
-                resId
-            )
+            return SkinResourcesManager.getStrategyDrawable(context, resId)
+                ?: AppCompatResources.getDrawable(context, resId)
         } else {
             if (!SkinUserThemeManager.isColorEmpty) {
                 SkinUserThemeManager.getColorStateList(resId)?.apply {
@@ -58,14 +57,12 @@ object SkinCompatVectorResources : SkinResources {
                     return it
                 }
             }
-            val drawable =
-                SkinResourcesManager.getStrategyDrawable(context, resId)
-            if (drawable != null) {
-                return drawable
-            }
+            SkinResourcesManager.getStrategyDrawable(context, resId)
+                ?.let {
+                    return it
+                }
             if (!SkinResourcesManager.isDefaultSkin) {
-                val targetResId =
-                    SkinResourcesManager.getTargetResId(context, resId)
+                val targetResId = SkinResourcesManager.getTargetResId(context, resId)
                 if (targetResId != 0) {
                     return SkinResourcesManager.skinResources?.run {
                         ResourcesCompat.getDrawable(this, targetResId, context.theme)

@@ -5,16 +5,16 @@ import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import com.google.android.material.textfield.TextInputEditText
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
-import com.util.skinnable.support.compat.helpers.SkinCompatTextHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinTextHelper
 
 class SkinMaterialTextInputEditText @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = androidx.appcompat.R.attr.editTextStyle
 ) : TextInputEditText(context, attrs, defStyleAttr), SkinSupportable {
-    private val mTextHelper = SkinCompatTextHelper.create(this)
-    private val mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+    private val mTextHelper = SkinTextHelper.create(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
 
     val textColorResId: Int
         get() = mTextHelper.textColorResId
@@ -26,7 +26,7 @@ class SkinMaterialTextInputEditText @JvmOverloads constructor(
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper.onSetBackgroundResource(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun setTextAppearance(resId: Int) {

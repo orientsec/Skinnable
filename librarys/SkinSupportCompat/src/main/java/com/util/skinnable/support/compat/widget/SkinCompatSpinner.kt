@@ -9,11 +9,11 @@ import android.util.AttributeSet
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatSpinner
-import com.util.skin.library.R
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.helpers.SkinHelper.Companion.checkResourceIdValid
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
+import com.util.skinnable.support.compat.R
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 @SuppressLint("PrivateResource")
@@ -25,7 +25,7 @@ class SkinCompatSpinner @JvmOverloads constructor(
     popupTheme: Resources.Theme? = null
 ) : AppCompatSpinner(context, attrs, defStyleAttr, mode, popupTheme), SkinSupportable {
 
-    private val mBackgroundTintHelper: SkinCompatBackgroundHelper?
+    private val mBackgroundTintHelper: SkinBackgroundHelper?
     private var mPopupBackgroundResId = INVALID_ID
 
     constructor(context: Context, mode: Int) : this(context, null, R.attr.spinnerStyle, mode) {}
@@ -66,7 +66,7 @@ class SkinCompatSpinner @JvmOverloads constructor(
         }
         a.recycle()
 
-        mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+        mBackgroundTintHelper = SkinBackgroundHelper(this)
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
     }
 

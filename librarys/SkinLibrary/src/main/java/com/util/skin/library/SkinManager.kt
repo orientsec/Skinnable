@@ -35,7 +35,7 @@ object SkinManager : SkinObservable(), CoroutineScope {
         get() = scope.coroutineContext
 
     val wrappers: List<SkinWrapper>
-        get() = mWrappers
+        get() = mWrappers.toList()
 
     val inflaters: List<SkinLayoutInflater>
         get() = mInflaters

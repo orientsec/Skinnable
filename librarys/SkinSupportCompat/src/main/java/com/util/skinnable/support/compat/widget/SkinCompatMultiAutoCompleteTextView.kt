@@ -4,12 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
-import com.util.skin.library.R
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
-import com.util.skinnable.support.compat.helpers.SkinCompatTextHelper
+import com.util.skinnable.support.compat.R
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinTextHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 class SkinCompatMultiAutoCompleteTextView @JvmOverloads constructor(
@@ -18,8 +18,8 @@ class SkinCompatMultiAutoCompleteTextView @JvmOverloads constructor(
     defStyleAttr: Int = R.attr.editTextStyle
 ) : AppCompatMultiAutoCompleteTextView(context, attrs, defStyleAttr), SkinSupportable {
     private var mDropDownBackgroundResId = INVALID_ID
-    private val mTextHelper = SkinCompatTextHelper.create(this)
-    private val mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+    private val mTextHelper = SkinTextHelper.create(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
 
     init {
         val a = context.obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0)
@@ -49,7 +49,7 @@ class SkinCompatMultiAutoCompleteTextView @JvmOverloads constructor(
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper.onSetBackgroundResource(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun setTextAppearance(resId: Int) {

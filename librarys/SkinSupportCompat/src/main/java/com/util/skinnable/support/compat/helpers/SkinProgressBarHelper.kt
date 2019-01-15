@@ -10,13 +10,21 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ProgressBar
-import com.util.skin.library.R
 import com.util.skin.library.helpers.SkinHelper
-import com.util.skin.library.res.SkinResourcesManager
-import com.util.skin.library.utils.SkinCompatVersionUtils
-import com.util.skinnable.support.compat.res.SkinCompatVectorResources
+import com.util.skin.library.res.SkinResourcesManager.getColorStateList
+import com.util.skin.library.utils.SkinCompatVersionUtils.getV4DrawableWrapperWrappedDrawable
+import com.util.skin.library.utils.SkinCompatVersionUtils.getV4WrappedDrawableWrappedDrawable
+import com.util.skin.library.utils.SkinCompatVersionUtils.isV4DrawableWrapper
+import com.util.skin.library.utils.SkinCompatVersionUtils.isV4WrappedDrawable
+import com.util.skin.library.utils.SkinCompatVersionUtils.setV4DrawableWrapperWrappedDrawable
+import com.util.skin.library.utils.SkinCompatVersionUtils.setV4WrappedDrawableWrappedDrawable
+import com.util.skinnable.support.compat.R
+import com.util.skinnable.support.compat.res.SkinCompatVectorResources.getDrawableCompat
 
-open class SkinCompatProgressBarHelper constructor(private val mView: ProgressBar) : SkinHelper() {
+/**
+ * ProgressBarUI处理
+ */
+open class SkinProgressBarHelper constructor(private val mView: ProgressBar) : SkinHelper() {
 
     private var mSampleTile: Bitmap? = null
     private var mIndeterminateDrawableResId = SkinHelper.INVALID_ID
@@ -29,7 +37,7 @@ open class SkinCompatProgressBarHelper constructor(private val mView: ProgressBa
             return RoundRectShape(roundedCorners, null, null)
         }
 
-    open fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+    override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
         var a = mView.context.obtainStyledAttributes(attrs, R.styleable.SkinCompatProgressBar, defStyleAttr, 0)
 
         mIndeterminateDrawableResId =
@@ -51,21 +59,42 @@ open class SkinCompatProgressBarHelper constructor(private val mView: ProgressBa
         applySkin()
     }
 
+    override fun applySkin() {
+        if (checkResourceIdValid(mIndeterminateDrawableResId)) {
+            getDrawableCompat(mView.context, mIndeterminateDrawableResId)
+                ?.let {
+                    it.bounds = mView.indeterminateDrawable.bounds
+                    mView.indeterminateDrawable = tilingIndeterminate(it)
+                }
+        }
+
+        if (checkResourceIdValid(mProgressDrawableResId)) {
+            getDrawableCompat(mView.context, mProgressDrawableResId)?.let {
+                mView.progressDrawable = tiling(it, false)
+            }
+        }
+        if (Build.VERSION.SDK_INT > 21) {
+            if (checkResourceIdValid(mIndeterminateTintResId)) {
+                mView.indeterminateTintList = getColorStateList(mView.context, mIndeterminateTintResId)
+            }
+        }
+    }
+
     /**
      * Converts a drawable to a tiled version of itself. It will recursively
      * traverse layer and state list drawables.
      */
-    private fun tileify(drawable: Drawable, clip: Boolean): Drawable {
+    private fun tiling(drawable: Drawable, clip: Boolean): Drawable {
         when {
-            SkinCompatVersionUtils.isV4WrappedDrawable(drawable) -> {
-                var inner = SkinCompatVersionUtils.getV4WrappedDrawableWrappedDrawable(drawable)
-                inner = tileify(inner, clip)
-                SkinCompatVersionUtils.setV4WrappedDrawableWrappedDrawable(drawable, inner)
+            isV4WrappedDrawable(drawable) -> {
+                var inner = getV4WrappedDrawableWrappedDrawable(drawable)
+                inner = tiling(inner, clip)
+                setV4WrappedDrawableWrappedDrawable(drawable, inner)
             }
-            SkinCompatVersionUtils.isV4DrawableWrapper(drawable) -> {
-                var inner = SkinCompatVersionUtils.getV4DrawableWrapperWrappedDrawable(drawable)
-                inner = tileify(inner, clip)
-                SkinCompatVersionUtils.setV4DrawableWrapperWrappedDrawable(drawable, inner)
+            isV4DrawableWrapper(drawable) -> {
+                var inner = getV4DrawableWrapperWrappedDrawable(drawable)
+                inner = tiling(inner, clip)
+                setV4DrawableWrapperWrappedDrawable(drawable, inner)
             }
             drawable is LayerDrawable -> {
                 val N = drawable.numberOfLayers
@@ -73,7 +102,7 @@ open class SkinCompatProgressBarHelper constructor(private val mView: ProgressBa
 
                 for (i in 0 until N) {
                     val id = drawable.getId(i)
-                    outDrawables[i] = tileify(
+                    outDrawables[i] = tiling(
                         drawable.getDrawable(i),
                         id == android.R.id.progress || id == android.R.id.secondaryProgress
                     )
@@ -118,7 +147,7 @@ open class SkinCompatProgressBarHelper constructor(private val mView: ProgressBa
      * Each frame of the animation is wrapped in a ClipDrawable and
      * given a tiling BitmapShader.
      */
-    private fun tileifyIndeterminate(drawable: Drawable): Drawable {
+    private fun tilingIndeterminate(drawable: Drawable): Drawable {
         var drawable1 = drawable
         if (drawable1 is AnimationDrawable) {
             val background = drawable1
@@ -127,7 +156,7 @@ open class SkinCompatProgressBarHelper constructor(private val mView: ProgressBa
             newBg.isOneShot = background.isOneShot
 
             for (i in 0 until N) {
-                val frame = tileify(background.getFrame(i), true)
+                val frame = tiling(background.getFrame(i), true)
                 frame.level = 10000
                 newBg.addFrame(frame, background.getDuration(i))
             }
@@ -135,32 +164,5 @@ open class SkinCompatProgressBarHelper constructor(private val mView: ProgressBa
             drawable1 = newBg
         }
         return drawable1
-    }
-
-    override fun applySkin() {
-        if (checkResourceIdValid(mIndeterminateDrawableResId)) {
-            val drawable = SkinCompatVectorResources.getDrawableCompat(mView.context, mIndeterminateDrawableResId)
-            drawable?.let {
-                drawable.bounds = mView.indeterminateDrawable.bounds
-                mView.indeterminateDrawable = tileifyIndeterminate(drawable)
-            }
-        }
-
-        if (checkProgressDrawableResId(mProgressDrawableResId)) {
-            val drawable = SkinCompatVectorResources.getDrawableCompat(mView.context, mProgressDrawableResId)
-            drawable?.let {
-                mView.progressDrawable = tileify(drawable, false)
-            }
-        }
-        if (Build.VERSION.SDK_INT > 21) {
-            if (checkResourceIdValid(mIndeterminateTintResId)) {
-                mView.indeterminateTintList =
-                        SkinResourcesManager.getColorStateList(mView.context, mIndeterminateTintResId)
-            }
-        }
-    }
-
-    private fun checkProgressDrawableResId(mProgressDrawableResId: Int): Boolean {
-        return checkResourceIdValid(mProgressDrawableResId)
     }
 }

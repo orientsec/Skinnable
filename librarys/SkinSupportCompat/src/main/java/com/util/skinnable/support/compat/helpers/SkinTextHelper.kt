@@ -6,13 +6,13 @@ import android.os.Build
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.annotation.DrawableRes
-import com.util.skin.library.R
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.res.SkinResourcesManager
+import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 
-open class SkinCompatTextHelper(internal val mView: TextView) : SkinHelper() {
+open class SkinTextHelper(internal val mView: TextView) : SkinHelper() {
 
     var textColorResId = INVALID_ID
         private set
@@ -22,24 +22,24 @@ open class SkinCompatTextHelper(internal val mView: TextView) : SkinHelper() {
     protected var mDrawableRightResId = INVALID_ID
     protected var mDrawableTopResId = INVALID_ID
 
-    open fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+    override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
         val context = mView.context
 
         // First read the TextAppearance style id
-        var a = context.obtainStyledAttributes(attrs, R.styleable.SkinCompatTextHelper, defStyleAttr, 0)
-        val ap = a.getResourceId(R.styleable.SkinCompatTextHelper_android_textAppearance, INVALID_ID)
+        var a = context.obtainStyledAttributes(attrs, R.styleable.SkinTextHelper, defStyleAttr, 0)
+        val ap = a.getResourceId(R.styleable.SkinTextHelper_android_textAppearance, INVALID_ID)
 
-        if (a.hasValue(R.styleable.SkinCompatTextHelper_android_drawableLeft)) {
-            mDrawableLeftResId = a.getResourceId(R.styleable.SkinCompatTextHelper_android_drawableLeft, INVALID_ID)
+        if (a.hasValue(R.styleable.SkinTextHelper_android_drawableLeft)) {
+            mDrawableLeftResId = a.getResourceId(R.styleable.SkinTextHelper_android_drawableLeft, INVALID_ID)
         }
-        if (a.hasValue(R.styleable.SkinCompatTextHelper_android_drawableTop)) {
-            mDrawableTopResId = a.getResourceId(R.styleable.SkinCompatTextHelper_android_drawableTop, INVALID_ID)
+        if (a.hasValue(R.styleable.SkinTextHelper_android_drawableTop)) {
+            mDrawableTopResId = a.getResourceId(R.styleable.SkinTextHelper_android_drawableTop, INVALID_ID)
         }
-        if (a.hasValue(R.styleable.SkinCompatTextHelper_android_drawableRight)) {
-            mDrawableRightResId = a.getResourceId(R.styleable.SkinCompatTextHelper_android_drawableRight, INVALID_ID)
+        if (a.hasValue(R.styleable.SkinTextHelper_android_drawableRight)) {
+            mDrawableRightResId = a.getResourceId(R.styleable.SkinTextHelper_android_drawableRight, INVALID_ID)
         }
-        if (a.hasValue(R.styleable.SkinCompatTextHelper_android_drawableBottom)) {
-            mDrawableBottomResId = a.getResourceId(R.styleable.SkinCompatTextHelper_android_drawableBottom, INVALID_ID)
+        if (a.hasValue(R.styleable.SkinTextHelper_android_drawableBottom)) {
+            mDrawableBottomResId = a.getResourceId(R.styleable.SkinTextHelper_android_drawableBottom, INVALID_ID)
         }
         a.recycle()
 
@@ -111,7 +111,10 @@ open class SkinCompatTextHelper(internal val mView: TextView) : SkinHelper() {
     }
 
     open fun onSetCompoundDrawablesRelativeWithIntrinsicBounds(
-        @DrawableRes start: Int, @DrawableRes top: Int, @DrawableRes end: Int, @DrawableRes bottom: Int
+        @DrawableRes start: Int,
+        @DrawableRes top: Int,
+        @DrawableRes end: Int,
+        @DrawableRes bottom: Int
     ) {
         mDrawableLeftResId = start
         mDrawableTopResId = top
@@ -121,7 +124,10 @@ open class SkinCompatTextHelper(internal val mView: TextView) : SkinHelper() {
     }
 
     fun onSetCompoundDrawablesWithIntrinsicBounds(
-        @DrawableRes left: Int, @DrawableRes top: Int, @DrawableRes right: Int, @DrawableRes bottom: Int
+        @DrawableRes left: Int,
+        @DrawableRes top: Int,
+        @DrawableRes right: Int,
+        @DrawableRes bottom: Int
     ) {
         mDrawableLeftResId = left
         mDrawableTopResId = top
@@ -134,7 +140,7 @@ open class SkinCompatTextHelper(internal val mView: TextView) : SkinHelper() {
         applyCompoundDrawablesResource()
     }
 
-    protected fun applyCompoundDrawablesResource() {
+    private fun applyCompoundDrawablesResource() {
         var drawableLeft: Drawable? = null
         var drawableTop: Drawable? = null
         var drawableRight: Drawable? = null
@@ -167,10 +173,10 @@ open class SkinCompatTextHelper(internal val mView: TextView) : SkinHelper() {
     }
 
     companion object {
-        fun create(textView: TextView): SkinCompatTextHelper {
+        fun create(textView: TextView): SkinTextHelper {
             return if (Build.VERSION.SDK_INT >= 17) {
-                SkinCompatTextHelperV17(textView)
-            } else SkinCompatTextHelper(textView)
+                SkinTextHelperV17(textView)
+            } else SkinTextHelper(textView)
         }
     }
 }

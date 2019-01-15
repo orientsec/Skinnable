@@ -7,7 +7,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 import com.util.skinnable.support.design.R
 
@@ -19,7 +19,7 @@ class SkinMaterialCollapsingToolbarLayout @JvmOverloads constructor(
 ) : CollapsingToolbarLayout(context, attrs, defStyleAttr), SkinSupportable {
     private var mContentScrimResId = INVALID_ID
     private var mStatusBarScrimResId = INVALID_ID
-    private val mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
 
     init {
 

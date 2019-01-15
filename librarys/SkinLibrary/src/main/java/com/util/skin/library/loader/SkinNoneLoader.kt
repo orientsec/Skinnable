@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 
+/**
+ * 默认加载器
+ */
 class SkinNoneLoader : SkinLoaderStrategy {
 
     override val type: SkinLoaderStrategyType

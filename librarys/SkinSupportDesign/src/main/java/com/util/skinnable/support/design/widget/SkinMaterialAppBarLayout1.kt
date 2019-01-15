@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.AttributeSet
 import com.google.android.material.appbar.AppBarLayout
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 
 class SkinMaterialAppBarLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     AppBarLayout(context, attrs), SkinSupportable {
-    private val mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, 0)

@@ -7,7 +7,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.widget.SkinSupportable
-import com.util.skinnable.support.compat.helpers.SkinCompatImageHelper
+import com.util.skinnable.support.compat.helpers.SkinImageHelper
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skinnable.support.design.R
 
@@ -20,7 +20,7 @@ class SkinMaterialFloatingActionButton @JvmOverloads constructor(
     private var mRippleColorResId = INVALID_ID
     private var mBackgroundTintResId = INVALID_ID
 
-    private val mImageHelper = SkinCompatImageHelper(this)
+    private val mImageHelper = SkinImageHelper(this)
 
     init {
         val a = context.obtainStyledAttributes(

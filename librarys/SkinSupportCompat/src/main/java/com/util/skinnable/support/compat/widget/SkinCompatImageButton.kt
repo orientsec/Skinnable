@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageButton
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
-import com.util.skinnable.support.compat.helpers.SkinCompatImageHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinImageHelper
 import com.util.skin.library.widget.SkinSupportable
 
 class SkinCompatImageButton @JvmOverloads constructor(
@@ -13,8 +13,8 @@ class SkinCompatImageButton @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = androidx.appcompat.R.attr.imageButtonStyle
 ) : AppCompatImageButton(context, attrs, defStyleAttr), SkinSupportable {
-    private val mBackgroundTintHelper= SkinCompatBackgroundHelper(this)
-    private val mImageHelper = SkinCompatImageHelper(this)
+    private val mBackgroundTintHelper= SkinBackgroundHelper(this)
+    private val mImageHelper = SkinImageHelper(this)
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
@@ -23,12 +23,12 @@ class SkinCompatImageButton @JvmOverloads constructor(
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper.onSetBackgroundResource(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun setImageResource(@DrawableRes resId: Int) {
         // Intercept this call and instead retrieve the Drawable via the image helper
-        mImageHelper.setImageResource(resId)
+        mImageHelper.setSrcId(resId)
     }
 
     override fun applySkin() {

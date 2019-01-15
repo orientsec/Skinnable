@@ -1,5 +1,6 @@
 package com.util.skinnable.support.compat
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Build
@@ -10,32 +11,12 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.TintContextWrapper
 import androidx.appcompat.widget.VectorEnabledTintResources
 import androidx.core.view.ViewCompat
-import com.util.skin.library.R
 import com.util.skin.library.app.SkinLayoutInflater
 import com.util.skin.library.app.SkinWrapper
 import com.util.skin.library.utils.Slog
-import com.util.skinnable.support.compat.widget.SkinCompatAutoCompleteTextView
-import com.util.skinnable.support.compat.widget.SkinCompatButton
-import com.util.skinnable.support.compat.widget.SkinCompatCheckBox
-import com.util.skinnable.support.compat.widget.SkinCompatCheckedTextView
-import com.util.skinnable.support.compat.widget.SkinCompatEditText
-import com.util.skinnable.support.compat.widget.SkinCompatFrameLayout
-import com.util.skinnable.support.compat.widget.SkinCompatImageButton
-import com.util.skinnable.support.compat.widget.SkinCompatImageView
-import com.util.skinnable.support.compat.widget.SkinCompatLinearLayout
-import com.util.skinnable.support.compat.widget.SkinCompatMultiAutoCompleteTextView
-import com.util.skinnable.support.compat.widget.SkinCompatProgressBar
-import com.util.skinnable.support.compat.widget.SkinCompatRadioButton
-import com.util.skinnable.support.compat.widget.SkinCompatRadioGroup
-import com.util.skinnable.support.compat.widget.SkinCompatRatingBar
-import com.util.skinnable.support.compat.widget.SkinCompatRelativeLayout
-import com.util.skinnable.support.compat.widget.SkinCompatScrollView
-import com.util.skinnable.support.compat.widget.SkinCompatSeekBar
-import com.util.skinnable.support.compat.widget.SkinCompatSpinner
-import com.util.skinnable.support.compat.widget.SkinCompatTextView
-import com.util.skinnable.support.compat.widget.SkinCompatToolbar
-import com.util.skinnable.support.compat.widget.SkinCompatView
+import com.util.skinnable.support.compat.widget.*
 
+@SuppressLint("PrivateResource")
 class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
 
     override fun createView(context: Context, name: String, attrs: AttributeSet): View? {
@@ -106,7 +87,7 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
         }
         if (isPre21 || readAppTheme) {
             // We then apply the theme on the context, if specified
-            tempContext = themifyContext(tempContext, attrs, isPre21, readAppTheme)
+            tempContext = themeContext(tempContext, attrs, isPre21, readAppTheme)
         }
         if (wrapContext) {
             tempContext = TintContextWrapper.wrap(tempContext)
@@ -143,17 +124,17 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
     }
 
     companion object {
-        private val LOG_TAG = "SkinAppCompatViewInflater"
+        private const val LOG_TAG = "SkinAppCompatViewInflater"
 
         /**
          * Allows us to emulate the `android:theme` attribute for devices before L.
          */
-        private fun themifyContext(
+        private fun themeContext(
             context: Context, attrs: AttributeSet,
             useAndroidTheme: Boolean, useAppTheme: Boolean
         ): Context {
-            var context = context
-            val a = context.obtainStyledAttributes(attrs, R.styleable.View, 0, 0)
+            var context1 = context
+            val a = context1.obtainStyledAttributes(attrs, R.styleable.View, 0, 0)
             var themeId = 0
             if (useAndroidTheme) {
                 // First try reading android:theme if enabled
@@ -169,12 +150,12 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
             }
             a.recycle()
 
-            if (themeId != 0 && (context !is ContextThemeWrapper || context.themeResId != themeId)) {
+            if (themeId != 0 && (context1 !is ContextThemeWrapper || context1.themeResId != themeId)) {
                 // If the context isn't a ContextThemeWrapper, or it is but does not have
                 // the same theme as we need, wrap it in a new wrapper
-                context = ContextThemeWrapper(context, themeId)
+                context1 = ContextThemeWrapper(context1, themeId)
             }
-            return context
+            return context1
         }
     }
 

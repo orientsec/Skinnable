@@ -8,8 +8,8 @@ import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.compat.R
-import com.util.skinnable.support.compat.helpers.SkinCompatBackgroundHelper
-import com.util.skinnable.support.compat.helpers.SkinCompatTextHelper
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
+import com.util.skinnable.support.compat.helpers.SkinTextHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 
@@ -19,8 +19,8 @@ class SkinCompatAutoCompleteTextView @JvmOverloads constructor(
     defStyleAttr: Int = R.attr.autoCompleteTextViewStyle
 ) : AppCompatAutoCompleteTextView(context, attrs, defStyleAttr), SkinSupportable {
     private var mDropDownBackgroundResId = INVALID_ID
-    private val mTextHelper: SkinCompatTextHelper?
-    private val mBackgroundTintHelper: SkinCompatBackgroundHelper?
+    private val mTextHelper: SkinTextHelper?
+    private val mBackgroundTintHelper: SkinBackgroundHelper?
 
     init {
         val a = context.obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0)
@@ -29,9 +29,9 @@ class SkinCompatAutoCompleteTextView @JvmOverloads constructor(
         }
         a.recycle()
         applyDropDownBackgroundResource()
-        mBackgroundTintHelper = SkinCompatBackgroundHelper(this)
+        mBackgroundTintHelper = SkinBackgroundHelper(this)
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
-        mTextHelper = SkinCompatTextHelper.create(this)
+        mTextHelper = SkinTextHelper.create(this)
         mTextHelper.loadFromAttributes(attrs, defStyleAttr)
     }
 
@@ -52,7 +52,7 @@ class SkinCompatAutoCompleteTextView @JvmOverloads constructor(
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper?.onSetBackgroundResource(resId)
+        mBackgroundTintHelper?.setSrcId(resId)
     }
 
     override fun setTextAppearance(resId: Int) {

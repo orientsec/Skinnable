@@ -19,7 +19,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
-import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -259,8 +258,10 @@ object SkinUserThemeManager {
             if (!TextUtils.isEmpty(entry)) {
                 val drawablePathAndAngle = mDrawablePathAndAngleMap[entry]
                 if (!TextUtils.isEmpty(drawablePathAndAngle)) {
-                    val splits =
-                        drawablePathAndAngle!!.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    val splits = drawablePathAndAngle!!
+                        .split(":".toRegex())
+                        .dropLastWhile { it.isEmpty() }
+                        .toTypedArray()
                     val path = splits[0]
                     var angle = 0
                     if (splits.size == 2) {

@@ -16,7 +16,6 @@ import android.util.*
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
-import androidx.appcompat.R
 import androidx.collection.ArrayMap
 import androidx.collection.LongSparseArray
 import androidx.collection.LruCache
@@ -29,6 +28,7 @@ import com.util.skin.library.res.SkinThemeUtils
 import com.util.skin.library.res.SkinThemeUtils.getDisabledThemeAttrColor
 import com.util.skin.library.res.SkinThemeUtils.getThemeAttrColor
 import com.util.skin.library.res.SkinThemeUtils.getThemeAttrColorStateList
+import com.util.skinnable.support.compat.R
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import java.lang.ref.WeakReference
@@ -38,7 +38,7 @@ import java.util.*
 internal object SkinCompatDrawableManager {
 
     init {
-        installDefaultInflateDelegates(this)
+        installDefaultInflateDelegates()
     }
 
     private val TAG = SkinCompatDrawableManager::class.java.simpleName
@@ -136,8 +136,8 @@ internal object SkinCompatDrawableManager {
                     arrayOf(
                         getDrawable(
                             context,
-                            R.drawable.abc_cab_background_internal_bg
-                        ), getDrawable(context, R.drawable.abc_cab_background_top_mtrl_alpha)
+                            com.util.skinnable.support.compat.R.drawable.abc_cab_background_internal_bg
+                        ), getDrawable(context, com.util.skinnable.support.compat.R.drawable.abc_cab_background_top_mtrl_alpha)
                     )
                 )
             }
@@ -175,15 +175,15 @@ internal object SkinCompatDrawableManager {
             val ld = drawable1 as LayerDrawable
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.background),
-                getThemeAttrColor(context, R.attr.colorControlNormal), DEFAULT_MODE
+                getThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlNormal), DEFAULT_MODE
             )
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.secondaryProgress),
-                getThemeAttrColor(context, R.attr.colorControlNormal), DEFAULT_MODE
+                getThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlNormal), DEFAULT_MODE
             )
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.progress),
-                getThemeAttrColor(context, R.attr.colorControlActivated), DEFAULT_MODE
+                getThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlActivated), DEFAULT_MODE
             )
         } else if (resId == androidx.appcompat.R.drawable.abc_ratingbar_material
             || resId == androidx.appcompat.R.drawable.abc_ratingbar_indicator_material
@@ -192,12 +192,12 @@ internal object SkinCompatDrawableManager {
             val ld = drawable1 as LayerDrawable
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.background),
-                getDisabledThemeAttrColor(context, R.attr.colorControlNormal),
+                getDisabledThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlNormal),
                 DEFAULT_MODE
             )
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.secondaryProgress),
-                getThemeAttrColor(context, R.attr.colorControlActivated), DEFAULT_MODE
+                getThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlActivated), DEFAULT_MODE
             )
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.progress),
@@ -361,7 +361,7 @@ internal object SkinCompatDrawableManager {
         }
     }
 
-    fun getTintList(context: Context, @DrawableRes resId: Int): ColorStateList? {
+    private fun getTintList(context: Context, @DrawableRes resId: Int): ColorStateList? {
         // Try the cache first (if it exists)
         var tint = getTintListFromCache(context, resId)
 
@@ -596,7 +596,7 @@ internal object SkinCompatDrawableManager {
     }
 
 
-    private fun installDefaultInflateDelegates(manager: SkinCompatDrawableManager) {
+    private fun installDefaultInflateDelegates() {
         // This sdk version check will affect src:appCompat code path.
         // Although VectorDrawable exists in Android framework from Lollipop, AppCompat will use the
         // VectorDrawableCompat before Nougat to utilize the bug fixes in VectorDrawableCompat.
