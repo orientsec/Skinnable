@@ -15,6 +15,7 @@ class SkinCompatEditText @JvmOverloads constructor(
 ) : AppCompatEditText(context, attrs, defStyleAttr), SkinSupportable {
     private val mTextHelper = SkinTextHelper.create(this)
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     val textColorResId: Int
         get() = mTextHelper.textColorResId

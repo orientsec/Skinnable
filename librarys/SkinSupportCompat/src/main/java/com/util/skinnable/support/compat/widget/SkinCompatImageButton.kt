@@ -15,6 +15,7 @@ class SkinCompatImageButton @JvmOverloads constructor(
 ) : AppCompatImageButton(context, attrs, defStyleAttr), SkinSupportable {
     private val mBackgroundTintHelper= SkinBackgroundHelper(this)
     private val mImageHelper = SkinImageHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)

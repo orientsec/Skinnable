@@ -21,8 +21,9 @@ internal class LazySkinObserver constructor(private val mContext: Context?) : Sk
     override fun updateSkin(observable: SkinObservable) {
         // 当前Activity，或者非Activity，立即刷新，否则延迟到下次onResume方法中刷新。
         if (SkinActivityLifecycle.mCurActivityRef == null
-                || mContext === SkinActivityLifecycle.mCurActivityRef!!.get()
-                || mContext !is Activity) {
+            || mContext === SkinActivityLifecycle.mCurActivityRef!!.get()
+            || mContext !is Activity
+        ) {
             updateSkinForce()
         } else {
             mMarkNeedUpdate = true
@@ -46,8 +47,8 @@ internal class LazySkinObserver constructor(private val mContext: Context?) : Sk
             SkinActivityLifecycle.updateWindowBackground(mContext)
         }
         SkinActivityLifecycle.getSkinDelegate(mContext).applySkin()
-        if (mContext is SkinSupportable) {
-            (mContext as SkinSupportable).applySkin()
+        if (mContext is SkinSupportable && mContext.skinnable) {
+            mContext.applySkin()
         }
         mMarkNeedUpdate = false
     }

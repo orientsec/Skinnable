@@ -12,7 +12,7 @@ import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
 
-open class SkinTextHelper(internal val mView: TextView) : SkinHelper() {
+open class SkinTextHelper(view: TextView) : SkinHelper(view) {
 
     var textColorResId = INVALID_ID
         private set
@@ -21,8 +21,11 @@ open class SkinTextHelper(internal val mView: TextView) : SkinHelper() {
     protected var mDrawableLeftResId = INVALID_ID
     protected var mDrawableRightResId = INVALID_ID
     protected var mDrawableTopResId = INVALID_ID
+    override val mView: TextView
+        get() = super.mView as TextView
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+        super.loadFromAttributes(attrs, defStyleAttr)
         val context = mView.context
 
         // First read the TextAppearance style id

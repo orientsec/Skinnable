@@ -13,6 +13,7 @@ class SkinCompatSeekBar @JvmOverloads constructor(
     defStyleAttr: Int = R.attr.seekBarStyle
 ) : AppCompatSeekBar(context, attrs, defStyleAttr), SkinSupportable {
     private val mSkinCompatSeekBarHelper= SkinSeekBarHelper(this)
+    override val skinnable: Boolean by lazy { mSkinCompatSeekBarHelper.skinnable }
 
     init {
         mSkinCompatSeekBarHelper.loadFromAttributes(attrs, defStyleAttr)

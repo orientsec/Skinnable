@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import com.google.android.material.tabs.TabLayout
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
-import com.util.skin.library.widget.SkinSupportable
 import com.util.skin.library.res.SkinResourcesManager
+import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.design.R
 
 @SuppressLint("CustomViewStyleable", "PrivateResource")
@@ -19,6 +19,7 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
     private var mTabIndicatorColorResId = INVALID_ID
     private var mTabTextColorsResId = INVALID_ID
     private var mTabSelectedTextColorResId = INVALID_ID
+    override val skinnable: Boolean
 
     init {
         val a = context.obtainStyledAttributes(
@@ -50,6 +51,7 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
             // this (theme attrs in ColorStateLists are Lollipop+)
             mTabSelectedTextColorResId = a.getResourceId(R.styleable.TabLayout_tabSelectedTextColor, INVALID_ID)
         }
+        skinnable = a.getBoolean(R.styleable.SkinSupportable_skinnable, false)
         a.recycle()
         applySkin()
     }

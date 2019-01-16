@@ -24,12 +24,15 @@ import com.util.skinnable.support.compat.res.SkinCompatVectorResources.getDrawab
 /**
  * ProgressBarUI处理
  */
-open class SkinProgressBarHelper constructor(private val mView: ProgressBar) : SkinHelper() {
+open class SkinProgressBarHelper constructor(view: ProgressBar) : SkinHelper(view) {
 
     private var mSampleTile: Bitmap? = null
     private var mIndeterminateDrawableResId = SkinHelper.INVALID_ID
     private var mProgressDrawableResId = SkinHelper.INVALID_ID
     private var mIndeterminateTintResId = SkinHelper.INVALID_ID
+
+    override val mView: ProgressBar
+        get() = super.mView as ProgressBar
 
     private val drawableShape: Shape
         get() {
@@ -38,6 +41,7 @@ open class SkinProgressBarHelper constructor(private val mView: ProgressBar) : S
         }
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+        super.loadFromAttributes(attrs, defStyleAttr)
         var a = mView.context.obtainStyledAttributes(attrs, R.styleable.SkinCompatProgressBar, defStyleAttr, 0)
 
         mIndeterminateDrawableResId =

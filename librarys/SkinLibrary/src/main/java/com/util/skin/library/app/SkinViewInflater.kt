@@ -12,7 +12,16 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
-class SkinViewInflater {
+/**
+ * create View
+ */
+internal object SkinViewInflater {
+    private val sConstructorSignature = arrayOf(Context::class.java, AttributeSet::class.java)
+    private val sOnClickAttrs = intArrayOf(android.R.attr.onClick)
+
+    private val sClassPrefixList = arrayOf("android.widget.", "android.view.", "android.webkit.")
+
+    private val sConstructorMap = ArrayMap<String, Constructor<out View>>()
 
     fun createView(name: String, context: Context, attrs: AttributeSet): View? {
         val view = createViewFromInflater(context, name, attrs) ?: createViewFromTag(context, name, attrs)
@@ -178,14 +187,5 @@ class SkinViewInflater {
                         + "attribute defined on view " + mHostView.javaClass + idText
             )
         }
-    }
-
-    companion object {
-        private val sConstructorSignature = arrayOf(Context::class.java, AttributeSet::class.java)
-        private val sOnClickAttrs = intArrayOf(android.R.attr.onClick)
-
-        private val sClassPrefixList = arrayOf("android.widget.", "android.view.", "android.webkit.")
-
-        private val sConstructorMap = ArrayMap<String, Constructor<out View>>()
     }
 }

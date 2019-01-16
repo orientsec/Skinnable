@@ -21,6 +21,7 @@ class SkinCompatCheckedTextView @JvmOverloads constructor(
 
     private val mTextHelper = SkinTextHelper.create(this)
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)

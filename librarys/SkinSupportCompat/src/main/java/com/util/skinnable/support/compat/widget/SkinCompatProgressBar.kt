@@ -12,6 +12,7 @@ class SkinCompatProgressBar @JvmOverloads constructor(
     defStyleAttr: Int = android.R.attr.progressBarStyle
 ) : ProgressBar(context, attrs, defStyleAttr), SkinSupportable {
     private val mSkinCompatProgressBarHelper = SkinProgressBarHelper(this)
+    override val skinnable: Boolean by lazy { mSkinCompatProgressBarHelper.skinnable }
 
     init {
         mSkinCompatProgressBarHelper.loadFromAttributes(attrs, defStyleAttr)

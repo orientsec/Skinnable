@@ -20,6 +20,7 @@ class SkinMaterialCollapsingToolbarLayout @JvmOverloads constructor(
     private var mContentScrimResId = INVALID_ID
     private var mStatusBarScrimResId = INVALID_ID
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
 

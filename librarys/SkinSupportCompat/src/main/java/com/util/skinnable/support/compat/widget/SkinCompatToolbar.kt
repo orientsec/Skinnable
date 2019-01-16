@@ -22,10 +22,10 @@ class SkinCompatToolbar @JvmOverloads constructor(
     private var mTitleTextColorResId = INVALID_ID
     private var mSubtitleTextColorResId = INVALID_ID
     private var mNavigationIconResId = INVALID_ID
-    private val mBackgroundTintHelper: SkinBackgroundHelper?
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
-        mBackgroundTintHelper = SkinBackgroundHelper(this)
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
 
         var a = context.obtainStyledAttributes(attrs, R.styleable.Toolbar, defStyleAttr, 0)

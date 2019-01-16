@@ -10,6 +10,7 @@ import com.util.skin.library.widget.SkinSupportable
 class SkinCompatView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     View(context, attrs, defStyleAttr), SkinSupportable {
     private val mBackgroundTintHelper= SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)

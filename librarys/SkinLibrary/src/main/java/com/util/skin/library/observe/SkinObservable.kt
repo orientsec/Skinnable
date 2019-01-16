@@ -1,18 +1,14 @@
 package com.util.skin.library.observe
 
-import java.util.*
-
 open class SkinObservable {
-    private val observers: ArrayList<SkinObserver> = ArrayList()
+    private val observers: HashSet<SkinObserver> = hashSetOf()
 
     @Synchronized
     fun addObserver(o: SkinObserver?) {
         if (o == null) {
             throw NullPointerException()
         }
-        if (!observers.contains(o)) {
-            observers.add(o)
-        }
+        observers.add(o)
     }
 
     @Synchronized

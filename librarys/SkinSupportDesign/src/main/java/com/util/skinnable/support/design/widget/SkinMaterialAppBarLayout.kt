@@ -9,6 +9,7 @@ import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 class SkinMaterialAppBarLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     AppBarLayout(context, attrs), SkinSupportable {
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, 0)

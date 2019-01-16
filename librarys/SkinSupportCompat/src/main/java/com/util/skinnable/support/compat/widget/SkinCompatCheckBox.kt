@@ -19,6 +19,7 @@ class SkinCompatCheckBox @JvmOverloads constructor(
     private val mTextHelper = SkinTextHelper.create(this)
     private val mBackgroundTintHelper: SkinBackgroundHelper =
         SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         mCompoundButtonHelper.loadFromAttributes(attrs, defStyleAttr)

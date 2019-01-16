@@ -7,15 +7,14 @@ import com.util.skin.library.R
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
-class SkinBackgroundHelper(private val mView: View) : SkinHelper() {
+class SkinBackgroundHelper(view: View) : SkinHelper(view) {
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+        super.loadFromAttributes(attrs, defStyleAttr)
         val a = mView.context.obtainStyledAttributes(attrs, R.styleable.SkinBackgroundHelper, defStyleAttr, 0)
         try {
             if (a.hasValue(R.styleable.SkinBackgroundHelper_android_background)) {
-                mSrcId = a.getResourceId(
-                    R.styleable.SkinBackgroundHelper_android_background, INVALID_ID
-                )
+                mSrcId = a.getResourceId(R.styleable.SkinBackgroundHelper_android_background, INVALID_ID)
             }
         } finally {
             a.recycle()

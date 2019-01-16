@@ -13,7 +13,6 @@ import java.util.*
  * [LayoutInflater.onCreateView] 方法监听并转发
  */
 internal class SkinDelegate private constructor(private val mContext: Context) : LayoutInflater.Factory2 {
-    private val mSkinCompatViewInflater = SkinViewInflater()
     private val mSkinHelpers = ArrayList<WeakReference<SkinSupportable>>()
 
     override fun onCreateView(name: String?, context: Context?, attrs: AttributeSet?): View? {
@@ -23,7 +22,7 @@ internal class SkinDelegate private constructor(private val mContext: Context) :
     override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
         val view = createView(parent, name, context, attrs) ?: return null
 
-        if (view is SkinSupportable) {
+        if (view is SkinSupportable && view.skinnable) {
             // 记录支持换肤功能的View
             mSkinHelpers.add(WeakReference(view as SkinSupportable))
         }
@@ -41,14 +40,16 @@ internal class SkinDelegate private constructor(private val mContext: Context) :
             val wrappedContext = wrapper.wrapContext(mContext, parent, attrs)
             tempContext = wrappedContext
         }
-        return mSkinCompatViewInflater.createView(name, tempContext, attrs)
+        return SkinViewInflater.createView(name, tempContext, attrs)
     }
 
     fun applySkin() {
         if (!mSkinHelpers.isEmpty()) {
             for (ref in mSkinHelpers) {
-                if (ref.get() != null) {
-                    (ref.get() as SkinSupportable).applySkin()
+                ref.get()?.apply {
+                    if (skinnable) {
+                        applySkin()
+                    }
                 }
             }
         }

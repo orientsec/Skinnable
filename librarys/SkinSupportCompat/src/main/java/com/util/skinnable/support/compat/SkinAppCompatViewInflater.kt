@@ -119,40 +119,40 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
         return false
     }
 
+    /**
+     * Allows us to emulate the `android:theme` attribute for devices before L.
+     */
+    private fun themeContext(
+        context: Context, attrs: AttributeSet,
+        useAndroidTheme: Boolean, useAppTheme: Boolean
+    ): Context {
+        var context1 = context
+        val a = context1.obtainStyledAttributes(attrs, R.styleable.View, 0, 0)
+        var themeId = 0
+        if (useAndroidTheme) {
+            // First try reading android:theme if enabled
+            themeId = a.getResourceId(R.styleable.View_android_theme, 0)
+        }
+        if (useAppTheme && themeId == 0) {
+            // ...if that didn't work, try reading app:theme (for legacy reasons) if enabled
+            themeId = a.getResourceId(R.styleable.View_theme, 0)
+
+            if (themeId != 0) {
+                Slog.i(LOG_TAG, "app:theme is now deprecated. " + "Please move to using android:theme instead.")
+            }
+        }
+        a.recycle()
+
+        if (themeId != 0 && (context1 !is ContextThemeWrapper || context1.themeResId != themeId)) {
+            // If the context isn't a ContextThemeWrapper, or it is but does not have
+            // the same theme as we need, wrap it in a new wrapper
+            context1 = ContextThemeWrapper(context1, themeId)
+        }
+        return context1
+    }
+
     companion object {
         private const val LOG_TAG = "SkinAppCompatViewInflater"
-
-        /**
-         * Allows us to emulate the `android:theme` attribute for devices before L.
-         */
-        private fun themeContext(
-            context: Context, attrs: AttributeSet,
-            useAndroidTheme: Boolean, useAppTheme: Boolean
-        ): Context {
-            var context1 = context
-            val a = context1.obtainStyledAttributes(attrs, R.styleable.View, 0, 0)
-            var themeId = 0
-            if (useAndroidTheme) {
-                // First try reading android:theme if enabled
-                themeId = a.getResourceId(R.styleable.View_android_theme, 0)
-            }
-            if (useAppTheme && themeId == 0) {
-                // ...if that didn't work, try reading app:theme (for legacy reasons) if enabled
-                themeId = a.getResourceId(R.styleable.View_theme, 0)
-
-                if (themeId != 0) {
-                    Slog.i(LOG_TAG, "app:theme is now deprecated. " + "Please move to using android:theme instead.")
-                }
-            }
-            a.recycle()
-
-            if (themeId != 0 && (context1 !is ContextThemeWrapper || context1.themeResId != themeId)) {
-                // If the context isn't a ContextThemeWrapper, or it is but does not have
-                // the same theme as we need, wrap it in a new wrapper
-                context1 = ContextThemeWrapper(context1, themeId)
-            }
-            return context1
-        }
     }
 
 }

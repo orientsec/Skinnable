@@ -17,6 +17,7 @@ class SkinTextHelperV17(view: TextView) : SkinTextHelper(view) {
     private var mDrawableEndResId = INVALID_ID
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+        super.loadFromAttributes(attrs, defStyleAttr)
         val context = mView.context
 
         val a = context.obtainStyledAttributes(

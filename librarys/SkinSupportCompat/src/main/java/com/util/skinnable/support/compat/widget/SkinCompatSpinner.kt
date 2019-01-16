@@ -16,7 +16,7 @@ import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
-@SuppressLint("PrivateResource")
+@SuppressLint("PrivateResource", "CustomViewStyleable")
 class SkinCompatSpinner @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -25,8 +25,9 @@ class SkinCompatSpinner @JvmOverloads constructor(
     popupTheme: Resources.Theme? = null
 ) : AppCompatSpinner(context, attrs, defStyleAttr, mode, popupTheme), SkinSupportable {
 
-    private val mBackgroundTintHelper: SkinBackgroundHelper?
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
     private var mPopupBackgroundResId = INVALID_ID
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     constructor(context: Context, mode: Int) : this(context, null, R.attr.spinnerStyle, mode) {}
 
@@ -67,7 +68,6 @@ class SkinCompatSpinner @JvmOverloads constructor(
         }
         a.recycle()
 
-        mBackgroundTintHelper = SkinBackgroundHelper(this)
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
     }
 
@@ -84,12 +84,12 @@ class SkinCompatSpinner @JvmOverloads constructor(
     }
 
     override fun applySkin() {
-        mBackgroundTintHelper?.applySkin()
+        mBackgroundTintHelper.applySkin()
         applyPopupBackground()
     }
 
     companion object {
-        private val TAG = SkinCompatSpinner::class.java!!.getSimpleName()
+        private val TAG = SkinCompatSpinner::class.java.getSimpleName()
 
         private val ATTRS_ANDROID_SPINNERMODE = intArrayOf(android.R.attr.spinnerMode)
 

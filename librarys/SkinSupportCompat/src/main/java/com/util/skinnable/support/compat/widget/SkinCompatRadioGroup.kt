@@ -9,6 +9,7 @@ import com.util.skin.library.widget.SkinSupportable
 class SkinCompatRadioGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     RadioGroup(context, attrs), SkinSupportable {
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, 0)

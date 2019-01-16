@@ -35,7 +35,7 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
         if (isContextSkinEnable(activity)) {
             installLayoutFactory(activity)
             updateWindowBackground(activity)
-            if (activity is SkinSupportable) {
+            if (activity is SkinSupportable && activity.skinnable) {
                 (activity as SkinSupportable).applySkin()
             }
         }

@@ -27,6 +27,7 @@ class SkinMaterialTextInputLayout @JvmOverloads constructor(
     private var mErrorTextColorResId = INVALID_ID
     private var mFocusedTextColorResId = INVALID_ID
     private var mDefaultTextColorResId = INVALID_ID
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     private val counterView: TextView?
         get() {

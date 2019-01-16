@@ -7,10 +7,13 @@ import com.util.skin.library.helpers.SkinHelper
 import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.res.SkinCompatVectorResources
 
-class SkinImageHelper(private val mView: ImageView) : SkinHelper() {
+class SkinImageHelper(view: ImageView) : SkinHelper(view) {
     private var mSrcCompatResId = INVALID_ID
+    override val mView: ImageView
+        get() = super.mView as ImageView
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+        super.loadFromAttributes(attrs, defStyleAttr)
         var a: TypedArray? = null
         try {
             a = mView.context.obtainStyledAttributes(attrs, R.styleable.SkinCompatImageView, defStyleAttr, 0)
@@ -30,7 +33,8 @@ class SkinImageHelper(private val mView: ImageView) : SkinHelper() {
             }
         } else {
             if (checkResourceIdValid(mSrcId)) {
-                val drawable = SkinCompatVectorResources.getDrawableCompat(mView.context,
+                val drawable = SkinCompatVectorResources.getDrawableCompat(
+                    mView.context,
                     mSrcId
                 )
                 if (drawable != null) {

@@ -19,8 +19,9 @@ class SkinCompatAutoCompleteTextView @JvmOverloads constructor(
     defStyleAttr: Int = R.attr.autoCompleteTextViewStyle
 ) : AppCompatAutoCompleteTextView(context, attrs, defStyleAttr), SkinSupportable {
     private var mDropDownBackgroundResId = INVALID_ID
-    private val mTextHelper: SkinTextHelper?
-    private val mBackgroundTintHelper: SkinBackgroundHelper?
+    private val mTextHelper = SkinTextHelper.create(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         val a = context.obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0)
@@ -29,9 +30,7 @@ class SkinCompatAutoCompleteTextView @JvmOverloads constructor(
         }
         a.recycle()
         applyDropDownBackgroundResource()
-        mBackgroundTintHelper = SkinBackgroundHelper(this)
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
-        mTextHelper = SkinTextHelper.create(this)
         mTextHelper.loadFromAttributes(attrs, defStyleAttr)
     }
 
@@ -52,7 +51,7 @@ class SkinCompatAutoCompleteTextView @JvmOverloads constructor(
 
     override fun setBackgroundResource(@DrawableRes resId: Int) {
         super.setBackgroundResource(resId)
-        mBackgroundTintHelper?.setSrcId(resId)
+        mBackgroundTintHelper.setSrcId(resId)
     }
 
     override fun setTextAppearance(resId: Int) {
@@ -61,26 +60,26 @@ class SkinCompatAutoCompleteTextView @JvmOverloads constructor(
 
     override fun setTextAppearance(context: Context, resId: Int) {
         super.setTextAppearance(context, resId)
-        mTextHelper?.onSetTextAppearance(context, resId)
+        mTextHelper.onSetTextAppearance(context, resId)
     }
 
     override fun setCompoundDrawablesRelativeWithIntrinsicBounds(
         @DrawableRes start: Int, @DrawableRes top: Int, @DrawableRes end: Int, @DrawableRes bottom: Int
     ) {
         super.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
-        mTextHelper?.onSetCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
+        mTextHelper.onSetCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
     }
 
     override fun setCompoundDrawablesWithIntrinsicBounds(
         @DrawableRes left: Int, @DrawableRes top: Int, @DrawableRes right: Int, @DrawableRes bottom: Int
     ) {
         super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom)
-        mTextHelper?.onSetCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom)
+        mTextHelper.onSetCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom)
     }
 
     override fun applySkin() {
-        mBackgroundTintHelper?.applySkin()
-        mTextHelper?.applySkin()
+        mBackgroundTintHelper.applySkin()
+        mTextHelper.applySkin()
         applyDropDownBackgroundResource()
     }
 

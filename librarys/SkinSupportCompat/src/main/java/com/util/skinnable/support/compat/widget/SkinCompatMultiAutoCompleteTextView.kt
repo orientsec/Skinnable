@@ -20,6 +20,7 @@ class SkinCompatMultiAutoCompleteTextView @JvmOverloads constructor(
     private var mDropDownBackgroundResId = INVALID_ID
     private val mTextHelper = SkinTextHelper.create(this)
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         val a = context.obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0)

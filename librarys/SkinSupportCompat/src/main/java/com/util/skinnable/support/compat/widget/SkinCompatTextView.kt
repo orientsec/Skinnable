@@ -4,17 +4,18 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
+import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.compat.helpers.SkinTextHelper
-import com.util.skin.library.widget.SkinSupportable
 
 class SkinCompatTextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = android.R.attr.textViewStyle
 ) : AppCompatTextView(context, attrs, defStyleAttr), SkinSupportable {
-    private val mTextHelper= SkinTextHelper.create(this)
-    private val mBackgroundTintHelper= SkinBackgroundHelper(this)
+    private val mTextHelper = SkinTextHelper.create(this)
+    private val mBackgroundTintHelper = SkinBackgroundHelper(this)
+    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
