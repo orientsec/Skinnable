@@ -25,7 +25,6 @@ open class SkinTextHelper(view: TextView) : SkinHelper(view) {
         get() = super.mView as TextView
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
-        super.loadFromAttributes(attrs, defStyleAttr)
         val context = mView.context
 
         // First read the TextAppearance style id

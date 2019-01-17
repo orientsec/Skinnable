@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private var loadDefault = true
+    private var loadDefault2 = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +20,15 @@ class MainActivity : AppCompatActivity() {
                 SkinManager.restoreDefaultSkin()
             }
             loadDefault = !loadDefault
+        }
+
+        tv_text2.setOnClickListener {
+            if (loadDefault2) {
+                SkinManager.loadSkin("night", SkinLoaderStrategyType.BuildIn)
+            } else {
+                SkinManager.restoreDefaultSkin()
+            }
+            loadDefault2 = !loadDefault2
         }
     }
 }

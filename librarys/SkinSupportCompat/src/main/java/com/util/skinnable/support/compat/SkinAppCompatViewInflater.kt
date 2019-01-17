@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewParent
 import androidx.appcompat.view.ContextThemeWrapper
@@ -13,7 +14,6 @@ import androidx.appcompat.widget.VectorEnabledTintResources
 import androidx.core.view.ViewCompat
 import com.util.skin.library.app.SkinLayoutInflater
 import com.util.skin.library.app.SkinWrapper
-import com.util.skin.library.utils.Slog
 import com.util.skinnable.support.compat.widget.*
 
 @SuppressLint("PrivateResource")
@@ -138,7 +138,7 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
             themeId = a.getResourceId(R.styleable.View_theme, 0)
 
             if (themeId != 0) {
-                Slog.i(LOG_TAG, "app:theme is now deprecated. " + "Please move to using android:theme instead.")
+                Log.i(LOG_TAG, "app:theme is now deprecated. " + "Please move to using android:theme instead.")
             }
         }
         a.recycle()
@@ -152,7 +152,7 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
     }
 
     companion object {
-        private const val LOG_TAG = "SkinAppCompatViewInflater"
+        private const val LOG_TAG = "SkinViewInflater"
     }
 
 }

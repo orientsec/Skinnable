@@ -29,7 +29,13 @@ class SkinMaterialNavigationView @JvmOverloads constructor(
     private var mDefaultTintResId = INVALID_ID
     private var mIconTintResId = INVALID_ID
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, 0)

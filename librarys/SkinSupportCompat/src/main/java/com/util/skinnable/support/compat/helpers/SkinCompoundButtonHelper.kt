@@ -17,7 +17,6 @@ class SkinCompoundButtonHelper(view: CompoundButton) : SkinHelper(view) {
         get() = super.mView as CompoundButton
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
-        super.loadFromAttributes(attrs, defStyleAttr)
         val a = mView.context.obtainStyledAttributes(
             attrs, R.styleable.CompoundButton,
             defStyleAttr, INVALID_ID

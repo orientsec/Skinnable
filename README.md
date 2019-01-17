@@ -3,7 +3,7 @@
 
 # 使用方法
 ## 1.引用Library
-``` 
+``` groovy
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.11'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.0.1'
@@ -84,12 +84,12 @@ sourceSets {
 ## 将需要换肤的资源放到res目录下(同名资源)
 例如 APK中窗口背景颜色为
 colors.xml
-```
+``` xml
 <color name="background">#ffffff</color>
 ```
 那么夜间模式你可以在skin-night工程中设置
 colors.xml
-```
+``` xml
 <color name="background">#000000</c
 ```
 ## 打包生成apk, 即为皮肤包
@@ -104,7 +104,7 @@ SkinManager.loadSkin("skin.night", SkinLoaderStrategyType.Assets)
 # 自定义加载策略:
 ## 自定义sdcard路径
 继承自SkinSDCardLoader，通过getSkinPath方法指定皮肤加载路径，通过getType方法指定加载器type。
-```
+``` java
 public class CustomSDCardLoader extends SkinSDCardLoader {
     @Override
     protected String getSkinPath(Context context, String skinName) {
@@ -120,18 +120,18 @@ public class CustomSDCardLoader extends SkinSDCardLoader {
 注: 自定义加载器type 值最好从整数最大值开始递减，框架的type值从小数开始递增，以免将来框架升级造成type 值冲突
 
 ## 在Application中，添加自定义加载策略:
-```
-SkinManager.addStrategy(CustomSDCardLoader());          // 自定义加载策略，指定SDCard路径
+``` kotlin
+SkinManager.addStrategy(CustomSDCardLoader())          // 自定义加载策略，指定SDCard路径
 ```
 注: 自定义加载器必须在Application中注册，皮肤切换后，重启应用需要根据当前策略加载皮肤
 
 使用自定义加载器加载皮肤:
-```
-SkinManager.loadSkin("night.skin", null, SkinLoaderStrategyType.SDCard);
+``` kotlin
+SkinManager.loadSkin("night.skin", null, SkinLoaderStrategyType.SDCard)
 ```
 ## zip包中加载资源
 继承自SkinSDCardLoader，在loadSkinInBackground方法中解压资源，在getDrawable等方法中返回加压后的资源。
-```
+``` java
 public class ZipSDCardLoader extends SkinSDCardLoader {
 
     @Override
@@ -161,6 +161,6 @@ public class ZipSDCardLoader extends SkinSDCardLoader {
 资源加载策略更灵活，不仅仅只有皮肤包，开发者可配置任意资源获取方式(Zip/Apk/Json...)。
 
 在Application中，添加自定义加载策略:
-```
-SkinManager.addStrategy(ZipSDCardLoader());          // 自定义加载策略，加载zip包中的资源
+``` kotlin
+SkinManager.addStrategy(ZipSDCardLoader())          // 自定义加载策略，加载zip包中的资源
 ```

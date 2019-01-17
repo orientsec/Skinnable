@@ -41,7 +41,6 @@ open class SkinProgressBarHelper constructor(view: ProgressBar) : SkinHelper(vie
         }
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
-        super.loadFromAttributes(attrs, defStyleAttr)
         var a = mView.context.obtainStyledAttributes(attrs, R.styleable.SkinCompatProgressBar, defStyleAttr, 0)
 
         mIndeterminateDrawableResId =

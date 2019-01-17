@@ -19,7 +19,13 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
     private var mTabIndicatorColorResId = INVALID_ID
     private var mTabTextColorsResId = INVALID_ID
     private var mTabSelectedTextColorResId = INVALID_ID
-    override val skinnable: Boolean
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         val a = context.obtainStyledAttributes(
@@ -51,7 +57,6 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
             // this (theme attrs in ColorStateLists are Lollipop+)
             mTabSelectedTextColorResId = a.getResourceId(R.styleable.TabLayout_tabSelectedTextColor, INVALID_ID)
         }
-        skinnable = a.getBoolean(R.styleable.SkinSupportable_skinnable, false)
         a.recycle()
         applySkin()
     }

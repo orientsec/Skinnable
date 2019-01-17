@@ -11,6 +11,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatSpinner
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.helpers.SkinHelper.Companion.checkResourceIdValid
+import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
@@ -27,7 +28,13 @@ class SkinCompatSpinner @JvmOverloads constructor(
 
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
     private var mPopupBackgroundResId = INVALID_ID
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     constructor(context: Context, mode: Int) : this(context, null, R.attr.spinnerStyle, mode) {}
 

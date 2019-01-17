@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatRadioButton
+import com.util.skin.library.res.SkinResourcesManager
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.compat.helpers.SkinTextHelper
 import com.util.skin.library.widget.SkinSupportable
@@ -18,7 +19,13 @@ class SkinCompatRadioButton @JvmOverloads constructor(
     private val mTextHelper= SkinTextHelper.create(this)
     private val mCompoundButtonHelper= SkinCompoundButtonHelper(this)
     private val mBackgroundTintHelper= SkinBackgroundHelper(this)
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         mCompoundButtonHelper.loadFromAttributes(attrs, defStyleAttr)

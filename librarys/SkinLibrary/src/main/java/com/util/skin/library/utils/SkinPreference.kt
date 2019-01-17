@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.util.skin.library.loader.SkinLoaderStrategyType
 
-object SkinPreference {
+internal object SkinPreference {
     private lateinit var mPref: SharedPreferences
     private lateinit var mEditor: SharedPreferences.Editor
 

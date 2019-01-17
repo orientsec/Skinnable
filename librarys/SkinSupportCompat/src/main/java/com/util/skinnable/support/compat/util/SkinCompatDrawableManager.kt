@@ -266,10 +266,10 @@ internal object SkinCompatDrawableManager {
                         val parser = SkinResourcesManager.getXml(context, resId)
                         val attrs = Xml.asAttributeSet(parser)
                         var type = parser.next()
-                        while (type != XmlPullParser.START_TAG && type != XmlPullParser.END_DOCUMENT
+                        while (type != XmlPullParser.START_TAG
+                            && type != XmlPullParser.END_DOCUMENT
                         ) {
-                            type =
-                                    parser.next()
+                            type = parser.next()
                             // Empty loop
                         }
                         if (type != XmlPullParser.START_TAG) {

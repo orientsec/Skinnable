@@ -21,7 +21,13 @@ class SkinMaterialFloatingActionButton @JvmOverloads constructor(
     private var mBackgroundTintResId = INVALID_ID
 
     private val mImageHelper = SkinImageHelper(this)
-    override val skinnable: Boolean by lazy { mImageHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         val a = context.obtainStyledAttributes(

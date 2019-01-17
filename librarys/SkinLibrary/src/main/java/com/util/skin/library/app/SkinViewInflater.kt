@@ -36,16 +36,13 @@ internal object SkinViewInflater {
      * 根据name重建View
      */
     private fun createViewFromInflater(context: Context, name: String, attrs: AttributeSet): View? {
-        var view: View? = null
-        for (inflater in SkinManager.inflaters) {
-            view = inflater.createView(context, name, attrs)
-            if (view == null) {
-                continue
-            } else {
-                break
-            }
+        SkinManager.inflaters.forEach { inflater ->
+            inflater.createView(context, name, attrs)
+                ?.let {
+                    return it
+                }
         }
-        return view
+        return null
     }
 
     private fun createViewFromTag(context: Context, name: String, attrs: AttributeSet): View? {
@@ -56,7 +53,7 @@ internal object SkinViewInflater {
 
         try {
             if (!tempName.contains('.')) {
-                for (cls in sClassPrefixList) {
+                sClassPrefixList.forEach { cls ->
                     createView(context, tempName, cls, attrs)
                         ?.let { return it }
                 }
@@ -88,10 +85,10 @@ internal object SkinViewInflater {
         }
 
         val a = context.obtainStyledAttributes(attrs, sOnClickAttrs)
-        val handlerName = a.getString(0)
-        if (handlerName != null) {
-            view.setOnClickListener(DeclaredOnClickListener(view, handlerName))
-        }
+        a.getString(0)
+            ?.let { handlerName ->
+                view.setOnClickListener(DeclaredOnClickListener(view, handlerName))
+            }
         a.recycle()
     }
 

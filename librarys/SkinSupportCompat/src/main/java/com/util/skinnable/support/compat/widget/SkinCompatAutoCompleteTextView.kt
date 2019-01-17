@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
+import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
@@ -21,7 +22,13 @@ class SkinCompatAutoCompleteTextView @JvmOverloads constructor(
     private var mDropDownBackgroundResId = INVALID_ID
     private val mTextHelper = SkinTextHelper.create(this)
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         val a = context.obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0)

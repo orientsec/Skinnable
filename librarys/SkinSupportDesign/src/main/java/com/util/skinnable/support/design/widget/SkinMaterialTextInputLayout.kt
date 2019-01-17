@@ -27,12 +27,18 @@ class SkinMaterialTextInputLayout @JvmOverloads constructor(
     private var mErrorTextColorResId = INVALID_ID
     private var mFocusedTextColorResId = INVALID_ID
     private var mDefaultTextColorResId = INVALID_ID
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     private val counterView: TextView?
         get() {
             try {
-                val counterView = TextInputLayout::class.java!!.getDeclaredField("mCounterView")
+                val counterView = TextInputLayout::class.java.getDeclaredField("mCounterView")
                 counterView.isAccessible = true
                 return counterView.get(this) as TextView?
             } catch (e: Exception) {

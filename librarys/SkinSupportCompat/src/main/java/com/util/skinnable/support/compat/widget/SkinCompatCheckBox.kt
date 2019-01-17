@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatCheckBox
+import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.compat.R
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
@@ -19,7 +20,13 @@ class SkinCompatCheckBox @JvmOverloads constructor(
     private val mTextHelper = SkinTextHelper.create(this)
     private val mBackgroundTintHelper: SkinBackgroundHelper =
         SkinBackgroundHelper(this)
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         mCompoundButtonHelper.loadFromAttributes(attrs, defStyleAttr)

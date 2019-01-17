@@ -3,6 +3,7 @@ package com.util.skinnable.support.compat.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import com.util.skin.library.res.SkinResourcesManager
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skin.library.widget.SkinSupportable
 
@@ -12,7 +13,13 @@ class SkinCompatRelativeLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr), SkinSupportable {
     private val mBackgroundTintHelper= SkinBackgroundHelper(this)
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)

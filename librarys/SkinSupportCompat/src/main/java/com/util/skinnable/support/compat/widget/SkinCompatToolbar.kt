@@ -23,7 +23,13 @@ class SkinCompatToolbar @JvmOverloads constructor(
     private var mSubtitleTextColorResId = INVALID_ID
     private var mNavigationIconResId = INVALID_ID
     private val mBackgroundTintHelper = SkinBackgroundHelper(this)
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)

@@ -147,25 +147,22 @@ object SkinManager : SkinObservable(), CoroutineScope {
             try {
                 // 加载资源
                 loadTask(skinName, loaderStrategy)
-                // skinName 为""时，恢复默认皮肤
-                SkinPreference.setSkinName(skinName).setSkinStrategy(loaderStrategy.type).commitEditor()
                 notifyUpdateSkin()
                 listener?.onSuccess()
             } catch (e: Exception) {
-                e.printStackTrace()
-
                 SkinResourcesManager.reset()
-                SkinPreference.setSkinName("").setSkinStrategy(SkinLoaderStrategyType.Default).commitEditor()
                 listener?.onFailed("皮肤资源获取失败")
+                e.printStackTrace()
             }
             skinLoading = false
         }
     }
 
     private suspend fun loadTask(skinName: String, strategy: SkinLoaderStrategy) {
-        val backName = strategy.loadSkinInBackground(context, skinName)
-        if (TextUtils.isEmpty(backName)) {
-            SkinResourcesManager.reset(strategy)
+        val backSkinName = strategy.loadSkinInBackground(context, skinName)
+        // backSkinName 为""时，恢复默认皮肤
+        if (TextUtils.isEmpty(backSkinName)) {
+            SkinResourcesManager.reset()
         }
     }
 
@@ -176,9 +173,9 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * @return
      */
     internal fun getSkinPackageName(skinPkgPath: String): String {
-        val mPm = context.packageManager
-        val info = mPm.getPackageArchiveInfo(skinPkgPath, PackageManager.GET_ACTIVITIES)
-        return info.packageName
+        return context.packageManager
+            .getPackageArchiveInfo(skinPkgPath, PackageManager.GET_ACTIVITIES)
+            .packageName
     }
 
     /**

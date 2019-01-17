@@ -2,7 +2,7 @@ package com.util.skin.library.utils
 
 import android.util.Log
 
-object Slog {
+internal object Slog {
     var DEBUG = false
     private const val TAG = "skin-support"
 

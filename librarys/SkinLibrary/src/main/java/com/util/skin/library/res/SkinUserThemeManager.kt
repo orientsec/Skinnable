@@ -29,12 +29,14 @@ object SkinUserThemeManager {
     private val mColorCaches = WeakHashMap<Int, WeakReference<ColorStateList>>()
     var isColorEmpty: Boolean = false
         private set
+        get() = mColorNameStateMap.isEmpty()
 
     private val mDrawablePathAndAngleMap = HashMap<String, String>()
     private val mDrawableCacheLock = java.lang.Object()
     private val mDrawableCaches = WeakHashMap<Int, WeakReference<Drawable>>()
     var isDrawableEmpty: Boolean = false
         private set
+        get() = mDrawablePathAndAngleMap.isEmpty()
 
     private const val TAG = "SkinCompatUserThemeManager"
     private const val KEY_TYPE = "type"
@@ -91,8 +93,6 @@ object SkinUserThemeManager {
                     }
                 }
             }
-            isColorEmpty = mColorNameStateMap.isEmpty()
-            isDrawableEmpty = mDrawablePathAndAngleMap.isEmpty()
         }
     }
 
@@ -110,10 +110,10 @@ object SkinUserThemeManager {
             }
         }
         for (drawableName in mDrawablePathAndAngleMap.keys) {
-            val `object` = JSONObject()
+            val jsonObject = JSONObject()
             try {
                 jsonArray.put(
-                    `object`.putOpt(KEY_TYPE, KEY_TYPE_DRAWABLE)
+                    jsonObject.putOpt(KEY_TYPE, KEY_TYPE_DRAWABLE)
                         .putOpt(KEY_DRAWABLE_NAME, drawableName)
                         .putOpt(KEY_DRAWABLE_PATH_AND_ANGLE, mDrawablePathAndAngleMap[drawableName])
                 )
@@ -135,7 +135,6 @@ object SkinUserThemeManager {
             state.colorName = entry!!
             mColorNameStateMap[entry] = state
             removeColorInCache(colorRes)
-            isColorEmpty = false
         }
     }
 
@@ -147,7 +146,6 @@ object SkinUserThemeManager {
         if (!TextUtils.isEmpty(entry)) {
             mColorNameStateMap[entry!!] = ColorState(entry, colorDefault)
             removeColorInCache(colorRes)
-            isColorEmpty = false
         }
     }
 
@@ -156,14 +154,12 @@ object SkinUserThemeManager {
         if (!TextUtils.isEmpty(entry)) {
             mColorNameStateMap.remove(entry)
             removeColorInCache(colorRes)
-            isColorEmpty = mColorNameStateMap.isEmpty()
         }
     }
 
     internal fun removeColorState(colorName: String) {
         if (!TextUtils.isEmpty(colorName)) {
             mColorNameStateMap.remove(colorName)
-            isColorEmpty = mColorNameStateMap.isEmpty()
         }
     }
 
@@ -205,7 +201,6 @@ object SkinUserThemeManager {
             val drawablePathAndAngle = drawablePath + ":" + angle.toString()
             mDrawablePathAndAngleMap[entry!!] = drawablePathAndAngle
             removeDrawableInCache(drawableRes)
-            isDrawableEmpty = false
         }
     }
 
@@ -218,7 +213,6 @@ object SkinUserThemeManager {
             val drawablePathAndAngle = drawablePath + ":" + angle.toString()
             mDrawablePathAndAngleMap[entry!!] = drawablePathAndAngle
             removeDrawableInCache(drawableRes)
-            isDrawableEmpty = false
         }
     }
 
@@ -227,7 +221,6 @@ object SkinUserThemeManager {
         if (!TextUtils.isEmpty(entry)) {
             mDrawablePathAndAngleMap.remove(entry)
             removeDrawableInCache(drawableRes)
-            isDrawableEmpty = mDrawablePathAndAngleMap.isEmpty()
         }
     }
 
@@ -293,14 +286,12 @@ object SkinUserThemeManager {
     fun clearColors() {
         mColorNameStateMap.clear()
         clearColorCaches()
-        isColorEmpty = true
         apply()
     }
 
     fun clearDrawables() {
         mDrawablePathAndAngleMap.clear()
         clearDrawableCaches()
-        isDrawableEmpty = true
         apply()
     }
 

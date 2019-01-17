@@ -22,7 +22,13 @@ class SkinMaterialBottomNavigationView @JvmOverloads constructor(
     private var mTextColorResId = INVALID_ID
     private var mIconTintResId = INVALID_ID
     private var mDefaultTintResId = INVALID_ID
-    override val skinnable: Boolean
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         val a = context.obtainStyledAttributes(
@@ -40,7 +46,6 @@ class SkinMaterialBottomNavigationView @JvmOverloads constructor(
         } else {
             mDefaultTintResId = resolveColorPrimary()
         }
-        skinnable = a.getBoolean(R.styleable.SkinSupportable_skinnable, false)
         a.recycle()
         applyItemIconTintResource()
         applyItemTextColorResource()

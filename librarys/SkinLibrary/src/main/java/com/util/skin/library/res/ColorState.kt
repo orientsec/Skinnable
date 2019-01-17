@@ -4,16 +4,12 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.text.TextUtils
-
+import androidx.annotation.ColorRes
 import com.util.skin.library.exception.SkinCompatException
 import com.util.skin.library.utils.Slog
-
 import org.json.JSONException
 import org.json.JSONObject
-
-import java.util.ArrayList
-
-import androidx.annotation.ColorRes
+import java.util.*
 
 class ColorState {
     var isOnlyDefaultColor: Boolean = false
@@ -45,10 +41,12 @@ class ColorState {
     var colorDefault: String = ""
         internal set
 
-    internal constructor(colorWindowFocused: String, colorSelected: String, colorFocused: String,
-                         colorEnabled: String, colorPressed: String, colorChecked: String, colorActivated: String,
-                         colorAccelerated: String, colorHovered: String, colorDragCanAccept: String,
-                         colorDragHovered: String, colorDefault: String) {
+    internal constructor(
+        colorWindowFocused: String, colorSelected: String, colorFocused: String,
+        colorEnabled: String, colorPressed: String, colorChecked: String, colorActivated: String,
+        colorAccelerated: String, colorHovered: String, colorDragCanAccept: String,
+        colorDragHovered: String, colorDefault: String
+    ) {
         this.colorWindowFocused = colorWindowFocused
         this.colorSelected = colorSelected
         this.colorFocused = colorFocused
@@ -479,9 +477,11 @@ class ColorState {
             if (TextUtils.isEmpty(colorDefault)) {
                 throw SkinCompatException("Default color can not empty!")
             }
-            return ColorState(colorWindowFocused, colorSelected, colorFocused,
-                    colorEnabled, colorPressed, colorChecked, colorActivated, colorAccelerated,
-                    colorHovered, colorDragCanAccept, colorDragHovered, colorDefault)
+            return ColorState(
+                colorWindowFocused, colorSelected, colorFocused,
+                colorEnabled, colorPressed, colorChecked, colorActivated, colorAccelerated,
+                colorHovered, colorDragCanAccept, colorDragHovered, colorDefault
+            )
         }
     }
 
@@ -504,31 +504,32 @@ class ColorState {
             val jsonObject = JSONObject()
             if (state.isOnlyDefaultColor) {
                 jsonObject.putOpt("colorName", state.colorName)
-                        .putOpt("colorDefault", state.colorDefault)
-                        .putOpt("onlyDefaultColor", state.isOnlyDefaultColor)
+                    .putOpt("colorDefault", state.colorDefault)
+                    .putOpt("onlyDefaultColor", state.isOnlyDefaultColor)
             } else {
                 jsonObject.putOpt("colorName", state.colorName)
-                        .putOpt("colorWindowFocused", state.colorWindowFocused)
-                        .putOpt("colorSelected", state.colorSelected)
-                        .putOpt("colorFocused", state.colorFocused)
-                        .putOpt("colorEnabled", state.colorEnabled)
-                        .putOpt("colorPressed", state.colorPressed)
-                        .putOpt("colorChecked", state.colorChecked)
-                        .putOpt("colorActivated", state.colorActivated)
-                        .putOpt("colorAccelerated", state.colorAccelerated)
-                        .putOpt("colorHovered", state.colorHovered)
-                        .putOpt("colorDragCanAccept", state.colorDragCanAccept)
-                        .putOpt("colorDragHovered", state.colorDragHovered)
-                        .putOpt("colorDefault", state.colorDefault)
-                        .putOpt("onlyDefaultColor", state.isOnlyDefaultColor)
+                    .putOpt("colorWindowFocused", state.colorWindowFocused)
+                    .putOpt("colorSelected", state.colorSelected)
+                    .putOpt("colorFocused", state.colorFocused)
+                    .putOpt("colorEnabled", state.colorEnabled)
+                    .putOpt("colorPressed", state.colorPressed)
+                    .putOpt("colorChecked", state.colorChecked)
+                    .putOpt("colorActivated", state.colorActivated)
+                    .putOpt("colorAccelerated", state.colorAccelerated)
+                    .putOpt("colorHovered", state.colorHovered)
+                    .putOpt("colorDragCanAccept", state.colorDragCanAccept)
+                    .putOpt("colorDragHovered", state.colorDragHovered)
+                    .putOpt("colorDefault", state.colorDefault)
+                    .putOpt("onlyDefaultColor", state.isOnlyDefaultColor)
             }
             return jsonObject
         }
 
         internal fun fromJSONObject(jsonObject: JSONObject): ColorState? {
             if (jsonObject.has("colorName")
-                    && jsonObject.has("colorDefault")
-                    && jsonObject.has("onlyDefaultColor")) {
+                && jsonObject.has("colorDefault")
+                && jsonObject.has("onlyDefaultColor")
+            ) {
                 try {
                     val onlyDefaultColor = jsonObject.getBoolean("onlyDefaultColor")
                     val colorName = jsonObject.getString("colorName")

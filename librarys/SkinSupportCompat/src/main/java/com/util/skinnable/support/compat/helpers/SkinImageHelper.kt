@@ -13,7 +13,6 @@ class SkinImageHelper(view: ImageView) : SkinHelper(view) {
         get() = super.mView as ImageView
 
     override fun loadFromAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
-        super.loadFromAttributes(attrs, defStyleAttr)
         var a: TypedArray? = null
         try {
             a = mView.context.obtainStyledAttributes(attrs, R.styleable.SkinCompatImageView, defStyleAttr, 0)

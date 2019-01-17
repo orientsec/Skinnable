@@ -1,13 +1,16 @@
 package com.util.skinnable.support.compat.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatButton
+import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.widget.SkinSupportable
 import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.compat.helpers.SkinTextHelper
 
+@SuppressLint("CustomViewStyleable")
 class SkinCompatButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -16,7 +19,13 @@ class SkinCompatButton @JvmOverloads constructor(
     private val mTextHelper: SkinTextHelper = SkinTextHelper.create(this)
     private val mBackgroundTintHelper: SkinBackgroundHelper =
         SkinBackgroundHelper(this)
-    override val skinnable: Boolean by lazy { mBackgroundTintHelper.skinnable }
+    override val skinnable: Boolean by lazy {
+        return@lazy SkinResourcesManager.parseSkinnable(
+            context,
+            attrs,
+            defStyleAttr
+        )
+    }
 
     init {
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr)
