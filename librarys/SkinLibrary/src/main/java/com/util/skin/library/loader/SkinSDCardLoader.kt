@@ -1,33 +1,25 @@
 package com.util.skin.library.loader
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
 import android.text.TextUtils
-
 import com.util.skin.library.SkinManager
-import com.util.skin.library.res.SkinResourcesManager
-import com.util.skin.library.utils.SkinFileUtils
+import com.util.skin.library.model.SkinResModel
+import com.util.skin.library.utils.isFileExists
 
 /**
  * SD卡中加载器
  */
-abstract class SkinSDCardLoader : SkinLoaderStrategy {
-    override fun loadSkinInBackground(context: Context, skinName: String): String? {
+abstract class SkinSDCardLoader : BaseSkinLoaderStrategy() {
+    override suspend fun initLoader(context: Context, skinName: String): String? {
         if (TextUtils.isEmpty(skinName)) {
             return skinName
         }
         val skinPkgPath = getSkinPath(context, skinName)
-        if (SkinFileUtils.isFileExists(skinPkgPath)) {
+        if (isFileExists(skinPkgPath)) {
             val pkgName = SkinManager.getSkinPackageName(skinPkgPath)
             val resources = SkinManager.getSkinResources(skinPkgPath)
             if (resources != null && !TextUtils.isEmpty(pkgName)) {
-                SkinResourcesManager.setupSkin(
-                    resources,
-                    pkgName,
-                    skinName,
-                    this
-                )
+                resModel = SkinResModel(resources, pkgName, skinName)
                 return skinName
             }
         }
@@ -40,15 +32,4 @@ abstract class SkinSDCardLoader : SkinLoaderStrategy {
         return null
     }
 
-    override fun getColor(context: Context, skinName: String, resId: Int): ColorStateList? {
-        return null
-    }
-
-    override fun getColorStateList(context: Context, skinName: String, resId: Int): ColorStateList? {
-        return null
-    }
-
-    override fun getDrawable(context: Context, skinName: String, resId: Int): Drawable? {
-        return null
-    }
 }

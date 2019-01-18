@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import com.util.skin.library.loader.SkinLoaderStrategyType
+import com.util.skin.library.model.ResEntry
 
 internal object SkinPreference {
     private lateinit var mPref: SharedPreferences
@@ -11,9 +12,8 @@ internal object SkinPreference {
 
     private const val FILE_NAME = "meta-data"
 
-    private const val KEY_SKIN_NAME = "skin-name"
-    private const val KEY_SKIN_STRATEGY = "skin-strategy"
     private const val KEY_SKIN_USER_THEME = "skin-user-theme-json"
+    private const val KEY_SKIN_RESOURCES = "key_skin_resources"
 
     @SuppressLint("CommitPrefEdits")
     fun init(context: Context) {
@@ -21,27 +21,50 @@ internal object SkinPreference {
         mEditor = mPref.edit()
     }
 
-    val skinName: String
-        get() = mPref.getString(KEY_SKIN_NAME, "") ?: ""
-
-    val skinStrategy: Int
-        get() = mPref.getInt(KEY_SKIN_STRATEGY, SkinLoaderStrategyType.Default.type)
-
     val userTheme: String
         get() = mPref.getString(KEY_SKIN_USER_THEME, "") ?: ""
 
-    fun setSkinName(skinName: String): SkinPreference {
-        mEditor.putString(KEY_SKIN_NAME, skinName)
-        return this
-    }
+    private val keyRes: String
+        get() = mPref.getString(KEY_SKIN_RESOURCES, "") ?: ""
 
-    fun setSkinStrategy(strategy: SkinLoaderStrategyType): SkinPreference {
-        mEditor.putInt(KEY_SKIN_STRATEGY, strategy.type)
-        return this
-    }
+    val resEntries: HashSet<ResEntry>
+        get() {
+            val entrySet = hashSetOf<ResEntry>()
+            val set = keyRes.split(";").toHashSet()
+            set.forEach { value ->
+                if (value.isNotBlank() && value.contains(":")) {
+                    val params = value.split(":")
+                    entrySet.add(ResEntry(params[0], SkinLoaderStrategyType.parseType(params[1].toInt())))
+                }
+            }
+            return entrySet
+        }
 
     fun setUserTheme(themeJson: String): SkinPreference {
         mEditor.putString(KEY_SKIN_USER_THEME, themeJson)
+        return this
+    }
+
+    fun addResources(value: String): SkinPreference {
+        val set = keyRes.split(";").toHashSet()
+        if (set.contains(value)) return this
+        set.add(value)
+        val saveValue = set.fold("") { acc, s -> "$acc$s;" }
+        mEditor.putString(KEY_SKIN_RESOURCES, saveValue)
+        return this
+    }
+
+    fun removeResources(value: String): SkinPreference {
+        val set = keyRes.split(";").toHashSet()
+        if (!set.contains(value)) return this
+        set.remove(value)
+        val saveValue = set.fold("") { acc, s -> "$acc$s;" }
+        mEditor.putString(KEY_SKIN_RESOURCES, saveValue)
+        return this
+    }
+
+    fun resetResources(): SkinPreference {
+        mEditor.putString(KEY_SKIN_RESOURCES, "")
         return this
     }
 

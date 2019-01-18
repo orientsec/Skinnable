@@ -7,8 +7,6 @@ package com.util.skin.library.loader
  * @author zhanglei
  */
 enum class SkinLoaderStrategyType(val type: Int) {
-    /**默认*/
-    Default(-1),
     /**ASSETS中加载*/
     Assets(0),
     /**后缀加载*/
@@ -23,6 +21,6 @@ enum class SkinLoaderStrategyType(val type: Int) {
     companion object {
         private val map by lazy { SkinLoaderStrategyType.values().associateBy { it.type } }
         fun parseType(type: Int): SkinLoaderStrategyType = map[type]
-            ?: SkinLoaderStrategyType.Default
+            ?: throw RuntimeException("没有对应的SkinLoaderStrategyType")
     }
 }

@@ -2,17 +2,14 @@ package com.util.skin.library.res
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.content.res.XmlResourceParser
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.annotation.AnyRes
 import androidx.core.content.res.ResourcesCompat
 import com.util.skin.library.R
-import com.util.skin.library.SkinManager
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.loader.SkinLoaderStrategy
 import com.util.skin.library.loader.SkinLoaderStrategyType
@@ -20,70 +17,51 @@ import com.util.skin.library.utils.SkinPreference
 import java.util.*
 
 object SkinResourcesManager {
-    private var skinResources: Resources? = null
-    private var skinPkgName = ""
-    private var mSkinName = ""
-    private var strategy: SkinLoaderStrategy? = null
     private val mSkinResources = ArrayList<SkinResources>()
+    private val strategyMap = hashMapOf<String, SkinLoaderStrategy>()
 
     /**默认皮肤*/
     var isDefaultSkin = true
         private set
+        get() = strategyMap.isEmpty()
 
     fun addSkinResources(resources: SkinResources) {
         mSkinResources.add(resources)
     }
 
-    internal fun reset() {
-        SkinPreference.setSkinName("")
-            .setSkinStrategy(SkinLoaderStrategyType.Default)
-            .commitEditor()
-        skinResources = SkinManager.context.resources
-        skinPkgName = ""
-        mSkinName = ""
-        SkinResourcesManager.strategy = SkinManager.strategies[SkinLoaderStrategyType.Default]!!
-        isDefaultSkin = true
+    /**
+     * 增加策略
+     */
+    fun addStrategy(skinName: String, strategy: SkinLoaderStrategy) {
+        strategyMap[getSkinResourcesKey(skinName, strategy.type)] = strategy
+        val value = getSkinResourcesKey(skinName, strategy.type)
+        SkinPreference.addResources(value).commitEditor()
+    }
+
+    /**
+     * 删除策略
+     */
+    fun removeStrategy(skinName: String, strategyType: SkinLoaderStrategyType) {
+        strategyMap.remove(getSkinResourcesKey(skinName, strategyType))
+        val value = getSkinResourcesKey(skinName, strategyType)
+        SkinPreference.removeResources(value).commitEditor()
+    }
+
+    /**
+     * 恢复默认皮肤
+     */
+    fun resetDefault() {
+        strategyMap.clear()
+        SkinPreference.resetResources().commitEditor()
         SkinUserThemeManager.clearCaches()
         for (skinResources in mSkinResources) {
             skinResources.clear()
         }
     }
 
-    fun setupSkin(resources: Resources?, pkgName: String, skinName: String, strategy: SkinLoaderStrategy) {
-        if (resources == null || TextUtils.isEmpty(pkgName) || TextUtils.isEmpty(skinName)) {
-            reset()
-            return
-        }
-        SkinPreference.setSkinName(skinName)
-            .setSkinStrategy(strategy.type)
-            .commitEditor()
-        skinResources = resources
-        skinPkgName = pkgName
-        mSkinName = skinName
-        SkinResourcesManager.strategy = strategy
-        isDefaultSkin = false
-        SkinUserThemeManager.clearCaches()
-        for (skinResources in mSkinResources) {
-            skinResources.clear()
-        }
-    }
-
-    internal fun getTargetResId(context: Context, resId: Int): Int {
-        return try {
-            var resName: String? = strategy?.getTargetResourceEntryName(context, mSkinName, resId)
-            if (TextUtils.isEmpty(resName)) {
-                resName = context.resources.getResourceEntryName(resId)
-            }
-            val type = context.resources.getResourceTypeName(resId)
-            skinResources!!.getIdentifier(resName, type, skinPkgName)
-        } catch (e: Exception) {
-            // 换肤失败不至于应用崩溃.
-            e.printStackTrace()
-            INVALID_ID
-        }
-
-    }
-
+    /**
+     * 获取颜色
+     */
     private fun getSkinColor(context: Context, resId: Int): Int {
         if (!SkinUserThemeManager.isColorEmpty) {
             SkinUserThemeManager.getColorStateList(resId)
@@ -91,36 +69,39 @@ object SkinResourcesManager {
                     return defaultColor
                 }
         }
-        strategy?.getColor(context, mSkinName, resId)
-            ?.apply {
-                return defaultColor
+        strategyMap.values
+            .sortedBy { strategy -> strategy.type.type }
+            .forEach { strategy ->
+                strategy.getColor(context, resId)
+                    .let {
+                        if (it != INVALID_ID) {
+                            return it
+                        }
+                    }
             }
-        if (!isDefaultSkin) {
-            val targetResId = getTargetResId(context, resId)
-            if (targetResId != INVALID_ID) {
-                return ResourcesCompat.getColor(skinResources!!, targetResId, context.theme)
-            }
-        }
         return ResourcesCompat.getColor(context.resources, resId, context.theme)
     }
 
+    /**
+     * 获取ColorStateList
+     */
     private fun getSkinColorStateList(context: Context, resId: Int): ColorStateList? {
         if (!SkinUserThemeManager.isColorEmpty) {
             SkinUserThemeManager.getColorStateList(resId)
                 ?.let { return it }
         }
-        strategy?.getColorStateList(context, mSkinName, resId)
-            ?.let { return it }
-        if (!isDefaultSkin) {
-            val targetResId = getTargetResId(context, resId)
-            if (targetResId != INVALID_ID) {
-                return ResourcesCompat.getColorStateList(skinResources!!, targetResId, context.theme)
-                    ?: ResourcesCompat.getColorStateList(context.resources, resId, context.theme)
+        strategyMap.values
+            .sortedBy { strategy -> strategy.type.type }
+            .forEach { strategy ->
+                strategy.getColorStateList(context, resId)
+                    ?.let { return it }
             }
-        }
         return ResourcesCompat.getColorStateList(context.resources, resId, context.theme)
     }
 
+    /**
+     * 获取Drawable
+     */
     private fun getSkinDrawable(context: Context, resId: Int): Drawable? {
         if (!SkinUserThemeManager.isColorEmpty) {
             SkinUserThemeManager.getColorStateList(resId)
@@ -134,47 +115,37 @@ object SkinResourcesManager {
                     return it
                 }
         }
-        strategy?.apply {
-            getDrawable(context, mSkinName, resId)?.let {
-                return it
+        // 使用每种策略中的resource加载资源
+        strategyMap.values
+            .sortedBy { strategy -> strategy.type.type }
+            .forEach { strategy ->
+                strategy.getDrawable(context, resId)
+                    ?.let { return it }
             }
-        }
-        if (!isDefaultSkin) {
-            val targetResId = getTargetResId(context, resId)
-            if (targetResId != INVALID_ID) {
-                return skinResources?.run {
-                    ResourcesCompat.getDrawable(this, targetResId, context.theme)
-                } ?: ResourcesCompat.getDrawable(context.resources, resId, context.theme)
-            }
-        }
         return ResourcesCompat.getDrawable(context.resources!!, resId, context.theme)
     }
 
-    fun getStrategyDrawable(context: Context, resId: Int): Drawable? {
-        return strategy?.getDrawable(context, mSkinName, resId)
-    }
-
     private fun getSkinXml(context: Context, resId: Int): XmlResourceParser {
-        if (!isDefaultSkin) {
-            val targetResId = getTargetResId(context, resId)
-            if (targetResId != INVALID_ID) {
-                return skinResources!!.getXml(targetResId)
-                    ?: context.resources.getXml(resId)
+        strategyMap.values
+            .sortedBy { strategy -> strategy.type.type }
+            .forEach { strategy ->
+                strategy.getXml(context, resId)
+                    ?.let { return it }
             }
-        }
         return context.resources.getXml(resId)
     }
 
     private fun getSkinValue(context: Context, @AnyRes resId: Int, outValue: TypedValue, resolveRefs: Boolean) {
-        if (!isDefaultSkin) {
-            val targetResId = getTargetResId(context, resId)
-            if (targetResId != INVALID_ID) {
-                skinResources!!.getValue(targetResId, outValue, resolveRefs)
-                return
+        strategyMap.values
+            .sortedBy { strategy -> strategy.type.type }
+            .forEach { strategy ->
+                strategy.getValue(context, resId, outValue, resolveRefs)
             }
-        }
         context.resources.getValue(resId, outValue, resolveRefs)
     }
+
+    private fun getSkinResourcesKey(skinName: String, strategyType: SkinLoaderStrategyType): String =
+        "$skinName:${strategyType.type}"
 
     fun getColor(context: Context, resId: Int): Int {
         return getSkinColor(context, resId)

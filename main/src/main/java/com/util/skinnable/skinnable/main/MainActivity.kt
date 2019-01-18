@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
             if (loadDefault) {
                 SkinManager.loadSkin("skin.night", SkinLoaderStrategyType.Assets)
             } else {
-                SkinManager.restoreDefaultSkin()
+                SkinManager.resetSkin("skin.night", SkinLoaderStrategyType.Assets)
             }
             loadDefault = !loadDefault
         }
@@ -26,9 +26,12 @@ class MainActivity : AppCompatActivity() {
             if (loadDefault2) {
                 SkinManager.loadSkin("night", SkinLoaderStrategyType.BuildIn)
             } else {
-                SkinManager.restoreDefaultSkin()
+                SkinManager.resetSkin("night", SkinLoaderStrategyType.BuildIn)
             }
             loadDefault2 = !loadDefault2
+        }
+        tv_text3.setOnClickListener {
+            SkinManager.restoreDefaultSkin()
         }
     }
 }

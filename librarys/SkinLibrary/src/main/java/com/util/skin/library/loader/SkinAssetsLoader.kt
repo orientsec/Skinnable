@@ -1,8 +1,8 @@
 package com.util.skin.library.loader
 
 import android.content.Context
-import com.util.skin.library.utils.SkinConstants
-import com.util.skin.library.utils.SkinFileUtils
+import com.util.skin.library.utils.SKIN_DEPLOY_PATH
+import com.util.skin.library.utils.getSkinDir
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -21,10 +21,9 @@ class SkinAssetsLoader : SkinSDCardLoader() {
     }
 
     private fun copySkinFromAssets(context: Context, name: String): String {
-        val skinPath = File(SkinFileUtils.getSkinDir(context), name).absolutePath
+        val skinPath = File(getSkinDir(context), name).absolutePath
         try {
-            val inputStream = context.assets.open(
-                    SkinConstants.SKIN_DEPLOY_PATH + File.separator + name)
+            val inputStream = context.assets.open(SKIN_DEPLOY_PATH + File.separator + name)
             val os = FileOutputStream(skinPath)
             var byteCount: Int
             val bytes = ByteArray(1024)

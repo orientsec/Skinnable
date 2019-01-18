@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import java.lang.reflect.Method
 
 object SkinCompatVersionUtils {
-    private const val TAG = "SkinCompatUtils"
+    private const val TAG = "SkinCompatVersionUtils"
     // 27.1.0后删除
     private var sV4DrawableWrapperClass: Class<*>? = null
     private var sV4DrawableWrapperGetM: Method? = null

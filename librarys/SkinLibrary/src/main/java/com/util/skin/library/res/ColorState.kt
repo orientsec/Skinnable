@@ -11,7 +11,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
-class ColorState {
+internal class ColorState {
     var isOnlyDefaultColor: Boolean = false
         internal set
     var colorName: String = ""

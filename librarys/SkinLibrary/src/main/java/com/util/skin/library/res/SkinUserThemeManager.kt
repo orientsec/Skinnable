@@ -12,9 +12,9 @@ import androidx.annotation.DrawableRes
 import com.util.skin.library.SkinManager
 import com.util.skin.library.res.ColorState.Companion.checkColorValid
 import com.util.skin.library.res.ColorState.Companion.toJSONObject
-import com.util.skin.library.utils.SkinImageUtils
 import com.util.skin.library.utils.SkinPreference
 import com.util.skin.library.utils.Slog
+import com.util.skin.library.utils.getImageRotateAngle
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -22,7 +22,7 @@ import java.io.File
 import java.lang.ref.WeakReference
 import java.util.*
 
-object SkinUserThemeManager {
+internal object SkinUserThemeManager {
 
     private val mColorNameStateMap = HashMap<String, ColorState>()
     private val mColorCacheLock = java.lang.Object()
@@ -197,7 +197,7 @@ object SkinUserThemeManager {
         }
         val entry = getEntryName(drawableRes, KEY_TYPE_DRAWABLE)
         if (!TextUtils.isEmpty(entry)) {
-            val angle = SkinImageUtils.getImageRotateAngle(drawablePath)
+            val angle = getImageRotateAngle(drawablePath)
             val drawablePathAndAngle = drawablePath + ":" + angle.toString()
             mDrawablePathAndAngleMap[entry!!] = drawablePathAndAngle
             removeDrawableInCache(drawableRes)

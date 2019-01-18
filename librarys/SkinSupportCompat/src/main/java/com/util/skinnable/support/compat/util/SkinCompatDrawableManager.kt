@@ -121,7 +121,7 @@ internal object SkinCompatDrawableManager {
             mTypedValue = TypedValue()
         }
         mTypedValue?.let { tv ->
-            //            SkinResourcesManager.getValue(context, resId, tv, true)
+            SkinResourcesManager.getValue(context, resId, tv, true)
             val key = createCacheKey(tv)
 
             var dr = getCachedDrawable(context, key)
@@ -242,7 +242,7 @@ internal object SkinCompatDrawableManager {
                 mTypedValue = TypedValue()
             }
             mTypedValue?.let { tv ->
-                //                SkinResourcesManager.getValue(context, resId, tv, true)
+                SkinResourcesManager.getValue(context, resId, tv, true)
 
                 val key = createCacheKey(tv)
 
