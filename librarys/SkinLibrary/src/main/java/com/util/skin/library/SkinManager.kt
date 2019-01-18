@@ -104,8 +104,10 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * 恢复默认主题，使用应用自带资源.
      */
     fun restoreDefaultSkin() {
-        SkinResourcesManager.resetDefault()
-        notifyUpdateSkin()
+        launch {
+            SkinResourcesManager.resetDefault()
+            notifyUpdateSkin()
+        }
     }
 
     /**
@@ -114,13 +116,16 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * @return
      */
     fun loadSkin() {
-        // 加载记录的loader
-        SkinPreference.resEntries.forEach { entry ->
-            loadSkin(entry.skinName, entry.strategyType)
-        }
-        // 加载新增的loader
-        lateInitStrategies.forEach { wrapStrategy ->
-            loadSkin(wrapStrategy.skinName, wrapStrategy.strategy)
+        launch {
+            // 加载记录的loader
+            SkinPreference.getEntries().forEach { entry ->
+                loadSkin(entry.skinName, entry.strategyType)
+            }
+            // 加载新增的loader
+            lateInitStrategies.forEach { wrapStrategy ->
+                loadSkin(wrapStrategy.skinName, wrapStrategy.strategy)
+            }
+            notifyUpdateSkin()
         }
     }
 
@@ -133,7 +138,11 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * @return
      */
     fun loadSkin(skinName: String, strategy: SkinLoaderStrategy, listener: SkinLoaderListener? = null) {
-        addSkinLoader(skinName, strategy, listener)
+        launch {
+            addSkinLoader(skinName, strategy, listener)
+            notifyUpdateSkin()
+        }
+
     }
 
     /**
@@ -145,33 +154,39 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * @return
      */
     fun loadSkin(skinName: String, strategyType: SkinLoaderStrategyType, listener: SkinLoaderListener? = null) {
-        createLoaderStrategy(strategyType)?.let { strategy ->
+        getLoaderStrategy(skinName, strategyType)?.let { strategy ->
             loadSkin(skinName, strategy, listener)
         }
     }
 
+    /**
+     * 恢复strategyType皮肤
+     */
     fun resetSkin(skinName: String, strategyType: SkinLoaderStrategyType) {
-        removeSkinLoader(skinName, strategyType)
-    }
-
-    private fun removeSkinLoader(skinName: String, strategyType: SkinLoaderStrategyType) {
-        SkinResourcesManager.removeStrategy(skinName, strategyType)
-        notifyUpdateSkin()
-    }
-
-    private fun addSkinLoader(skinName: String, strategy: SkinLoaderStrategy, listener: SkinLoaderListener? = null) {
         launch {
-            listener?.onStart()
-            try {
-                // 加载资源
-                loadTask(skinName, strategy)
-                listener?.onSuccess()
-            } catch (e: Exception) {
-                SkinResourcesManager.resetDefault()
-                listener?.onFailed("皮肤资源获取失败:$e")
-                e.printStackTrace()
-            }
+            removeSkinLoader(skinName, strategyType)
             notifyUpdateSkin()
+        }
+    }
+
+    private suspend fun removeSkinLoader(skinName: String, strategyType: SkinLoaderStrategyType) {
+        SkinResourcesManager.removeStrategy(skinName, strategyType)
+    }
+
+    private suspend fun addSkinLoader(
+        skinName: String,
+        strategy: SkinLoaderStrategy,
+        listener: SkinLoaderListener? = null
+    ) {
+        listener?.onStart()
+        try {
+            // 加载资源
+            loadTask(skinName, strategy)
+            listener?.onSuccess()
+        } catch (e: Exception) {
+            SkinResourcesManager.resetDefault()
+            listener?.onFailed("皮肤资源获取失败:$e")
+            e.printStackTrace()
         }
     }
 
@@ -180,11 +195,13 @@ object SkinManager : SkinObservable(), CoroutineScope {
         // backSkinName 为""时，恢复默认皮肤
         if (TextUtils.isEmpty(backSkinName)) {
             SkinResourcesManager.resetDefault()
+        } else {
+            SkinResourcesManager.addStrategy(skinName, strategy)
         }
-        SkinResourcesManager.addStrategy(skinName, strategy)
     }
 
-    private fun createLoaderStrategy(type: SkinLoaderStrategyType): SkinLoaderStrategy? {
+    private fun getLoaderStrategy(skinName: String, type: SkinLoaderStrategyType): SkinLoaderStrategy? {
+        SkinResourcesManager.getStrategy(skinName, type)?.let { return it }
         return when (type) {
             SkinLoaderStrategyType.Assets -> SkinAssetsLoader()
             SkinLoaderStrategyType.BuildIn -> SkinBuildInLoader()

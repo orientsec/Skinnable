@@ -27,25 +27,24 @@ internal object SkinPreference {
     private val keyRes: String
         get() = mPref.getString(KEY_SKIN_RESOURCES, "") ?: ""
 
-    val resEntries: HashSet<ResEntry>
-        get() {
-            val entrySet = hashSetOf<ResEntry>()
-            val set = keyRes.split(";").toHashSet()
-            set.forEach { value ->
-                if (value.isNotBlank() && value.contains(":")) {
-                    val params = value.split(":")
-                    entrySet.add(ResEntry(params[0], SkinLoaderStrategyType.parseType(params[1].toInt())))
-                }
+    suspend fun getEntries(): HashSet<ResEntry> {
+        val entrySet = hashSetOf<ResEntry>()
+        val set = keyRes.split(";").toHashSet()
+        set.forEach { value ->
+            if (value.isNotBlank() && value.contains(":")) {
+                val params = value.split(":")
+                entrySet.add(ResEntry(params[0], SkinLoaderStrategyType.parseType(params[1].toInt())))
             }
-            return entrySet
         }
+        return entrySet
+    }
 
     fun setUserTheme(themeJson: String): SkinPreference {
         mEditor.putString(KEY_SKIN_USER_THEME, themeJson)
         return this
     }
 
-    fun addResources(value: String): SkinPreference {
+    suspend fun addResources(value: String): SkinPreference {
         val set = keyRes.split(";").toHashSet()
         if (set.contains(value)) return this
         set.add(value)
@@ -54,7 +53,7 @@ internal object SkinPreference {
         return this
     }
 
-    fun removeResources(value: String): SkinPreference {
+    suspend fun removeResources(value: String): SkinPreference {
         val set = keyRes.split(";").toHashSet()
         if (!set.contains(value)) return this
         set.remove(value)
@@ -63,7 +62,7 @@ internal object SkinPreference {
         return this
     }
 
-    fun resetResources(): SkinPreference {
+    suspend fun resetResources(): SkinPreference {
         mEditor.putString(KEY_SKIN_RESOURCES, "")
         return this
     }
