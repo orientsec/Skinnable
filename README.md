@@ -1,5 +1,5 @@
 # Skinnable
-东方证券Android换肤Kotlin实现方案
+东方证券Android换肤Kotlin实现方案，支持多套皮肤同时变换
 
 # 使用方法
 ## 1.引用Library
@@ -48,12 +48,30 @@ app:skinnable="true"
 ```
 表示支持换肤
 
+# 支持多套皮肤同时存在
+``` kotlin
+// 指定皮肤插件
+SkinManager.loadSkin("skin.night", SkinLoaderStrategyType.Assets)
+SkinManager.loadSkin("skin.night2", SkinLoaderStrategyType.Assets)
+SkinManager.loadSkin("skin.night3", SkinLoaderStrategyType.Assets)
+// 后缀加载
+SkinManager.loadSkin("night", SkinLoaderStrategyType.BuildIn)
+// 前缀加载
+SkinManager.loadSkin("night", SkinLoaderStrategyType.PrefixBuildIn)
+// 重置"skin.night"插件换肤
+SkinManager.resetSkin("skin.night", SkinLoaderStrategyType.Assets)
+// 重置"skin.night3"插件换肤
+SkinManager.resetSkin("skin.night3", SkinLoaderStrategyType.Assets)
+// 恢复应用默认皮肤
+SkinManager.restoreDefaultTheme();
+```
 # 换肤方法
 ## 加载插件皮肤库
 ``` kotlin
 // 指定皮肤插件
 SkinManager.loadSkin("skin.night", SkinLoaderStrategyType.Assets)
-
+// 重置插件换肤
+SkinManager.resetSkin("skin.night", SkinLoaderStrategyType.Assets)
 // 恢复应用默认皮肤
 SkinManager.restoreDefaultTheme();
 ```
@@ -65,9 +83,12 @@ SkinManager.restoreDefaultTheme();
 加载应用内皮肤:
 ``` kotlin
 // 后缀加载
-SkinManager.loadSkin("night", SkinLoaderStrategyType.BuildIn);
+SkinManager.loadSkin("night", SkinLoaderStrategyType.BuildIn)
 // 前缀加载
-SkinManager.loadSkin("night", SkinLoaderStrategyType.PrefixBuildIn); 
+SkinManager.loadSkin("night", SkinLoaderStrategyType.PrefixBuildIn)
+//重置对应换肤
+SkinManager.resetSkin("night", SkinLoaderStrategyType.BuildIn)
+SkinManager.resetSkin("night", SkinLoaderStrategyType.PrefixBuildIn)
 ```
 推荐将应用内换肤相关的皮肤资源放到单独的目录中
 注: 如果使用这种方式来增加换肤资源，记得在build.gradle 中配置一下这个资源目录 
