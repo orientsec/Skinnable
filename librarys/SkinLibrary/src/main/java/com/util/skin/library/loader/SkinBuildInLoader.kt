@@ -8,7 +8,7 @@ class SkinBuildInLoader : BaseSkinLoaderStrategy() {
     override val type: SkinLoaderStrategyType
         get() = SkinLoaderStrategyType.BuildIn
 
-    override suspend fun initLoader(context: Context, skinName: String): String? {
+    override fun initLoader(context: Context, skinName: String): String? {
         resModel = SkinResModel(
             context.resources,
             context.packageName,

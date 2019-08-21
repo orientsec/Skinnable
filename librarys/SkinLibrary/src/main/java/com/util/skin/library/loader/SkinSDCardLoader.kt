@@ -10,7 +10,7 @@ import com.util.skin.library.utils.isFileExists
  * SD卡中加载器
  */
 abstract class SkinSDCardLoader : BaseSkinLoaderStrategy() {
-    override suspend fun initLoader(context: Context, skinName: String): String? {
+    override fun initLoader(context: Context, skinName: String): String? {
         if (TextUtils.isEmpty(skinName)) {
             return skinName
         }

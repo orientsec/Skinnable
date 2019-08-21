@@ -12,15 +12,11 @@ import com.util.skin.library.app.SkinWrapper
 import com.util.skin.library.loader.*
 import com.util.skin.library.observe.SkinObservable
 import com.util.skin.library.res.SkinResourcesManager
-import com.util.skin.library.scope.BaseScope
 import com.util.skin.library.utils.SkinPreference
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
 @SuppressLint("StaticFieldLeak")
-object SkinManager : SkinObservable(), CoroutineScope {
+object SkinManager : SkinObservable() {
     lateinit var context: Context
     private val mWrappers = ArrayList<SkinWrapper>()
     private val mInflaters = ArrayList<SkinLayoutInflater>()
@@ -28,19 +24,11 @@ object SkinManager : SkinObservable(), CoroutineScope {
     private var mSkinAllActivityEnable = true
     private var mSkinWindowBackgroundColorEnable = false
 
-    private val scope: BaseScope = BaseScope()
-    override val coroutineContext: CoroutineContext
-        get() = scope.coroutineContext
-
     val wrappers: List<SkinWrapper>
         get() = mWrappers.toList()
 
     val inflaters: List<SkinLayoutInflater>
         get() = mInflaters
-
-    init {
-        scope.create()
-    }
 
     private data class WrapStrategy(val skinName: String, val strategy: SkinLoaderStrategy)
 
@@ -104,10 +92,8 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * 恢复默认主题，使用应用自带资源.
      */
     fun restoreDefaultSkin() {
-        launch {
-            SkinResourcesManager.resetDefault()
-            notifyUpdateSkin()
-        }
+        SkinResourcesManager.resetDefault()
+        notifyUpdateSkin()
     }
 
     /**
@@ -116,17 +102,15 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * @return
      */
     fun loadSkin() {
-        launch {
-            // 加载记录的loader
-            SkinPreference.getEntries().forEach { entry ->
-                loadSkin(entry.skinName, entry.strategyType)
-            }
-            // 加载新增的loader
-            lateInitStrategies.forEach { wrapStrategy ->
-                loadSkin(wrapStrategy.skinName, wrapStrategy.strategy)
-            }
-            notifyUpdateSkin()
+        // 加载记录的loader
+        SkinPreference.getEntries().forEach { entry ->
+            loadSkin(entry.skinName, entry.strategyType)
         }
+        // 加载新增的loader
+        lateInitStrategies.forEach { wrapStrategy ->
+            loadSkin(wrapStrategy.skinName, wrapStrategy.strategy)
+        }
+        notifyUpdateSkin()
     }
 
     /**
@@ -138,11 +122,8 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * @return
      */
     fun loadSkin(skinName: String, strategy: SkinLoaderStrategy, listener: SkinLoaderListener? = null) {
-        launch {
-            addSkinLoader(skinName, strategy, listener)
-            notifyUpdateSkin()
-        }
-
+        addSkinLoader(skinName, strategy, listener)
+        notifyUpdateSkin()
     }
 
     /**
@@ -163,17 +144,15 @@ object SkinManager : SkinObservable(), CoroutineScope {
      * 恢复strategyType皮肤
      */
     fun resetSkin(skinName: String, strategyType: SkinLoaderStrategyType) {
-        launch {
-            removeSkinLoader(skinName, strategyType)
-            notifyUpdateSkin()
-        }
+        removeSkinLoader(skinName, strategyType)
+        notifyUpdateSkin()
     }
 
-    private suspend fun removeSkinLoader(skinName: String, strategyType: SkinLoaderStrategyType) {
+    private fun removeSkinLoader(skinName: String, strategyType: SkinLoaderStrategyType) {
         SkinResourcesManager.removeStrategy(skinName, strategyType)
     }
 
-    private suspend fun addSkinLoader(
+    private fun addSkinLoader(
         skinName: String,
         strategy: SkinLoaderStrategy,
         listener: SkinLoaderListener? = null
@@ -190,7 +169,7 @@ object SkinManager : SkinObservable(), CoroutineScope {
         }
     }
 
-    private suspend fun loadTask(skinName: String, strategy: SkinLoaderStrategy) {
+    private fun loadTask(skinName: String, strategy: SkinLoaderStrategy) {
         val backSkinName = strategy.initLoader(context, skinName)
         // backSkinName 为""时，恢复默认皮肤
         if (TextUtils.isEmpty(backSkinName)) {

@@ -31,7 +31,7 @@ interface SkinLoaderStrategy {
      * @param skinName 皮肤包名称.
      * @return 加载成功，返回皮肤包名称；失败，则返回空。
      */
-    suspend fun initLoader(context: Context, skinName: String): String?
+    fun initLoader(context: Context, skinName: String): String?
 
     /**
      * 根据应用中的资源ID，获取皮肤包相应资源的资源名.

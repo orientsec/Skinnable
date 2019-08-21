@@ -37,7 +37,7 @@ object SkinResourcesManager {
     /**
      * 增加策略
      */
-    suspend fun addStrategy(skinName: String, strategy: SkinLoaderStrategy) {
+    fun addStrategy(skinName: String, strategy: SkinLoaderStrategy) {
         strategyMap[getSkinResourcesKey(skinName, strategy.type)] = strategy
         val value = getSkinResourcesKey(skinName, strategy.type)
         SkinPreference.addResources(value).commitEditor()
@@ -46,7 +46,7 @@ object SkinResourcesManager {
     /**
      * 删除策略
      */
-    suspend fun removeStrategy(skinName: String, strategyType: SkinLoaderStrategyType) {
+    fun removeStrategy(skinName: String, strategyType: SkinLoaderStrategyType) {
         strategyMap.remove(getSkinResourcesKey(skinName, strategyType))
         val value = getSkinResourcesKey(skinName, strategyType)
         SkinPreference.removeResources(value).commitEditor()
@@ -55,7 +55,7 @@ object SkinResourcesManager {
     /**
      * 恢复默认皮肤
      */
-    suspend fun resetDefault() {
+    fun resetDefault() {
         strategyMap.clear()
         SkinPreference.resetResources().commitEditor()
         SkinUserThemeManager.clearCaches()
