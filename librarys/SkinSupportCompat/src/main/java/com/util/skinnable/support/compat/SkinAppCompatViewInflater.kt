@@ -113,7 +113,7 @@ class SkinAppCompatViewInflater : SkinLayoutInflater, SkinWrapper {
                     // inflated in the current inflate() call and we should not inherit the context.
                     return false
                 }
-                viewParent = viewParent!!.parent
+                viewParent = (viewParent as ViewParent).parent
             }
         }
         return false
