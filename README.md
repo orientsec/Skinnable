@@ -5,9 +5,7 @@
 ## 1.引用Library
 ``` groovy
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.11'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.0.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.Orientsec.Skinnable:SkinLibrary:1.0.0'
 }
@@ -15,22 +13,20 @@ dependencies {
 ## 2.添加support仓库 
 ``` groovy
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.11'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.0.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0'
     implementation 'com.github.Orientsec.Skinnable:SkinLibrary:1.0.0'
 
     // 支持appcompat
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'com.github.Orientsec.Skinnable:SkinSupportCompat:1.0.0'
 
     // 支持material View
-    implementation 'com.google.android.material:material:1.1.0-alpha02'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'com.github.Orientsec.Skinnable:SkinSupportDesign:1.0.0'
 
     // 支持ConstraintLayout
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.github.Orientsec.Skinnable:SkinSupportConstraintLayout:1.0.0'
 }
 ```
@@ -111,7 +107,7 @@ colors.xml
 那么夜间模式你可以在skin-night工程中设置
 colors.xml
 ``` xml
-<color name="background">#000000</c
+<color name="background">#000000</color>
 ```
 ## 打包生成apk, 即为皮肤包
 将打包生成的apk文件, 重命名为'xxx.skin', 防止apk结尾的文件造成混淆.

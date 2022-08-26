@@ -16,18 +16,17 @@ import java.io.IOException
 const val SKIN_DEPLOY_PATH = "skins"
 
 internal fun getImageRotateAngle(filePath: String): Int {
-    val exif: ExifInterface?
-    exif = try {
+    val exif: ExifInterface? = try {
         ExifInterface(filePath)
     } catch (e: IOException) {
         e.printStackTrace()
         null
-
     }
 
     var angle = 0
     if (exif != null) {
-        val ori = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+        val ori =
+            exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
         angle = when (ori) {
             ExifInterface.ORIENTATION_ROTATE_90 -> 90
             ExifInterface.ORIENTATION_ROTATE_180 -> 180

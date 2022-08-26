@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.util.skinnable.skinnable.main">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.util.skinnable.skinnable.main">
 
     <application
-            android:label="@string/app_name"
-            android:name="com.util.skinnable.skinnable.main.app.App"
-            android:theme="@style/Base.V7.Theme.AppCompat.Light"
-            android:icon="@android:drawable/ic_menu_report_image"
-            android:allowBackup="false"
-            tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        android:name="com.util.skinnable.skinnable.main.app.App"
+        android:allowBackup="false"
+        android:icon="@android:drawable/ic_menu_report_image"
+        android:label="@string/app_name"
+        android:theme="@style/Base.V7.Theme.AppCompat.Light"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

@@ -7,19 +7,24 @@ import android.view.View
 import com.util.skin.library.SkinManager
 import com.util.skin.library.widget.SkinSupportable
 import java.lang.ref.WeakReference
-import java.util.*
 
 /**
  * [LayoutInflater.onCreateView] 方法监听并转发
  */
-internal class SkinDelegate private constructor(private val mContext: Context) : LayoutInflater.Factory2 {
+internal class SkinDelegate private constructor(private val mContext: Context) :
+    LayoutInflater.Factory2 {
     private val mSkinHelpers = ArrayList<WeakReference<SkinSupportable>>()
 
-    override fun onCreateView(name: String?, context: Context?, attrs: AttributeSet?): View? {
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
         return null
     }
 
-    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
+    override fun onCreateView(
+        parent: View?,
+        name: String,
+        context: Context,
+        attrs: AttributeSet
+    ): View? {
         val view = createView(parent, name, context, attrs) ?: return null
 
         if (view is SkinSupportable && view.skinnable) {

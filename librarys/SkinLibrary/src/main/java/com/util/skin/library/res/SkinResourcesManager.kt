@@ -14,7 +14,6 @@ import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.loader.SkinLoaderStrategy
 import com.util.skin.library.loader.SkinLoaderStrategyType
 import com.util.skin.library.utils.SkinPreference
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 object SkinResourcesManager {
@@ -38,9 +37,9 @@ object SkinResourcesManager {
      * 增加策略
      */
     fun addStrategy(skinName: String, strategy: SkinLoaderStrategy) {
-        strategyMap[getSkinResourcesKey(skinName, strategy.type)] = strategy
-        val value = getSkinResourcesKey(skinName, strategy.type)
-        SkinPreference.addResources(value).commitEditor()
+        val key = getSkinResourcesKey(skinName, strategy.type)
+        strategyMap[key] = strategy
+        SkinPreference.addResources(key).commitEditor()
     }
 
     /**
@@ -140,7 +139,12 @@ object SkinResourcesManager {
         return context.resources.getXml(resId)
     }
 
-    private fun getSkinValue(context: Context, @AnyRes resId: Int, outValue: TypedValue, resolveRefs: Boolean) {
+    private fun getSkinValue(
+        context: Context,
+        @AnyRes resId: Int,
+        outValue: TypedValue,
+        resolveRefs: Boolean
+    ) {
         strategyMap.values
             .sortedBy { strategy -> strategy.type.type }
             .forEach { strategy ->
@@ -149,7 +153,10 @@ object SkinResourcesManager {
         context.resources.getValue(resId, outValue, resolveRefs)
     }
 
-    private fun getSkinResourcesKey(skinName: String, strategyType: SkinLoaderStrategyType): String =
+    private fun getSkinResourcesKey(
+        skinName: String,
+        strategyType: SkinLoaderStrategyType
+    ): String =
         "$skinName:${strategyType.type}"
 
     fun getColor(context: Context, resId: Int): Int {

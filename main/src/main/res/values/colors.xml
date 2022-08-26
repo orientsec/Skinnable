@@ -3,4 +3,9 @@
     <color name="text_background">#ff099fde</color>
     <color name="text_color">#ffffffff</color>
     <color name="container_bg">#ffffffff</color>
+
+    <color name="red_1">#EA6B6B</color>
+    <color name="red_2">#EA4D4D</color>
+    <color name="red_3">#EA2F2F</color>
+    <color name="red_4">#EA1414</color>
 </resources>

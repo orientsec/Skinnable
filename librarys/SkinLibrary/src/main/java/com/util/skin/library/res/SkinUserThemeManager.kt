@@ -25,14 +25,14 @@ import java.util.*
 internal object SkinUserThemeManager {
 
     private val mColorNameStateMap = HashMap<String, ColorState>()
-    private val mColorCacheLock = java.lang.Object()
+    private val mColorCacheLock = Object()
     private val mColorCaches = WeakHashMap<Int, WeakReference<ColorStateList>>()
     var isColorEmpty: Boolean = false
         private set
         get() = mColorNameStateMap.isEmpty()
 
     private val mDrawablePathAndAngleMap = HashMap<String, String>()
-    private val mDrawableCacheLock = java.lang.Object()
+    private val mDrawableCacheLock = Object()
     private val mDrawableCaches = WeakHashMap<Int, WeakReference<Drawable>>()
     var isDrawableEmpty: Boolean = false
         private set
@@ -87,7 +87,10 @@ internal object SkinUserThemeManager {
                     } else if (KEY_TYPE_DRAWABLE == type) {
                         val drawableName = jsonObject.getString(KEY_DRAWABLE_NAME)
                         val drawablePathAndAngle = jsonObject.getString(KEY_DRAWABLE_PATH_AND_ANGLE)
-                        if (!TextUtils.isEmpty(drawableName) && !TextUtils.isEmpty(drawablePathAndAngle)) {
+                        if (!TextUtils.isEmpty(drawableName) && !TextUtils.isEmpty(
+                                drawablePathAndAngle
+                            )
+                        ) {
                             mDrawablePathAndAngleMap[drawableName] = drawablePathAndAngle
                         }
                     }
@@ -123,7 +126,7 @@ internal object SkinUserThemeManager {
 
         }
         if (Slog.DEBUG) {
-            Slog.i(TAG, "Apply user theme: " + jsonArray.toString())
+            Slog.i(TAG, "Apply user theme: $jsonArray")
         }
         SkinPreference.setUserTheme(jsonArray.toString()).commitEditor()
         SkinManager.notifyUpdateSkin()
@@ -198,7 +201,7 @@ internal object SkinUserThemeManager {
         val entry = getEntryName(drawableRes, KEY_TYPE_DRAWABLE)
         if (!TextUtils.isEmpty(entry)) {
             val angle = getImageRotateAngle(drawablePath)
-            val drawablePathAndAngle = drawablePath + ":" + angle.toString()
+            val drawablePathAndAngle = "$drawablePath:$angle"
             mDrawablePathAndAngleMap[entry!!] = drawablePathAndAngle
             removeDrawableInCache(drawableRes)
         }
@@ -210,7 +213,7 @@ internal object SkinUserThemeManager {
         }
         val entry = getEntryName(drawableRes, KEY_TYPE_DRAWABLE)
         if (!TextUtils.isEmpty(entry)) {
-            val drawablePathAndAngle = drawablePath + ":" + angle.toString()
+            val drawablePathAndAngle = "$drawablePath:$angle"
             mDrawablePathAndAngleMap[entry!!] = drawablePathAndAngle
             removeDrawableInCache(drawableRes)
         }
@@ -227,7 +230,8 @@ internal object SkinUserThemeManager {
     fun getDrawablePath(drawableName: String): String {
         val drawablePathAndAngle = mDrawablePathAndAngleMap[drawableName]
         if (!TextUtils.isEmpty(drawablePathAndAngle)) {
-            val splits = drawablePathAndAngle!!.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val splits = drawablePathAndAngle!!.split(":".toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray()
             return splits[0]
         }
         return ""
@@ -236,7 +240,8 @@ internal object SkinUserThemeManager {
     fun getDrawableAngle(drawableName: String): Int {
         val drawablePathAndAngle = mDrawablePathAndAngleMap[drawableName]
         if (!TextUtils.isEmpty(drawablePathAndAngle)) {
-            val splits = drawablePathAndAngle!!.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val splits = drawablePathAndAngle!!.split(":".toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray()
             if (splits.size == 2) {
                 return Integer.valueOf(splits[1])
             }

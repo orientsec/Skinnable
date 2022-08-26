@@ -2,4 +2,9 @@
 <resources>
     <color name="text_background">#09de3b</color>
     <color name="text_color">#d62222</color>
+
+    <color name="red_1">#6B80EA</color>
+    <color name="red_2">#3D86D9</color>
+    <color name="red_3">#1C51B5</color>
+    <color name="red_4">#050E8D</color>
 </resources>

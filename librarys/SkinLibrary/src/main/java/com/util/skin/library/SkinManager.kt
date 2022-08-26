@@ -13,7 +13,6 @@ import com.util.skin.library.loader.*
 import com.util.skin.library.observe.SkinObservable
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.utils.SkinPreference
-import java.util.*
 
 @SuppressLint("StaticFieldLeak")
 object SkinManager : SkinObservable() {
@@ -121,7 +120,11 @@ object SkinManager : SkinObservable() {
      * @param strategy 皮肤包加载策略.
      * @return
      */
-    fun loadSkin(skinName: String, strategy: SkinLoaderStrategy, listener: SkinLoaderListener? = null) {
+    fun loadSkin(
+        skinName: String,
+        strategy: SkinLoaderStrategy,
+        listener: SkinLoaderListener? = null
+    ) {
         addSkinLoader(skinName, strategy, listener)
         notifyUpdateSkin()
     }
@@ -134,7 +137,11 @@ object SkinManager : SkinObservable() {
      * @param strategyType 皮肤包加载策略类型.
      * @return
      */
-    fun loadSkin(skinName: String, strategyType: SkinLoaderStrategyType, listener: SkinLoaderListener? = null) {
+    fun loadSkin(
+        skinName: String,
+        strategyType: SkinLoaderStrategyType,
+        listener: SkinLoaderListener? = null
+    ) {
         getLoaderStrategy(skinName, strategyType)?.let { strategy ->
             loadSkin(skinName, strategy, listener)
         }
@@ -179,8 +186,14 @@ object SkinManager : SkinObservable() {
         }
     }
 
-    private fun getLoaderStrategy(skinName: String, type: SkinLoaderStrategyType): SkinLoaderStrategy? {
-        SkinResourcesManager.getStrategy(skinName, type)?.let { return it }
+    private fun getLoaderStrategy(
+        skinName: String,
+        type: SkinLoaderStrategyType
+    ): SkinLoaderStrategy? {
+        return SkinResourcesManager.getStrategy(skinName, type) ?: getStrategy(type)
+    }
+
+    private fun getStrategy(type: SkinLoaderStrategyType): SkinLoaderStrategy? {
         return when (type) {
             SkinLoaderStrategyType.Assets -> SkinAssetsLoader()
             SkinLoaderStrategyType.BuildIn -> SkinBuildInLoader()
@@ -198,7 +211,7 @@ object SkinManager : SkinObservable() {
     internal fun getSkinPackageName(skinPkgPath: String): String {
         return context.packageManager
             .getPackageArchiveInfo(skinPkgPath, PackageManager.GET_ACTIVITIES)
-            .packageName
+            ?.packageName ?: ""
     }
 
     /**
@@ -209,7 +222,8 @@ object SkinManager : SkinObservable() {
      */
     internal fun getSkinResources(skinPkgPath: String): Resources? {
         try {
-            val packageInfo = context.packageManager.getPackageArchiveInfo(skinPkgPath, 0)
+            val packageInfo =
+                context.packageManager.getPackageArchiveInfo(skinPkgPath, 0) ?: return null
             packageInfo.applicationInfo.sourceDir = skinPkgPath
             packageInfo.applicationInfo.publicSourceDir = skinPkgPath
             val res = context.packageManager.getResourcesForApplication(packageInfo.applicationInfo)

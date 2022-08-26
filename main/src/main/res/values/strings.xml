@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="custom_text_view">切换内置</string>
-    <string name="assets_skin_night">切换Assets skin.night</string>
+    <string name="custom_text_view">内置Normal</string>
+    <string name="custom_text_view2">内置Night</string>
+    <string name="assets_skin_night">Assets Normal</string>
+    <string name="assets_skin_night2">Assets 内置Night</string>
+    <string name="restore">恢复</string>
 </resources>

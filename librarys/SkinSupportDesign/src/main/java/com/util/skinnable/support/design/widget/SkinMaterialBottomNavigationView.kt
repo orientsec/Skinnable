@@ -36,7 +36,7 @@ class SkinMaterialBottomNavigationView @JvmOverloads constructor(
             R.style.Widget_Design_BottomNavigationView
         )
 
-        if (a.hasValue(R.styleable.BottomNavigationView_itemIconTint)) {
+        /*if (a.hasValue(R.styleable.BottomNavigationView_itemIconTint)) {
             mIconTintResId = a.getResourceId(R.styleable.BottomNavigationView_itemIconTint, INVALID_ID)
         } else {
             mDefaultTintResId = resolveColorPrimary()
@@ -45,7 +45,7 @@ class SkinMaterialBottomNavigationView @JvmOverloads constructor(
             mTextColorResId = a.getResourceId(R.styleable.BottomNavigationView_itemTextColor, INVALID_ID)
         } else {
             mDefaultTintResId = resolveColorPrimary()
-        }
+        }*/
         a.recycle()
         applyItemIconTintResource()
         applyItemTextColorResource()

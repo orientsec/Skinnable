@@ -38,6 +38,7 @@ class SkinCompatTextView @JvmOverloads constructor(
         setTextAppearance(context, resId)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun setTextAppearance(context: Context, resId: Int) {
         super.setTextAppearance(context, resId)
         mTextHelper.onSetTextAppearance(context, resId)

@@ -1,7 +1,6 @@
 package com.util.skinnable.support.compat.util
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -15,7 +14,6 @@ import android.os.Build
 import android.util.*
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import androidx.annotation.RequiresApi
 import androidx.collection.ArrayMap
 import androidx.collection.LongSparseArray
 import androidx.collection.LruCache
@@ -53,7 +51,8 @@ internal object SkinCompatDrawableManager {
     private var mKnownDrawableIdTags: SparseArray<String>? = null
 
     private val mDrawableCacheLock = Any()
-    private val mDrawableCaches = WeakHashMap<Context, LongSparseArray<WeakReference<ConstantState>>>(0)
+    private val mDrawableCaches =
+        WeakHashMap<Context, LongSparseArray<WeakReference<ConstantState>>>(0)
 
     private var mTypedValue: TypedValue? = null
 
@@ -136,11 +135,11 @@ internal object SkinCompatDrawableManager {
                     arrayOf(
                         getDrawable(
                             context,
-                            com.util.skinnable.support.compat.R.drawable.abc_cab_background_internal_bg
+                            R.drawable.abc_cab_background_internal_bg
                         ),
                         getDrawable(
                             context,
-                            com.util.skinnable.support.compat.R.drawable.abc_cab_background_top_mtrl_alpha
+                            R.drawable.abc_cab_background_top_mtrl_alpha
                         )
                     )
                 )
@@ -153,7 +152,7 @@ internal object SkinCompatDrawableManager {
             }
 
             return dr
-        }
+        } ?: return null
     }
 
     private fun tintDrawable(
@@ -179,15 +178,24 @@ internal object SkinCompatDrawableManager {
             val ld = drawable1 as LayerDrawable
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.background),
-                getThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlNormal), DEFAULT_MODE
+                getThemeAttrColor(
+                    context,
+                    R.attr.colorControlNormal
+                ), DEFAULT_MODE
             )
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.secondaryProgress),
-                getThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlNormal), DEFAULT_MODE
+                getThemeAttrColor(
+                    context,
+                    R.attr.colorControlNormal
+                ), DEFAULT_MODE
             )
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.progress),
-                getThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlActivated), DEFAULT_MODE
+                getThemeAttrColor(
+                    context,
+                    R.attr.colorControlActivated
+                ), DEFAULT_MODE
             )
         } else if (resId == androidx.appcompat.R.drawable.abc_ratingbar_material
             || resId == androidx.appcompat.R.drawable.abc_ratingbar_indicator_material
@@ -196,12 +204,18 @@ internal object SkinCompatDrawableManager {
             val ld = drawable1 as LayerDrawable
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.background),
-                getDisabledThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlNormal),
+                getDisabledThemeAttrColor(
+                    context,
+                    R.attr.colorControlNormal
+                ),
                 DEFAULT_MODE
             )
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.secondaryProgress),
-                getThemeAttrColor(context, com.util.skinnable.support.compat.R.attr.colorControlActivated), DEFAULT_MODE
+                getThemeAttrColor(
+                    context,
+                    R.attr.colorControlActivated
+                ), DEFAULT_MODE
             )
             setPorterDuffColorFilter(
                 ld.findDrawableByLayerId(android.R.id.progress),
@@ -228,7 +242,9 @@ internal object SkinCompatDrawableManager {
                     if (DEBUG) {
                         Log.d(
                             TAG,
-                            "[loadDrawableFromDelegates] Skipping drawable: " + context.resources.getResourceName(resId)
+                            "[loadDrawableFromDelegates] Skipping drawable: " + context.resources.getResourceName(
+                                resId
+                            )
                         )
                     }
                     return null
@@ -373,9 +389,15 @@ internal object SkinCompatDrawableManager {
         if (tint == null) {
             // ...if the cache did not contain a color state list, try and create one
             if (resId == androidx.appcompat.R.drawable.abc_edit_text_material) {
-                tint = SkinResourcesManager.getColorStateList(context, androidx.appcompat.R.color.abc_tint_edittext)
+                tint = SkinResourcesManager.getColorStateList(
+                    context,
+                    androidx.appcompat.R.color.abc_tint_edittext
+                )
             } else if (resId == androidx.appcompat.R.drawable.abc_switch_track_mtrl_alpha) {
-                tint = SkinResourcesManager.getColorStateList(context, androidx.appcompat.R.color.abc_tint_switch_track)
+                tint = SkinResourcesManager.getColorStateList(
+                    context,
+                    androidx.appcompat.R.color.abc_tint_switch_track
+                )
             } else if (resId == androidx.appcompat.R.drawable.abc_switch_thumb_material) {
                 tint = createSwitchThumbColorStateList(context)
             } else if (resId == androidx.appcompat.R.drawable.abc_btn_default_mtrl_shape) {
@@ -385,18 +407,30 @@ internal object SkinCompatDrawableManager {
             } else if (resId == androidx.appcompat.R.drawable.abc_btn_colored_material) {
                 tint = createColoredButtonColorStateList(context)
             } else if (resId == androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha || resId == androidx.appcompat.R.drawable.abc_spinner_textfield_background_material) {
-                tint = SkinResourcesManager.getColorStateList(context, androidx.appcompat.R.color.abc_tint_spinner)
+                tint = SkinResourcesManager.getColorStateList(
+                    context,
+                    androidx.appcompat.R.color.abc_tint_spinner
+                )
             } else if (arrayContains(TINT_COLOR_CONTROL_NORMAL, resId)) {
-                tint = getThemeAttrColorStateList(context, androidx.appcompat.R.attr.colorControlNormal)
+                tint = getThemeAttrColorStateList(
+                    context,
+                    androidx.appcompat.R.attr.colorControlNormal
+                )
             } else if (arrayContains(TINT_COLOR_CONTROL_STATE_LIST, resId)) {
-                tint = SkinResourcesManager.getColorStateList(context, androidx.appcompat.R.color.abc_tint_default)
+                tint = SkinResourcesManager.getColorStateList(
+                    context,
+                    androidx.appcompat.R.color.abc_tint_default
+                )
             } else if (arrayContains(TINT_CHECKABLE_BUTTON_LIST, resId)) {
                 tint = SkinResourcesManager.getColorStateList(
                     context,
                     androidx.appcompat.R.color.abc_tint_btn_checkable
                 )
             } else if (resId == androidx.appcompat.R.drawable.abc_seekbar_thumb_material) {
-                tint = SkinResourcesManager.getColorStateList(context, androidx.appcompat.R.color.abc_tint_seek_thumb)
+                tint = SkinResourcesManager.getColorStateList(
+                    context,
+                    androidx.appcompat.R.color.abc_tint_seek_thumb
+                )
             }
 
             if (tint != null) {
@@ -456,8 +490,10 @@ internal object SkinCompatDrawableManager {
         val colors = IntArray(4)
         var i = 0
 
-        val colorControlHighlight = getThemeAttrColor(context, androidx.appcompat.R.attr.colorControlHighlight)
-        val disabledColor = getDisabledThemeAttrColor(context, androidx.appcompat.R.attr.colorButtonNormal)
+        val colorControlHighlight =
+            getThemeAttrColor(context, androidx.appcompat.R.attr.colorControlHighlight)
+        val disabledColor =
+            getDisabledThemeAttrColor(context, androidx.appcompat.R.attr.colorButtonNormal)
 
         // Disabled state
         states[i] = SkinThemeUtils.DISABLED_STATE_SET
@@ -484,7 +520,7 @@ internal object SkinCompatDrawableManager {
         val colors = IntArray(3)
         var i = 0
 
-        val thumbColor = SkinThemeUtils.getThemeAttrColorStateList(
+        val thumbColor = getThemeAttrColorStateList(
             context,
             androidx.appcompat.R.attr.colorSwitchThumbNormal
         )
@@ -499,7 +535,10 @@ internal object SkinCompatDrawableManager {
             i++
 
             states[i] = SkinThemeUtils.CHECKED_STATE_SET
-            colors[i] = SkinThemeUtils.getThemeAttrColor(context, androidx.appcompat.R.attr.colorControlActivated)
+            colors[i] = getThemeAttrColor(
+                context,
+                androidx.appcompat.R.attr.colorControlActivated
+            )
             i++
 
             // Default enabled state
@@ -510,32 +549,43 @@ internal object SkinCompatDrawableManager {
 
             // Disabled state
             states[i] = SkinThemeUtils.DISABLED_STATE_SET
-            colors[i] = SkinThemeUtils.getDisabledThemeAttrColor(
+            colors[i] = getDisabledThemeAttrColor(
                 context,
                 androidx.appcompat.R.attr.colorSwitchThumbNormal
             )
             i++
 
             states[i] = SkinThemeUtils.CHECKED_STATE_SET
-            colors[i] = SkinThemeUtils.getThemeAttrColor(context, androidx.appcompat.R.attr.colorControlActivated)
+            colors[i] = getThemeAttrColor(
+                context,
+                androidx.appcompat.R.attr.colorControlActivated
+            )
             i++
 
             // Default enabled state
             states[i] = SkinThemeUtils.EMPTY_STATE_SET
             colors[i] =
-                    SkinThemeUtils.getThemeAttrColor(context, androidx.appcompat.R.attr.colorSwitchThumbNormal)
+                getThemeAttrColor(
+                    context,
+                    androidx.appcompat.R.attr.colorSwitchThumbNormal
+                )
         }
 
         return ColorStateList(states, colors)
     }
 
-    private class ColorFilterLruCache(maxSize: Int) : LruCache<Int, PorterDuffColorFilter>(maxSize) {
+    private class ColorFilterLruCache(maxSize: Int) :
+        LruCache<Int, PorterDuffColorFilter>(maxSize) {
 
-        internal operator fun get(color: Int, mode: PorterDuff.Mode): PorterDuffColorFilter? {
+        operator fun get(color: Int, mode: PorterDuff.Mode): PorterDuffColorFilter? {
             return get(generateCacheKey(color, mode))
         }
 
-        internal fun put(color: Int, mode: PorterDuff.Mode, filter: PorterDuffColorFilter): PorterDuffColorFilter? {
+        fun put(
+            color: Int,
+            mode: PorterDuff.Mode,
+            filter: PorterDuffColorFilter
+        ): PorterDuffColorFilter? {
             return put(generateCacheKey(color, mode), filter)
         }
 
@@ -562,7 +612,7 @@ internal object SkinCompatDrawableManager {
         }
     }
 
-    private class VdcInflateDelegate internal constructor() : InflateDelegate {
+    private class VdcInflateDelegate() : InflateDelegate {
 
         @SuppressLint("NewApi")
         override fun createFromXmlInner(
@@ -581,9 +631,7 @@ internal object SkinCompatDrawableManager {
         }
     }
 
-    @RequiresApi(11)
-    @TargetApi(11)
-    private class AvdcInflateDelegate internal constructor() : InflateDelegate {
+    private class AvdcInflateDelegate() : InflateDelegate {
 
         @SuppressLint("NewApi")
         override fun createFromXmlInner(
@@ -649,12 +697,12 @@ internal object SkinCompatDrawableManager {
         androidx.appcompat.R.drawable.abc_textfield_search_activated_mtrl_alpha,
         androidx.appcompat.R.drawable.abc_cab_background_top_mtrl_alpha,
         androidx.appcompat.R.drawable.abc_text_cursor_material,
-        androidx.appcompat.R.drawable.abc_text_select_handle_left_mtrl_dark,
-        androidx.appcompat.R.drawable.abc_text_select_handle_middle_mtrl_dark,
-        androidx.appcompat.R.drawable.abc_text_select_handle_right_mtrl_dark,
-        androidx.appcompat.R.drawable.abc_text_select_handle_left_mtrl_light,
-        androidx.appcompat.R.drawable.abc_text_select_handle_middle_mtrl_light,
-        androidx.appcompat.R.drawable.abc_text_select_handle_right_mtrl_light
+        androidx.appcompat.R.drawable.abc_text_select_handle_left_mtrl,
+        androidx.appcompat.R.drawable.abc_text_select_handle_middle_mtrl,
+        androidx.appcompat.R.drawable.abc_text_select_handle_right_mtrl,
+        androidx.appcompat.R.drawable.abc_text_select_handle_left_mtrl,
+        androidx.appcompat.R.drawable.abc_text_select_handle_middle_mtrl,
+        androidx.appcompat.R.drawable.abc_text_select_handle_right_mtrl
     )
 
     /**

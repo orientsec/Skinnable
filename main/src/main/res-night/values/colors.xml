@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="container_bg_night">#E4A2A2</color>
+
+    <color name="red_1_night">#6B80EA</color>
+    <color name="red_2_night">#3D86D9</color>
+    <color name="red_3_night">#1C51B5</color>
+    <color name="red_4_night">#050E8D</color>
 </resources>

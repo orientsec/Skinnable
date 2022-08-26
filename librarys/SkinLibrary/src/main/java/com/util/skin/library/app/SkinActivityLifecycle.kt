@@ -17,8 +17,9 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
-    private var mSkinDelegateMap: WeakHashMap<Context, SkinDelegate>? = null
-    private var mSkinObserverMap: WeakHashMap<Context, LazySkinObserver>? = null
+    private val mSkinDelegateMap: WeakHashMap<Context, SkinDelegate> = WeakHashMap()
+    private val mSkinObserverMap: WeakHashMap<Context, LazySkinObserver> = WeakHashMap()
+
     /**
      * 用于记录当前Activity，在换肤后，立即刷新当前Activity以及非Activity创建的View。
      */
@@ -60,24 +61,20 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
 
     }
 
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
-
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
     }
 
     override fun onActivityDestroyed(activity: Activity) {
         if (isContextSkinEnable(activity)) {
             SkinManager.deleteObserver(getObserver(activity))
-            mSkinObserverMap?.remove(activity)
-            mSkinDelegateMap?.remove(activity)
+            mSkinObserverMap.remove(activity)
+            mSkinDelegateMap.remove(activity)
         }
     }
 
     private fun installLayoutFactory(context: Context) {
-        val layoutInflater = LayoutInflater.from(context)
         try {
-            val field = LayoutInflater::class.java.getDeclaredField("mFactorySet")
-            field.isAccessible = true
-            field.setBoolean(layoutInflater, false)
+            val layoutInflater = LayoutInflater.from(context).cloneInContext(context)
             LayoutInflaterCompat.setFactory2(layoutInflater, getSkinDelegate(context))
         } catch (e: NoSuchFieldException) {
             e.printStackTrace()
@@ -90,21 +87,14 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
     }
 
     fun getSkinDelegate(context: Context): SkinDelegate {
-        if (mSkinDelegateMap == null) {
-            mSkinDelegateMap = WeakHashMap()
-        }
-
-        val mSkinDelegate = mSkinDelegateMap!![context] ?: SkinDelegate.create(context)
-        mSkinDelegateMap!![context] = mSkinDelegate
+        val mSkinDelegate = mSkinDelegateMap[context] ?: SkinDelegate.create(context)
+        mSkinDelegateMap[context] = mSkinDelegate
         return mSkinDelegate
     }
 
     private fun getObserver(context: Context): LazySkinObserver {
-        if (mSkinObserverMap == null) {
-            mSkinObserverMap = WeakHashMap()
-        }
-        val observer = mSkinObserverMap!![context] ?: LazySkinObserver(context)
-        mSkinObserverMap!![context] = observer
+        val observer = mSkinObserverMap[context] ?: LazySkinObserver(context)
+        mSkinObserverMap[context] = observer
         return observer
     }
 
