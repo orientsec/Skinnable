@@ -11,17 +11,17 @@ import com.util.skin.library.utils.isFileExists
 /**
  * SD卡中加载器
  */
-abstract class SkinSDCardLoader(protected val skinName: String) : SkinLoaderStrategy {
+abstract class SkinSDCardLoader(protected val path: String) : SkinLoaderStrategy {
     override fun initStrategy(context: Context): SkinResource? {
-        if (TextUtils.isEmpty(skinName)) {
+        if (TextUtils.isEmpty(path)) {
             return null
         }
-        val skinPkgPath = getSkinPath(context, skinName)
+        val skinPkgPath = getSkinPath(context, path)
         if (isFileExists(skinPkgPath)) {
             val pkgName = getSkinPackageName(skinPkgPath)
             val resources = getSkinResources(skinPkgPath)
             if (resources != null && !TextUtils.isEmpty(pkgName)) {
-                return SkinResource(resources, pkgName, skinName)
+                return SkinResource(resources, pkgName, path)
             }
         }
         return null

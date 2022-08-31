@@ -7,7 +7,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-internal class SkinAssetsLoader(skinName: String) : SkinSDCardLoader(skinName) {
+internal class SkinAssetsLoader(path: String) : SkinSDCardLoader(path) {
     override fun getSkinPath(context: Context, skinName: String): String {
         return copySkinFromAssets(context, skinName)
     }
