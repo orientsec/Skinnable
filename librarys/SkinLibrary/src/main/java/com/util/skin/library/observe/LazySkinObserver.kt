@@ -46,7 +46,7 @@ internal class LazySkinObserver constructor(private val mContext: Context?) : Sk
         if (mContext is Activity && SkinActivityLifecycle.isContextSkinEnable(mContext)) {
             SkinActivityLifecycle.updateWindowBackground(mContext)
         }
-        SkinActivityLifecycle.getSkinDelegate(mContext).applySkin()
+        SkinActivityLifecycle.skinFactory(mContext).applySkin()
         if (mContext is SkinSupportable && mContext.skinnable) {
             mContext.applySkin()
         }

@@ -3,9 +3,7 @@ package com.util.skin.library.res
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.os.Build
 import android.util.TypedValue
-import androidx.annotation.RequiresApi
 import androidx.core.graphics.ColorUtils
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 
@@ -44,7 +42,6 @@ object SkinThemeUtils {
         return getResId(context, intArrayOf(android.R.attr.textColorPrimary))
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     fun getStatusBarColorResId(context: Context): Int {
         return getResId(context, intArrayOf(android.R.attr.statusBarColor))
     }

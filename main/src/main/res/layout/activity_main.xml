@@ -23,27 +23,18 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/custom_text_view" />
+            android:text="@string/title_item_default" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/custom_text_view2" />
+            android:text="@string/custom_text_view" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/assets_skin_night" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/assets_skin_night2" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/restore" />
     </com.google.android.material.tabs.TabLayout>
 
 
@@ -101,28 +92,33 @@
                 app:drawableLeftCompat="@drawable/ic_assignment_turned_in_black_24dp"
                 app:drawableStartCompat="@drawable/ic_assignment_turned_in_black_24dp"
                 app:layout_constraintBottom_toTopOf="@id/scrollView"
-                app:layout_constraintTop_toBottomOf="@id/tv_text2" />
+                app:layout_constraintTop_toBottomOf="@id/tv_text2"
+                app:skinnable="true" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:background="@color/red_1" />
+                android:background="@color/red_1"
+                app:skinnable="true" />
 
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:background="@color/red_2" />
+                android:background="@color/red_2"
+                app:skinnable="true" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:background="@color/red_3" />
+                android:background="@color/red_3"
+                app:skinnable="true" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:background="@color/red_4" />
+                android:background="@color/red_4"
+                app:skinnable="true" />
         </LinearLayout>
     </ScrollView>
 

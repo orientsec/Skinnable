@@ -1,13 +1,15 @@
 package com.util.skin.library.app
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.core.view.LayoutInflaterCompat
+import android.view.LayoutInflater.Factory2
 import com.util.skin.library.SkinManager
 import com.util.skin.library.annotation.Skinnable
+import com.util.skin.library.factory.SkinFactory2Impl
 import com.util.skin.library.helpers.SkinHelper.Companion.checkResourceIdValid
 import com.util.skin.library.observe.LazySkinObserver
 import com.util.skin.library.res.SkinResourcesManager
@@ -17,7 +19,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
-    private val mSkinDelegateMap: WeakHashMap<Context, SkinDelegate> = WeakHashMap()
+    private val mSkinFactoryMap: WeakHashMap<Context, SkinFactory2Impl> = WeakHashMap()
     private val mSkinObserverMap: WeakHashMap<Context, LazySkinObserver> = WeakHashMap()
 
     /**
@@ -68,28 +70,19 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
         if (isContextSkinEnable(activity)) {
             SkinManager.deleteObserver(getObserver(activity))
             mSkinObserverMap.remove(activity)
-            mSkinDelegateMap.remove(activity)
+            mSkinFactoryMap.remove(activity)
         }
     }
 
     private fun installLayoutFactory(context: Context) {
-        try {
-            val layoutInflater = LayoutInflater.from(context).cloneInContext(context)
-            LayoutInflaterCompat.setFactory2(layoutInflater, getSkinDelegate(context))
-        } catch (e: NoSuchFieldException) {
-            e.printStackTrace()
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace()
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
-        }
-
+        val inflater = LayoutInflater.from(context)
+        forceSetFactory2(inflater, skinFactory(context))
     }
 
-    fun getSkinDelegate(context: Context): SkinDelegate {
-        val mSkinDelegate = mSkinDelegateMap[context] ?: SkinDelegate.create(context)
-        mSkinDelegateMap[context] = mSkinDelegate
-        return mSkinDelegate
+    fun skinFactory(context: Context): SkinFactory2Impl {
+        val mSkinFactory = mSkinFactoryMap[context] ?: SkinFactory2Impl()
+        mSkinFactoryMap[context] = mSkinFactory
+        return mSkinFactory
     }
 
     private fun getObserver(context: Context): LazySkinObserver {
@@ -99,7 +92,7 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
     }
 
     fun updateWindowBackground(activity: Activity) {
-        if (SkinManager.isSkinWindowBackgroundEnable()) {
+        if (SkinManager.config.windowBackground) {
             val windowBackgroundResId = SkinThemeUtils.getWindowBackgroundResId(activity)
             if (checkResourceIdValid(windowBackgroundResId)) {
                 SkinResourcesManager.getDrawable(activity, windowBackgroundResId)
@@ -109,8 +102,28 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
     }
 
     fun isContextSkinEnable(context: Context): Boolean {
-        return (SkinManager.isSkinAllActivityEnable()
+        return (SkinManager.config.allActivity
                 || context.javaClass.getAnnotation(Skinnable::class.java) != null
                 || context is SkinSupportable)
+    }
+
+    /**
+     * For APIs < 21, there was a framework bug that prevented a LayoutInflater's
+     * Factory2 from being merged properly if set after a cloneInContext from a LayoutInflater
+     * that already had a Factory2 registered. We work around that bug here. If we can't we
+     * log an error.
+     */
+    @SuppressLint("DiscouragedPrivateApi")
+    private fun forceSetFactory2(inflater: LayoutInflater, factory: Factory2) {
+        try {
+            val sLayoutInflaterFactory2Field =
+                LayoutInflater::class.java.getDeclaredField("mFactory2")
+            sLayoutInflaterFactory2Field.isAccessible = true
+            sLayoutInflaterFactory2Field[inflater] = factory
+        } catch (e: NoSuchFieldException) {
+            e.printStackTrace()
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
+        }
     }
 }

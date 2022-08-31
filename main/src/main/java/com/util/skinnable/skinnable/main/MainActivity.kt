@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import com.util.skin.library.SkinManager
-import com.util.skin.library.loader.SkinLoaderStrategyType
+import com.util.skin.library.loader.SkinStrategy
 import com.util.skinnable.skinnable.main.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -21,19 +21,13 @@ class MainActivity : AppCompatActivity() {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     when (tab!!.position) {
                         0 -> {
-                            SkinManager.loadSkin("night", SkinLoaderStrategyType.BuildIn)
+                            SkinManager.restoreDefaultSkin()
                         }
                         1 -> {
-                            SkinManager.resetSkin("night", SkinLoaderStrategyType.BuildIn)
+                            SkinManager.loadSkin(SkinStrategy.BuildIn("night"))
                         }
                         2 -> {
-                            SkinManager.loadSkin("skin.night", SkinLoaderStrategyType.Assets)
-                        }
-                        3 -> {
-                            SkinManager.resetSkin("skin.night", SkinLoaderStrategyType.Assets)
-                        }
-                        4 -> {
-                            SkinManager.restoreDefaultSkin()
+                            SkinManager.loadSkin(SkinStrategy.Assets("skin.night"))
                         }
                     }
                 }

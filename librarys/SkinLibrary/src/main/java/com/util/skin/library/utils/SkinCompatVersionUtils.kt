@@ -6,10 +6,12 @@ import java.lang.reflect.Method
 
 object SkinCompatVersionUtils {
     private const val TAG = "SkinCompatVersionUtils"
+
     // 27.1.0后删除
     private var sV4DrawableWrapperClass: Class<*>? = null
     private var sV4DrawableWrapperGetM: Method? = null
     private var sV4DrawableWrapperSetM: Method? = null
+
     // 27.1.0后增加
     private var sV4WrappedDrawableClass: Class<*>? = null
     private var sV4WrappedDrawableGetM: Method? = null
@@ -21,7 +23,8 @@ object SkinCompatVersionUtils {
 
     init {
         try {
-            sV4WrappedDrawableClass = Class.forName("android.support.v4.graphics.drawable.WrappedDrawable")
+            sV4WrappedDrawableClass =
+                Class.forName("android.support.v4.graphics.drawable.WrappedDrawable")
         } catch (e: ClassNotFoundException) {
             if (Slog.DEBUG) {
                 Slog.i(TAG, "hasV4WrappedDrawable = false")
@@ -29,7 +32,8 @@ object SkinCompatVersionUtils {
         }
 
         try {
-            sV4DrawableWrapperClass = Class.forName("android.support.v4.graphics.drawable.DrawableWrapper")
+            sV4DrawableWrapperClass =
+                Class.forName("android.support.v4.graphics.drawable.DrawableWrapper")
         } catch (e: ClassNotFoundException) {
             if (Slog.DEBUG) {
                 Slog.i(TAG, "hasV4DrawableWrapper = false")
@@ -37,7 +41,8 @@ object SkinCompatVersionUtils {
         }
 
         try {
-            sV7DrawableWrapperClass = Class.forName("android.support.v7.graphics.drawable.DrawableWrapper")
+            sV7DrawableWrapperClass =
+                Class.forName("android.support.v7.graphics.drawable.DrawableWrapper")
         } catch (e: ClassNotFoundException) {
             if (Slog.DEBUG) {
                 Slog.i(TAG, "hasV7DrawableWrapper = false")
@@ -51,14 +56,15 @@ object SkinCompatVersionUtils {
     }
 
     fun isV4WrappedDrawable(drawable: Drawable): Boolean {
-        return sV4WrappedDrawableClass != null && sV4WrappedDrawableClass!!.isAssignableFrom(drawable.javaClass)
+        return sV4WrappedDrawableClass?.isAssignableFrom(drawable.javaClass) == true
     }
 
     fun getV4WrappedDrawableWrappedDrawable(drawable: Drawable): Drawable {
         if (sV4WrappedDrawableClass != null) {
             if (sV4WrappedDrawableGetM == null) {
                 try {
-                    sV4WrappedDrawableGetM = sV4WrappedDrawableClass!!.getDeclaredMethod("getWrappedDrawable")
+                    sV4WrappedDrawableGetM =
+                        sV4WrappedDrawableClass!!.getDeclaredMethod("getWrappedDrawable")
                     sV4WrappedDrawableGetM!!.isAccessible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -87,7 +93,10 @@ object SkinCompatVersionUtils {
         if (sV4WrappedDrawableClass != null) {
             if (sV4WrappedDrawableSetM == null) {
                 try {
-                    sV4WrappedDrawableSetM = sV4WrappedDrawableClass!!.getDeclaredMethod("setWrappedDrawable", Drawable::class.java)
+                    sV4WrappedDrawableSetM = sV4WrappedDrawableClass!!.getDeclaredMethod(
+                        "setWrappedDrawable",
+                        Drawable::class.java
+                    )
                     sV4WrappedDrawableSetM!!.isAccessible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -116,14 +125,17 @@ object SkinCompatVersionUtils {
     }
 
     fun isV4DrawableWrapper(drawable: Drawable): Boolean {
-        return sV4DrawableWrapperClass != null && sV4DrawableWrapperClass!!.isAssignableFrom(drawable.javaClass)
+        return sV4DrawableWrapperClass != null && sV4DrawableWrapperClass!!.isAssignableFrom(
+            drawable.javaClass
+        )
     }
 
     fun getV4DrawableWrapperWrappedDrawable(drawable: Drawable): Drawable {
         if (sV4DrawableWrapperClass != null) {
             if (sV4DrawableWrapperGetM == null) {
                 try {
-                    sV4DrawableWrapperGetM = sV4DrawableWrapperClass!!.getDeclaredMethod("getWrappedDrawable")
+                    sV4DrawableWrapperGetM =
+                        sV4DrawableWrapperClass!!.getDeclaredMethod("getWrappedDrawable")
                     sV4DrawableWrapperGetM!!.isAccessible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -152,7 +164,10 @@ object SkinCompatVersionUtils {
         if (sV4DrawableWrapperClass != null) {
             if (sV4DrawableWrapperSetM == null) {
                 try {
-                    sV4DrawableWrapperSetM = sV4DrawableWrapperClass!!.getDeclaredMethod("setWrappedDrawable", Drawable::class.java)
+                    sV4DrawableWrapperSetM = sV4DrawableWrapperClass!!.getDeclaredMethod(
+                        "setWrappedDrawable",
+                        Drawable::class.java
+                    )
                     sV4DrawableWrapperSetM!!.isAccessible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -181,14 +196,17 @@ object SkinCompatVersionUtils {
     }
 
     fun isV7DrawableWrapper(drawable: Drawable): Boolean {
-        return sV7DrawableWrapperClass != null && sV7DrawableWrapperClass!!.isAssignableFrom(drawable.javaClass)
+        return sV7DrawableWrapperClass != null && sV7DrawableWrapperClass!!.isAssignableFrom(
+            drawable.javaClass
+        )
     }
 
     fun getV7DrawableWrapperWrappedDrawable(drawable: Drawable): Drawable {
         if (sV7DrawableWrapperClass != null) {
             if (sV7DrawableWrapperGetM == null) {
                 try {
-                    sV7DrawableWrapperGetM = sV7DrawableWrapperClass!!.getDeclaredMethod("getWrappedDrawable")
+                    sV7DrawableWrapperGetM =
+                        sV7DrawableWrapperClass!!.getDeclaredMethod("getWrappedDrawable")
                     sV7DrawableWrapperGetM!!.isAccessible = true
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -217,7 +235,10 @@ object SkinCompatVersionUtils {
         if (sV7DrawableWrapperClass != null) {
             if (sV7DrawableWrapperSetM == null) {
                 try {
-                    sV7DrawableWrapperSetM = sV7DrawableWrapperClass!!.getDeclaredMethod("setWrappedDrawable", Drawable::class.java)
+                    sV7DrawableWrapperSetM = sV7DrawableWrapperClass!!.getDeclaredMethod(
+                        "setWrappedDrawable",
+                        Drawable::class.java
+                    )
                     sV7DrawableWrapperSetM!!.isAccessible = true
                 } catch (e: Exception) {
                     e.printStackTrace()

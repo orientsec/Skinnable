@@ -10,6 +10,7 @@ import android.text.TextUtils
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.util.skin.library.SkinManager
+import com.util.skin.library.model.appContext
 import com.util.skin.library.res.ColorState.Companion.checkColorValid
 import com.util.skin.library.res.ColorState.Companion.toJSONObject
 import com.util.skin.library.utils.SkinPreference
@@ -27,15 +28,13 @@ internal object SkinUserThemeManager {
     private val mColorNameStateMap = HashMap<String, ColorState>()
     private val mColorCacheLock = Object()
     private val mColorCaches = WeakHashMap<Int, WeakReference<ColorStateList>>()
-    var isColorEmpty: Boolean = false
-        private set
+    val isColorEmpty: Boolean
         get() = mColorNameStateMap.isEmpty()
 
     private val mDrawablePathAndAngleMap = HashMap<String, String>()
     private val mDrawableCacheLock = Object()
     private val mDrawableCaches = WeakHashMap<Int, WeakReference<Drawable>>()
-    var isDrawableEmpty: Boolean = false
-        private set
+    val isDrawableEmpty: Boolean
         get() = mDrawablePathAndAngleMap.isEmpty()
 
     private const val TAG = "SkinCompatUserThemeManager"
@@ -72,7 +71,7 @@ internal object SkinUserThemeManager {
         if (!TextUtils.isEmpty(colors)) {
             val jsonArray = JSONArray(colors)
             if (Slog.DEBUG) {
-                Slog.i(TAG, "startLoadFromSharedPreferences: " + jsonArray.toString())
+                Slog.i(TAG, "startLoadFromSharedPreferences: $jsonArray")
             }
             val count = jsonArray.length()
             for (i in 0 until count) {
@@ -376,11 +375,10 @@ internal object SkinUserThemeManager {
     }
 
     private fun getEntryName(resId: Int, entryType: String): String? {
-        val context = SkinManager.context
         return try {
-            val type = context.resources.getResourceTypeName(resId)
+            val type = appContext.resources.getResourceTypeName(resId)
             if (entryType.equals(type, ignoreCase = true)) {
-                context.resources.getResourceEntryName(resId)
+                appContext.resources.getResourceEntryName(resId)
             } else null
         } catch (e: Exception) {
             e.printStackTrace()

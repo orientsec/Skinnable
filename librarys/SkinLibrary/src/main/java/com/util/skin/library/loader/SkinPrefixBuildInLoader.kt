@@ -1,24 +1,23 @@
 package com.util.skin.library.loader
 
 import android.content.Context
-import com.util.skin.library.model.SkinResModel
+import com.util.skin.library.model.SkinResource
 
 
-class SkinPrefixBuildInLoader : BaseSkinLoaderStrategy() {
+internal class SkinPrefixBuildInLoader(private val skinName: String) : SkinLoaderStrategy {
 
-    override val type: SkinLoaderStrategyType
-        get() = SkinLoaderStrategyType.PrefixBuildIn
-
-    override fun initLoader(context: Context, skinName: String): String? {
-        resModel = SkinResModel(
+    override fun initStrategy(context: Context): SkinResource {
+        return SkinResource(
             context.resources,
             context.packageName,
             skinName
         )
-        return skinName
     }
 
-    override fun getTargetResourceEntryName(context: Context, skinName: String, resId: Int): String {
+    override fun getTargetResourceEntryName(
+        context: Context,
+        resId: Int
+    ): String {
         return skinName + "_" + context.resources.getResourceEntryName(resId)
     }
 }

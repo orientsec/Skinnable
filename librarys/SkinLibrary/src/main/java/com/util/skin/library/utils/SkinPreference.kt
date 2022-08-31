@@ -3,8 +3,7 @@ package com.util.skin.library.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import com.util.skin.library.loader.SkinLoaderStrategyType
-import com.util.skin.library.model.ResEntry
+import com.util.skin.library.loader.SkinStrategy
 
 internal object SkinPreference {
     private lateinit var mPref: SharedPreferences
@@ -27,13 +26,18 @@ internal object SkinPreference {
     private val keyRes: String
         get() = mPref.getString(KEY_SKIN_RESOURCES, "") ?: ""
 
-    fun getEntries(): HashSet<ResEntry> {
-        val entrySet = hashSetOf<ResEntry>()
+    /**
+     * 获取当前换肤策略
+     */
+    fun strategies(): HashSet<SkinStrategy> {
+        val entrySet = hashSetOf<SkinStrategy>()
         val set = keyRes.split(";").toHashSet()
         set.forEach { value ->
             if (value.isNotBlank() && value.contains(":")) {
                 val params = value.split(":")
-                entrySet.add(ResEntry(params[0], SkinLoaderStrategyType.parseType(params[1].toInt())))
+                entrySet.add(
+                    initialStrategy(params[0], params[1])
+                )
             }
         }
         return entrySet
@@ -69,5 +73,16 @@ internal object SkinPreference {
 
     fun commitEditor() {
         mEditor.apply()
+    }
+
+    private fun initialStrategy(skinName: String, simpleName: String): SkinStrategy {
+        return when (simpleName) {
+            SkinStrategy.Assets::class.java.simpleName -> SkinStrategy.Assets(skinName)
+            SkinStrategy.BuildIn::class.java.simpleName -> SkinStrategy.BuildIn(skinName)
+            SkinStrategy.PrefixBuildIn::class.java.simpleName -> SkinStrategy.PrefixBuildIn(skinName)
+            SkinStrategy.SDCard::class.java.simpleName -> SkinStrategy.SDCard(skinName)
+            SkinStrategy.Zip::class.java.simpleName -> SkinStrategy.Zip(skinName)
+            else -> throw IllegalArgumentException("not have name $simpleName")
+        }
     }
 }

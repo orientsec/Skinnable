@@ -23,4 +23,6 @@ interface SkinLoaderListener {
      * @param errMsg 错误信息.
      */
     fun onFailed(errMsg: String)
+
+    fun onFinish()
 }

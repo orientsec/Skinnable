@@ -1,8 +1,7 @@
-package com.util.skin.library.app
+package com.util.skin.library.factory
 
 import android.content.Context
 import android.content.ContextWrapper
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import androidx.collection.ArrayMap
@@ -13,9 +12,9 @@ import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
 /**
- * create View
+ * create View, 换肤Inflater factory
  */
-internal object SkinViewInflater {
+internal object SkinFactoryManager : SkinFactory {
     private val sConstructorSignature = arrayOf(Context::class.java, AttributeSet::class.java)
     private val sOnClickAttrs = intArrayOf(android.R.attr.onClick)
 
@@ -23,8 +22,9 @@ internal object SkinViewInflater {
 
     private val sConstructorMap = ArrayMap<String, Constructor<out View>>()
 
-    fun createView(name: String, context: Context, attrs: AttributeSet): View? {
-        val view = createViewFromInflater(context, name, attrs) ?: createViewFromTag(context, name, attrs)
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        val view =
+            createViewFromFactory(context, name, attrs) ?: createViewFromTag(context, name, attrs)
         view?.apply {
             // If we have created a view, check it's android:onClick
             checkOnClickListener(this, attrs)
@@ -35,14 +35,12 @@ internal object SkinViewInflater {
     /**
      * 根据name重建View
      */
-    private fun createViewFromInflater(context: Context, name: String, attrs: AttributeSet): View? {
-        SkinManager.inflaters.forEach { inflater ->
-            inflater.createView(context, name, attrs)
-                ?.let {
-                    return it
-                }
-        }
-        return null
+    private fun createViewFromFactory(context: Context, name: String, attrs: AttributeSet): View? {
+        return SkinManager.config
+            .factories
+            .firstNotNullOfOrNull { inflater ->
+                inflater.onCreateView(name, context, attrs)
+            }
     }
 
     private fun createViewFromTag(context: Context, name: String, attrs: AttributeSet): View? {
@@ -77,7 +75,7 @@ internal object SkinViewInflater {
     private fun checkOnClickListener(view: View, attrs: AttributeSet) {
         val context = view.context
 
-        if (context !is ContextWrapper || Build.VERSION.SDK_INT >= 15 && !ViewCompat.hasOnClickListeners(view)) {
+        if (context !is ContextWrapper || !ViewCompat.hasOnClickListeners(view)) {
             // Skip our compat functionality if: the Context isn't a ContextWrapper, or
             // the view doesn't have an OnClickListener (we can only rely on this on API 15+ so
             // always use our compat code on older devices)
@@ -125,7 +123,10 @@ internal object SkinViewInflater {
      * An implementation of OnClickListener that attempts to lazily load a
      * named click handling method from a parent or ancestor context.
      */
-    private class DeclaredOnClickListener(private val mHostView: View, private val mMethodName: String) :
+    private class DeclaredOnClickListener(
+        private val mHostView: View,
+        private val mMethodName: String
+    ) :
         View.OnClickListener {
 
         private var mResolvedMethod: Method? = null
