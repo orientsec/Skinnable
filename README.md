@@ -54,8 +54,6 @@ SkinConfig.builder()
 app:skinnable="true"
 ```
 
-表示支持换肤
-
 # 换肤方法
 
 ## 加载插件皮肤库
@@ -98,7 +96,10 @@ sourceSets {
 
 ## 插件式换肤:
 
-新建Android application工程,皮肤工程包名不能和宿主应用包名相同. 将需要换肤的资源放到res目录下(同名资源)
+### 新建Android application工程,皮肤工程包名不能和宿主应用包名相同.
+
+### 将需要换肤的资源放到res目录下(同名资源)
+
 例如 APK中窗口背景颜色为 colors.xml
 
 ``` xml
@@ -111,11 +112,11 @@ sourceSets {
 <color name="background">#000000</color>
 ```
 
-## 打包生成apk, 即为皮肤包
+### 打包生成apk, 即为皮肤包
 
 将打包生成的apk文件, 重命名为'xxx.skin', 防止apk结尾的文件造成混淆.
 
-## 加载皮肤插件
+### 加载皮肤插件
 
 加载插件式皮肤, 将皮肤包放到assets/skins目录下
 
