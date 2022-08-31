@@ -96,14 +96,9 @@ sourceSets {
 }
 ```
 
-# 插件式换肤:
+## 插件式换肤:
 
-## 新建Android application工程
-
-皮肤工程包名不能和宿主应用包名相同.
-
-## 将需要换肤的资源放到res目录下(同名资源)
-
+新建Android application工程,皮肤工程包名不能和宿主应用包名相同. 将需要换肤的资源放到res目录下(同名资源)
 例如 APK中窗口背景颜色为 colors.xml
 
 ``` xml
