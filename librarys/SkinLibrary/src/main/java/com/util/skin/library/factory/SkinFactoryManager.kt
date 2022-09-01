@@ -102,10 +102,7 @@ internal object SkinFactoryManager : SkinFactory {
                     .loadClass(if (prefix != null) prefix + name else name)
                     .asSubclass(View::class.java)
                     .getConstructor(*sConstructorSignature)
-                    .let {
-                        sConstructorMap[name] = it
-                        it
-                    })
+                    .apply { sConstructorMap[name] = this })
                 .apply {
                     isAccessible = true
                     return newInstance(context, attrs)

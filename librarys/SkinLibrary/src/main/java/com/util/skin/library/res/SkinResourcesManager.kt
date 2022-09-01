@@ -14,6 +14,7 @@ import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.loader.ResourceLoader
 import com.util.skin.library.loader.ResourceLoaderImpl
 import com.util.skin.library.loader.SkinStrategy
+import com.util.skin.library.model.appContext
 import com.util.skin.library.utils.SkinPreference
 import java.util.concurrent.atomic.AtomicReference
 
@@ -36,7 +37,9 @@ object SkinResourcesManager {
      * 初始化Resource
      */
     fun setupResource(strategy: SkinStrategy) {
-        resource.set(ResourceLoaderImpl(strategy.loaderStrategy))
+        val resourceLoader = ResourceLoaderImpl(strategy.loaderStrategy)
+        resourceLoader.initStrategy(appContext)
+        resource.set(resourceLoader)
         SkinPreference.addResources(strategy.key).commitEditor()
     }
 

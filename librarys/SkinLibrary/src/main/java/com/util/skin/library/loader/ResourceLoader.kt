@@ -19,10 +19,9 @@ interface ResourceLoader {
      * 初始化.
      *
      * @param context  [Context]
-     * @param skinName 皮肤包名称.
      * @return 加载成功，返回皮肤包SkinResource；失败，则返回空。
      */
-    fun initStrategy(context: Context, skinName: String): SkinResource?
+    fun initStrategy(context: Context): SkinResource?
 
     /**
      * 开发者可以拦截应用中的资源ID，返回对应color值。

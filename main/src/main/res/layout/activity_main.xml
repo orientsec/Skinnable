@@ -14,8 +14,9 @@
         android:layout_height="50dp"
         app:layout_constraintBottom_toTopOf="@id/scrollView"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicator="@color/red_3"
+        app:tabIndicator="@color/red_4"
         app:tabIndicatorFullWidth="true"
+        app:tabIndicatorHeight="2dp"
         app:tabSelectedTextColor="@color/red_1"
         app:tabTextAppearance="@style/text_15_red"
         app:tabTextColor="#1f1f1f">
@@ -111,8 +112,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:background="@color/red_3"
-                app:skinnable="true" />
+                android:background="@color/red_4" />
 
             <View
                 android:layout_width="match_parent"

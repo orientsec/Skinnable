@@ -20,7 +20,7 @@ internal class ResourceLoaderImpl constructor(
 ) : ResourceLoader {
     private var resource: SkinResource? = null
 
-    override fun initStrategy(context: Context, skinName: String): SkinResource? =
+    override fun initStrategy(context: Context): SkinResource? =
         strategy.initStrategy(context)?.apply { resource = this }
 
     override fun getColor(context: Context, resId: Int): Int {
