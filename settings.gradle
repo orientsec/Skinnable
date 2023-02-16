@@ -1,5 +1,11 @@
-include ':main', ':mainNight'
-include ':librarys:SkinLibrary'
-include ':librarys:SkinSupportCompat'
-include ':librarys:SkinSupportConstraintLayout'
-include ':librarys:SkinSupportDesign'
+include ':main'
+include('main-night')
+project(':main-night').projectDir = new File(settingsDir, 'mainNight')
+include ':librarys:skin-base'
+project(':librarys:skin-base').projectDir = new File(settingsDir, 'librarys/SkinLibrary')
+include ':librarys:skin-compat'
+project(':librarys:skin-compat').projectDir = new File(settingsDir, 'librarys/SkinSupportCompat')
+include ':librarys:skin-constraintlayout'
+project(':librarys:skin-constraintlayout').projectDir = new File(settingsDir, 'librarys/SkinSupportConstraintLayout')
+include ':librarys:skin-material-design'
+project(':librarys:skin-material-design').projectDir = new File(settingsDir, 'librarys/SkinSupportDesign')
