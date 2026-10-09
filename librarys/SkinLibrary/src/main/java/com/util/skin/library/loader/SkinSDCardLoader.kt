@@ -56,10 +56,12 @@ abstract class SkinSDCardLoader(protected val path: String) : SkinLoaderStrategy
         try {
             val packageInfo =
                 appContext.packageManager.getPackageArchiveInfo(skinPkgPath, 0) ?: return null
-            packageInfo.applicationInfo.sourceDir = skinPkgPath
-            packageInfo.applicationInfo.publicSourceDir = skinPkgPath
+            packageInfo.applicationInfo?.sourceDir = skinPkgPath
+            packageInfo.applicationInfo?.publicSourceDir = skinPkgPath
             val res =
-                appContext.packageManager.getResourcesForApplication(packageInfo.applicationInfo)
+                appContext.packageManager.getResourcesForApplication(
+                    packageInfo.applicationInfo ?: return null
+                )
             val superRes = appContext.resources
             return Resources(res.assets, superRes.displayMetrics, superRes.configuration)
         } catch (e: Exception) {
