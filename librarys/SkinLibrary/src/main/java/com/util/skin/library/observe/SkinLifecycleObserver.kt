@@ -12,8 +12,11 @@ import com.util.skin.library.utils.applySkinToViewTree
 import com.util.skin.library.widget.SkinSupportable
 
 /**
- * 供 Fragment/Dialog/View 或自定义 LifecycleOwner 绑定的换肤生命周期观察者。
- * 可以通过 lifecycle.addObserver(SkinLifecycleObserver(target)) 自动感知换肤刷新及解绑。
+ * 供 [Fragment]、[android.app.Dialog]、[View] 或自定义 [LifecycleOwner] 绑定的生命周期感知换肤观察者。
+ * 通过在目标生命周期组件中注册 `lifecycle.addObserver(SkinLifecycleObserver(this))`，
+ * 可以实现在 `onResume` 时自动注册全局换肤监听并刷新界面，在 `onDestroy` 时自动接触注册防止内存泄漏。
+ *
+ * @param target 换肤目标组件（支持 [Fragment]、[View] 或 [Context]）
  */
 class SkinLifecycleObserver(
     private val target: Any

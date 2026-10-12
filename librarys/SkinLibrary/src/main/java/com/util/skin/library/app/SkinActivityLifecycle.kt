@@ -45,6 +45,7 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
             installLayoutFactory(activity)
             updateWindowBackground(activity)
             registerFragmentLifecycleCallbacks(activity)
+            SkinManager.checkAndApplySystemDarkMode(activity)
             if (activity is SkinSupportable && activity.skinnable) {
                 (activity as SkinSupportable).applySkin()
             }

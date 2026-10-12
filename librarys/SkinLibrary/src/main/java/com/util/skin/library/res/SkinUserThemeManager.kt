@@ -23,7 +23,12 @@ import java.io.File
 import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
 
-internal object SkinUserThemeManager {
+/**
+ * 用户动态自定义主题管理器。
+ * 允许应用在运行时自由设置指定颜色资源（[ColorState] 或十六进制颜色字符串）或图片路径（Drawable Path），
+ * 无需制作或加载独立的皮肤包文件。所有配置会自动持久化保存至 SharedPreferences 中。
+ */
+object SkinUserThemeManager {
 
     private val mColorNameStateMap = ConcurrentHashMap<String, ColorState>()
     private val mColorCaches = ConcurrentHashMap<Int, WeakReference<ColorStateList>>()
@@ -103,6 +108,9 @@ internal object SkinUserThemeManager {
         isDrawableEmpty = mDrawablePathAndAngleMap.isEmpty()
     }
 
+    /**
+     * 将当前配置的用户自定义主题保存至 SharedPreferences 并触发全局界面皮肤重绘与刷新。
+     */
     fun apply() {
         val jsonArray = JSONArray()
         for (colorName in mColorNameStateMap.keys) {
@@ -136,6 +144,11 @@ internal object SkinUserThemeManager {
         SkinManager.notifyUpdateSkin()
     }
 
+    /**
+     * 为指定的颜色资源绑定自定义多状态 [ColorState] 对象。
+     * @param colorRes 需要替换的颜色资源 ID（例如 R.color.demo_primary）
+     * @param state 包含各控件状态颜色的 [ColorState] 对象
+     */
     fun addColorState(@ColorRes colorRes: Int, state: ColorState?) {
         val entry = getEntryName(colorRes, KEY_TYPE_COLOR)
         if (!TextUtils.isEmpty(entry) && state != null) {
@@ -146,6 +159,11 @@ internal object SkinUserThemeManager {
         }
     }
 
+    /**
+     * 为指定的颜色资源绑定默认十六进制颜色字符串（例如 "#FF3D00"）。
+     * @param colorRes 需要替换的颜色资源 ID（例如 R.color.demo_primary）
+     * @param colorDefault 十六进制颜色字符串
+     */
     fun addColorState(@ColorRes colorRes: Int, colorDefault: String) {
         if (!checkColorValid("colorDefault", colorDefault)) {
             return
@@ -158,6 +176,9 @@ internal object SkinUserThemeManager {
         }
     }
 
+    /**
+     * 移除指定颜色资源的动态自定义设置，恢复使用默认或皮肤包中的颜色。
+     */
     fun removeColorState(@ColorRes colorRes: Int) {
         val entry = getEntryName(colorRes, KEY_TYPE_COLOR)
         if (!TextUtils.isEmpty(entry)) {
@@ -202,6 +223,11 @@ internal object SkinUserThemeManager {
         return colorStateList
     }
 
+    /**
+     * 为指定的 Drawable 资源绑定本地图片绝对路径。
+     * @param drawableRes 需要替换的 Drawable 资源 ID（例如 R.drawable.ic_logo）
+     * @param drawablePath 本地文件系统中图片的绝对路径
+     */
     fun addDrawablePath(@DrawableRes drawableRes: Int, drawablePath: String) {
         if (!checkPathValid(drawablePath)) {
             return
@@ -299,6 +325,9 @@ internal object SkinUserThemeManager {
         return drawable
     }
 
+    /**
+     * 清空所有已配置的自定义颜色设置，并立即刷新应用界面。
+     */
     fun clearColors() {
         mColorNameStateMap.clear()
         isColorEmpty = true
@@ -306,6 +335,9 @@ internal object SkinUserThemeManager {
         apply()
     }
 
+    /**
+     * 清空所有自定义图片路径设置，并立即刷新应用界面。
+     */
     fun clearDrawables() {
         mDrawablePathAndAngleMap.clear()
         isDrawableEmpty = true

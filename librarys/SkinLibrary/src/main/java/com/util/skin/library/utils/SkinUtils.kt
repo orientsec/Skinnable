@@ -62,6 +62,18 @@ fun isFileExists(path: String): Boolean {
 }
 
 /**
+ * 刷新 RecyclerView 缓存池并通知数据发生改变，保证出队 Item 自动响应当前最新皮肤
+ */
+fun androidx.recyclerview.widget.RecyclerView.applySkinAndInvalidatePool() {
+    try {
+        recycledViewPool.clear()
+        adapter?.notifyDataSetChanged()
+    } catch (e: Exception) {
+        Slog.e("SkinUtils", "Failed to refresh RecyclerView pool", e)
+    }
+}
+
+/**
  * 递归遍历 View 树并尝试刷新每一个支持换肤的 View。
  * 可用于刷新 ViewPager、ViewPager2 或 Nested Fragment 中的动态 View 结构。
  */
@@ -69,6 +81,10 @@ fun applySkinToViewTree(view: android.view.View?) {
     if (view == null) return
     if (view is com.util.skin.library.widget.SkinSupportable && view.skinnable) {
         view.applySkin()
+    }
+    view.applySkinBinders()
+    if (view is androidx.recyclerview.widget.RecyclerView) {
+        view.applySkinAndInvalidatePool()
     }
     if (view is android.view.ViewGroup) {
         for (i in 0 until view.childCount) {

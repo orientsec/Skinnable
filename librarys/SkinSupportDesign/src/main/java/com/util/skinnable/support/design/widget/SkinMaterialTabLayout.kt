@@ -8,8 +8,13 @@ import com.util.skin.library.helpers.SkinHelper
 import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.widget.SkinSupportable
+import com.util.skinnable.support.compat.helpers.SkinBackgroundHelper
 import com.util.skinnable.support.design.R
 
+/**
+ * 支持换肤的 TabLayout 控件。
+ * 能够自动捕获并替换背景色、指示器颜色 (tabIndicatorColor)、标签文本颜色 (tabTextColor) 及选中文本颜色 (tabSelectedTextColor)。
+ */
 @SuppressLint("CustomViewStyleable", "PrivateResource")
 class SkinMaterialTabLayout @JvmOverloads constructor(
     context: Context,
@@ -19,6 +24,8 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
     private var mTabIndicatorColorResId = INVALID_ID
     private var mTabTextColorsResId = INVALID_ID
     private var mTabSelectedTextColorResId = INVALID_ID
+    private val mBackgroundHelper = SkinBackgroundHelper(this)
+
     override val skinnable: Boolean by lazy {
         return@lazy SkinResourcesManager.parseSkinnable(
             context,
@@ -28,6 +35,8 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
     }
 
     init {
+        mBackgroundHelper.loadFromAttributes(attrs, defStyleAttr)
+
         val a = context.obtainStyledAttributes(
             attrs, R.styleable.TabLayout,
             defStyleAttr, 0
@@ -53,8 +62,7 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
 
         if (a.hasValue(R.styleable.TabLayout_tabSelectedTextColor)) {
             // We have an explicit selected text color set, so we need to make merge it with the
-            // current colors. This is exposed so that developers can use theme attributes to set
-            // this (theme attrs in ColorStateLists are Lollipop+)
+            // current colors.
             mTabSelectedTextColorResId = a.getResourceId(R.styleable.TabLayout_tabSelectedTextColor, INVALID_ID)
         }
         a.recycle()
@@ -62,6 +70,8 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
     }
 
     override fun applySkin() {
+        mBackgroundHelper.applySkin()
+
         if (SkinHelper.checkResourceIdValid(mTabIndicatorColorResId)) {
             setSelectedTabIndicatorColor(SkinResourcesManager.getColor(context, mTabIndicatorColorResId))
         }
@@ -75,5 +85,4 @@ class SkinMaterialTabLayout @JvmOverloads constructor(
             }
         }
     }
-
 }

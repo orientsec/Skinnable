@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlinCompose)
 }
 
 android {
@@ -15,6 +16,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        compose = true
     }
     sourceSets {
         getByName("main") {
@@ -39,6 +41,11 @@ dependencies {
     
     implementation(libs.coroutines.android)
     implementation(libs.lifecycle.runtime.ktx)
+
+    implementation(libs.compose.runtime)
+    implementation(libs.composeUi)
+    implementation(libs.composeFoundation)
+    implementation(libs.composeMaterial3)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)

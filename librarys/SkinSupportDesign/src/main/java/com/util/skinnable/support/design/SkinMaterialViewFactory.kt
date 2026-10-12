@@ -11,6 +11,9 @@ class SkinMaterialViewFactory : SkinFactory {
         if ("androidx.coordinatorlayout.widget.CoordinatorLayout" == name) {
             return SkinMaterialCoordinatorLayout(context, attrs)
         }
+        if ("androidx.cardview.widget.CardView" == name || "com.google.android.material.card.MaterialCardView" == name) {
+            return SkinMaterialCardView(context, attrs)
+        }
         if (!name.startsWith("com.google.android.material.")) {
             return null
         }

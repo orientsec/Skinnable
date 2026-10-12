@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text_background">#ff099fde</color>
+    <color name="text_background_night">#2D3748</color>
+    <color name="night_text_background">#1A202C</color>
+
     <color name="text_color">#ffffffff</color>
     <color name="container_bg">#F5F5F5</color>
+    <color name="night_container_bg">#181818</color>
 
     <color name="red_1">#EA6B6B</color>
     <color name="red_2">#EA4D4D</color>
@@ -28,6 +32,10 @@
     <color name="demo_hint">#999999</color>
     <color name="demo_hint_night">#777777</color>
     <color name="night_demo_hint">#888888</color>
+
+    <color name="demo_tab_unselected">#D0FFFFFF</color>
+    <color name="demo_tab_unselected_night">#B0FFFFFF</color>
+    <color name="night_demo_tab_unselected">#B0FFFFFF</color>
 
     <color name="demo_icon_tint">#555555</color>
     <color name="demo_icon_tint_night">#BBBBBB</color>

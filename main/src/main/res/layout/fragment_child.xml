@@ -19,23 +19,18 @@
         app:skinnable="true" />
 
     <TextView
-        android:id="@+id/tv_child_desc"
+        android:id="@+id/tv_dynamic_dsl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="This is a nested child fragment inside ViewPager2."
-        android:textColor="@color/demo_hint"
         android:textSize="13sp"
-        app:skinnable="true" />
+        android:textStyle="italic" />
 
-    <Button
-        android:id="@+id/btn_child_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/demo_primary"
-        android:text="Child Fragment Button"
-        android:textColor="@android:color/white"
-        app:skinnable="true" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_child_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

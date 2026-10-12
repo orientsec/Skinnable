@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlinCompose)
 }
 
 android {
@@ -9,6 +10,10 @@ android {
     defaultConfig {
         minSdk = 21
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        compose = true
     }
 
     buildTypes {
@@ -22,6 +27,8 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.recyclerview)
+    compileOnly(libs.compose.runtime)
     implementation(libs.coroutines.android)
     implementation(libs.lifecycle.common)
     testImplementation(libs.junit)

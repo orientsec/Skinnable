@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/demo_primary"
+        android:fitsSystemWindows="true"
         app:layout_constraintTop_toTopOf="parent"
         app:skinnable="true">
 
@@ -27,12 +28,13 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@android:color/transparent"
-            app:tabIndicatorColor="@android:color/white"
+            android:background="@color/demo_primary"
+            app:tabIndicatorColor="@color/demo_surface"
             app:tabIndicatorFullWidth="true"
             app:tabIndicatorHeight="3dp"
-            app:tabSelectedTextColor="@android:color/white"
-            app:tabTextColor="#B3FFFFFF">
+            app:tabSelectedTextColor="@color/demo_surface"
+            app:tabTextColor="@color/demo_tab_unselected"
+            app:skinnable="true">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -64,6 +66,135 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <!-- 动态用户主题 (SkinUserThemeManager) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/demo_surface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:skinnable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎨 用户动态调色盘 (SkinUserThemeManager)"
+                        android:textColor="@color/demo_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:skinnable="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="实时修改 Theme 资源颜色（无需皮肤包）"
+                        android:textColor="@color/demo_hint"
+                        android:textSize="13sp"
+                        app:skinnable="true" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnThemePink"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="粉色"
+                            android:textSize="12sp"
+                            app:strokeColor="@color/demo_primary" />
+
+                        <Button
+                            android:id="@+id/btnThemeGreen"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="绿色"
+                            android:textSize="12sp"
+                            app:strokeColor="@color/demo_primary" />
+
+                        <Button
+                            android:id="@+id/btnThemePurple"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="紫色"
+                            android:textSize="12sp"
+                            app:strokeColor="@color/demo_primary" />
+
+                        <Button
+                            android:id="@+id/btnThemeReset"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="重置"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 协程异步换肤 (loadSkinSuspend) -->
+            <Button
+                android:id="@+id/btnAsyncSkin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/demo_primary"
+                android:text="⚡ 协程异步换肤 (Coroutines loadSkinSuspend)"
+                android:textColor="@android:color/white"
+                app:skinnable="true" />
+
+            <!-- Jetpack Compose 换肤示范 (SkinnableTheme) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/demo_surface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:skinnable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚛️ Jetpack Compose 换肤 (SkinnableTheme)"
+                        android:textColor="@color/demo_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:skinnable="true" />
+
+                    <androidx.compose.ui.platform.ComposeView
+                        android:id="@+id/composeView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- CardView (Material) -->
             <com.google.android.material.card.MaterialCardView
