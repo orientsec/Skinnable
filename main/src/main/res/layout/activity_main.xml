@@ -196,6 +196,39 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- WebView / H5 动态主题注入 (SkinWebViewHelper) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/demo_surface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:skinnable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌐 WebView / H5 动态主题注入 (SkinWebViewHelper)"
+                        android:textColor="@color/demo_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:skinnable="true" />
+
+                    <WebView
+                        android:id="@+id/webView"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- CardView (Material) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

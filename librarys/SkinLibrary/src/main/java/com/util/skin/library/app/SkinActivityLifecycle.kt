@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.LayoutInflater.Factory2
 import android.view.View
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.LayoutInflaterCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -159,6 +161,22 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
                 SkinResourcesManager.getDrawable(activity, windowBackgroundResId)
                     ?.let { activity.window.setBackgroundDrawable(it) }
             }
+        }
+        updateStatusBarColor(activity)
+    }
+
+    private fun updateStatusBarColor(activity: Activity) {
+        try {
+            val statusBarResId = SkinThemeUtils.getStatusBarColorResId(activity)
+            if (checkResourceIdValid(statusBarResId)) {
+                val color = SkinResourcesManager.getColor(activity, statusBarResId)
+                activity.window.statusBarColor = color
+                val controller = WindowInsetsControllerCompat(activity.window, activity.window.decorView)
+                val isLight = ColorUtils.calculateLuminance(color) > 0.5
+                controller.isAppearanceLightStatusBars = isLight
+            }
+        } catch (e: Exception) {
+            // Ignore system bar tinting exceptions
         }
     }
 

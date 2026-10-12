@@ -4,15 +4,16 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.util.AttributeSet
 import android.view.View
-import androidx.collection.ArrayMap
 import androidx.core.view.ViewCompat
 import com.util.skin.library.SkinManager
 import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
+import java.util.concurrent.ConcurrentHashMap
 
 /**
- * create View, 换肤Inflater factory
+ * 视图膨胀拦截管理器。
+ * 拦截 LayoutInflater 的 View 创建，支持自定义 Factory 转发以及原生 Tag/Class 反射解析与构造函数缓存。
  */
 internal object SkinFactoryManager : SkinFactory {
     private val sConstructorSignature = arrayOf(Context::class.java, AttributeSet::class.java)
@@ -20,21 +21,17 @@ internal object SkinFactoryManager : SkinFactory {
 
     private val sClassPrefixList = arrayOf("android.widget.", "android.view.", "android.webkit.")
 
-    private val sConstructorMap = ArrayMap<String, Constructor<out View>>()
+    // 使用 ConcurrentHashMap 保证多线程/异步 View 膨胀时的并发安全与无锁高效查找
+    private val sConstructorMap = ConcurrentHashMap<String, Constructor<out View>>()
 
     override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        val view =
-            createViewFromFactory(context, name, attrs) ?: createViewFromTag(context, name, attrs)
+        val view = createViewFromFactory(context, name, attrs) ?: createViewFromTag(context, name, attrs)
         view?.apply {
-            // If we have created a view, check it's android:onClick
             checkOnClickListener(this, attrs)
         }
         return view
     }
 
-    /**
-     * 根据name重建View
-     */
     private fun createViewFromFactory(context: Context, name: String, attrs: AttributeSet): View? {
         return SkinManager.config
             .factories
@@ -46,47 +43,35 @@ internal object SkinFactoryManager : SkinFactory {
     private fun createViewFromTag(context: Context, name: String, attrs: AttributeSet): View? {
         var tempName = name
         if ("view" == tempName) {
-            tempName = attrs.getAttributeValue(null, "class")
+            tempName = attrs.getAttributeValue(null, "class") ?: return null
         }
 
         try {
             if (!tempName.contains('.')) {
-                sClassPrefixList.forEach { cls ->
-                    createView(context, tempName, cls, attrs)
-                        ?.let { return it }
+                for (cls in sClassPrefixList) {
+                    val view = createView(context, tempName, cls, attrs)
+                    if (view != null) return view
                 }
                 return null
             } else {
                 return createView(context, tempName, null, attrs)
             }
         } catch (e: Exception) {
-            e.printStackTrace()
-            // We do not want to catch these, lets return null and let the actual LayoutInflater
-            // try
             return null
         }
     }
 
-    /**
-     * android:onClick doesn't handle views with a ContextWrapper context. This method
-     * backports new framework functionality to traverse the Context wrappers to find a
-     * suitable target.
-     */
     private fun checkOnClickListener(view: View, attrs: AttributeSet) {
         val context = view.context
 
         if (context !is ContextWrapper || !ViewCompat.hasOnClickListeners(view)) {
-            // Skip our compat functionality if: the Context isn't a ContextWrapper, or
-            // the view doesn't have an OnClickListener (we can only rely on this on API 15+ so
-            // always use our compat code on older devices)
             return
         }
 
         val a = context.obtainStyledAttributes(attrs, sOnClickAttrs)
-        a.getString(0)
-            ?.let { handlerName ->
-                view.setOnClickListener(DeclaredOnClickListener(view, handlerName))
-            }
+        a.getString(0)?.let { handlerName ->
+            view.setOnClickListener(DeclaredOnClickListener(view, handlerName))
+        }
         a.recycle()
     }
 
@@ -96,35 +81,25 @@ internal object SkinFactoryManager : SkinFactory {
         prefix: String?,
         attrs: AttributeSet
     ): View? {
+        val fullName = if (prefix != null) prefix + name else name
         try {
-            (sConstructorMap[name]
-                ?: context.classLoader
-                    .loadClass(if (prefix != null) prefix + name else name)
-                    .asSubclass(View::class.java)
-                    .getConstructor(*sConstructorSignature)
-                    .apply { sConstructorMap[name] = this })
-                .apply {
-                    isAccessible = true
-                    return newInstance(context, attrs)
-                }
+            val constructor = sConstructorMap[fullName] ?: run {
+                val clazz = context.classLoader.loadClass(fullName).asSubclass(View::class.java)
+                val ctor = clazz.getConstructor(*sConstructorSignature)
+                ctor.isAccessible = true // 仅在反射放入缓存时执行一次 setup，提升后续调用性能
+                sConstructorMap[fullName] = ctor
+                ctor
+            }
+            return constructor.newInstance(context, attrs)
         } catch (e: Exception) {
-            e.printStackTrace()
-            // We do not want to catch these, lets return null and let the actual LayoutInflater
-            // try
             return null
         }
-
     }
 
-    /**
-     * An implementation of OnClickListener that attempts to lazily load a
-     * named click handling method from a parent or ancestor context.
-     */
     private class DeclaredOnClickListener(
         private val mHostView: View,
         private val mMethodName: String
-    ) :
-        View.OnClickListener {
+    ) : View.OnClickListener {
 
         private var mResolvedMethod: Method? = null
         private var mResolvedContext: Context? = null
@@ -137,15 +112,10 @@ internal object SkinFactoryManager : SkinFactory {
             try {
                 mResolvedMethod?.invoke(mResolvedContext, v)
             } catch (e: IllegalAccessException) {
-                throw IllegalStateException(
-                    "Could not execute non-public method for android:onClick", e
-                )
+                throw IllegalStateException("Could not execute non-public method for android:onClick", e)
             } catch (e: InvocationTargetException) {
-                throw IllegalStateException(
-                    "Could not execute method for android:onClick", e
-                )
+                throw IllegalStateException("Could not execute method for android:onClick", e)
             }
-
         }
 
         private fun resolveMethod(context: Context?) {
@@ -159,26 +129,20 @@ internal object SkinFactoryManager : SkinFactory {
                         return
                     }
                 } catch (e: NoSuchMethodException) {
-                    // Failed to find method, keep searching up the hierarchy.
+                    // Continue searching ancestor context
                 }
 
                 tempContext = if (tempContext is ContextWrapper) {
                     tempContext.baseContext
                 } else {
-                    // Can't search up the hierarchy, null out and fail.
                     null
                 }
             }
 
             val id = mHostView.id
-            val idText = if (id == View.NO_ID)
-                ""
-            else
-                " with id '" + mHostView.context.resources.getResourceEntryName(id) + "'"
+            val idText = if (id == View.NO_ID) "" else " with id '" + mHostView.context.resources.getResourceEntryName(id) + "'"
             throw IllegalStateException(
-                "Could not find method " + mMethodName
-                        + "(View) in a parent or ancestor Context for android:onClick "
-                        + "attribute defined on view " + mHostView.javaClass + idText
+                "Could not find method " + mMethodName + "(View) in a parent or ancestor Context for android:onClick attribute defined on view " + mHostView.javaClass + idText
             )
         }
     }
