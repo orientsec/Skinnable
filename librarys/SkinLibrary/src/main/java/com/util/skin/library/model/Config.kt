@@ -26,7 +26,11 @@ class SkinConfig private constructor(
     /**
      * 换肤
      */
-    val factories: List<SkinFactory>
+    val factories: List<SkinFactory>,
+    /**
+     * 自定义日志输出
+     */
+    val logger: com.util.skin.library.utils.SkinLogger?
 ) {
     data class Builder(
         /**
@@ -40,7 +44,9 @@ class SkinConfig private constructor(
         /**
          * 换肤
          */
-        val factories: MutableList<SkinFactory> = mutableListOf()
+        val factories: MutableList<SkinFactory> = mutableListOf(),
+        
+        var logger: com.util.skin.library.utils.SkinLogger? = null
     ) {
         fun setAllActivity(allActivity: Boolean) = apply { this.allActivity = allActivity }
 
@@ -48,13 +54,16 @@ class SkinConfig private constructor(
             apply { this.windowBackground = windowBackground }
 
         fun addInflater(inflater: SkinFactory) = apply { factories.add(inflater) }
+        
+        fun setLogger(logger: com.util.skin.library.utils.SkinLogger) = apply { this.logger = logger }
 
-        fun build() = SkinConfig(allActivity, windowBackground, factories)
+        fun build() = SkinConfig(allActivity, windowBackground, factories, logger)
     }
 
     fun initManager(context: Application): SkinManager {
         _context = context
         SkinManager._config = this
+        com.util.skin.library.utils.Slog.logger = logger
         SkinPreference.init(context)
         SkinActivityLifecycle.init(context)
         return SkinManager

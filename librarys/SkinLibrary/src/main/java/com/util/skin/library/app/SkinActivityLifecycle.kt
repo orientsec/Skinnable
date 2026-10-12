@@ -17,6 +17,7 @@ import com.util.skin.library.res.SkinThemeUtils
 import com.util.skin.library.widget.SkinSupportable
 import java.lang.ref.WeakReference
 import java.util.*
+import androidx.core.view.LayoutInflaterCompat
 
 internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
     private val mSkinFactoryMap: WeakHashMap<Context, SkinFactory2Impl> = WeakHashMap()
@@ -57,7 +58,12 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
         }
     }
 
-    override fun onActivityPaused(activity: Activity) {}
+    override fun onActivityPaused(activity: Activity) {
+        if (isContextSkinEnable(activity)) {
+            val observer = getObserver(activity)
+            SkinManager.deleteObserver(observer)
+        }
+    }
 
     override fun onActivityStopped(activity: Activity) {
 
@@ -68,7 +74,6 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityDestroyed(activity: Activity) {
         if (isContextSkinEnable(activity)) {
-            SkinManager.deleteObserver(getObserver(activity))
             mSkinObserverMap.remove(activity)
             mSkinFactoryMap.remove(activity)
         }
@@ -76,7 +81,11 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
 
     private fun installLayoutFactory(context: Context) {
         val inflater = LayoutInflater.from(context)
-        forceSetFactory2(inflater, skinFactory(context))
+        val factory = skinFactory(context)
+        if (inflater.factory2 !is SkinFactory2Impl) {
+            factory.setOriginalFactory(inflater.factory2)
+            forceSetFactory2(inflater, factory)
+        }
     }
 
     fun skinFactory(context: Context): SkinFactory2Impl {
@@ -116,14 +125,18 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
     @SuppressLint("DiscouragedPrivateApi")
     private fun forceSetFactory2(inflater: LayoutInflater, factory: Factory2) {
         try {
-            val sLayoutInflaterFactory2Field =
-                LayoutInflater::class.java.getDeclaredField("mFactory2")
-            sLayoutInflaterFactory2Field.isAccessible = true
-            sLayoutInflaterFactory2Field[inflater] = factory
-        } catch (e: NoSuchFieldException) {
-            e.printStackTrace()
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
+            LayoutInflaterCompat.setFactory2(inflater, factory)
+        } catch (e: Exception) {
+            try {
+                val sLayoutInflaterFactory2Field =
+                    LayoutInflater::class.java.getDeclaredField("mFactory2")
+                sLayoutInflaterFactory2Field.isAccessible = true
+                sLayoutInflaterFactory2Field[inflater] = factory
+            } catch (e2: NoSuchFieldException) {
+                e2.printStackTrace()
+            } catch (e2: IllegalAccessException) {
+                e2.printStackTrace()
+            }
         }
     }
 }

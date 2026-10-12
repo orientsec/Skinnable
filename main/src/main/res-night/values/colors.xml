@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="container_bg_night">#E4A2A2</color>
+    <color name="container_bg_night">#121212</color>
 
     <color name="red_1_night">#6B80EA</color>
     <color name="red_2_night">#3D86D9</color>

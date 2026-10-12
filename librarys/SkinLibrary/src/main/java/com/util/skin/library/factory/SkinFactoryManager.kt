@@ -160,7 +160,6 @@ internal object SkinFactoryManager : SkinFactory {
                     }
                 } catch (e: NoSuchMethodException) {
                     // Failed to find method, keep searching up the hierarchy.
-                    e.printStackTrace()
                 }
 
                 tempContext = if (tempContext is ContextWrapper) {

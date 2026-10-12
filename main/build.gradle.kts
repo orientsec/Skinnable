@@ -36,6 +36,9 @@ dependencies {
 
     implementation(libs.androidx.constraintlayout)
     implementation(project(":librarys:skin-material-design"))
+    
+    implementation(libs.coroutines.android)
+    implementation(libs.lifecycle.runtime.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)

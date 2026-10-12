@@ -2,10 +2,34 @@
 <resources>
     <color name="text_background">#ff099fde</color>
     <color name="text_color">#ffffffff</color>
-    <color name="container_bg">#ffffffff</color>
+    <color name="container_bg">#F5F5F5</color>
 
     <color name="red_1">#EA6B6B</color>
     <color name="red_2">#EA4D4D</color>
     <color name="red_5">#EC2323</color>
     <color name="red_4">#EA1414</color>
+
+    <color name="design_default_color_background">#FFFFFF</color>
+    <color name="design_default_color_primary_dark">#000000</color>
+
+    <!-- New Demo Colors -->
+    <color name="demo_primary">#2196F3</color>
+    <color name="demo_primary_night">#9C27B0</color>
+    <color name="night_demo_primary">#4CAF50</color>
+
+    <color name="demo_surface">#FFFFFF</color>
+    <color name="demo_surface_night">#1E1E1E</color>
+    <color name="night_demo_surface">#222222</color>
+
+    <color name="demo_text">#333333</color>
+    <color name="demo_text_night">#E0E0E0</color>
+    <color name="night_demo_text">#DEDEDE</color>
+
+    <color name="demo_hint">#999999</color>
+    <color name="demo_hint_night">#777777</color>
+    <color name="night_demo_hint">#888888</color>
+
+    <color name="demo_icon_tint">#555555</color>
+    <color name="demo_icon_tint_night">#BBBBBB</color>
+    <color name="night_demo_icon_tint">#AAAAAA</color>
 </resources>

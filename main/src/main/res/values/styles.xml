@@ -1,5 +1,11 @@
 <resources>
 
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/demo_primary</item>
+        <item name="colorPrimaryVariant">@color/demo_primary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+    </style>
+
     <style name="text_15_red">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/red_1</item>

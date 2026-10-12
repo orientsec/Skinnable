@@ -1,7 +1,6 @@
 package com.util.skin.library.loader
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.text.TextUtils
 import com.util.skin.library.model.SkinResource
@@ -42,7 +41,7 @@ abstract class SkinSDCardLoader(protected val path: String) : SkinLoaderStrategy
      */
     private fun getSkinPackageName(skinPkgPath: String): String {
         return appContext.packageManager
-            .getPackageArchiveInfo(skinPkgPath, PackageManager.GET_ACTIVITIES)
+            .getPackageArchiveInfo(skinPkgPath, 0)
             ?.packageName ?: ""
     }
 

@@ -21,21 +21,23 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 import java.lang.ref.WeakReference
-import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 internal object SkinUserThemeManager {
 
-    private val mColorNameStateMap = HashMap<String, ColorState>()
-    private val mColorCacheLock = Object()
-    private val mColorCaches = WeakHashMap<Int, WeakReference<ColorStateList>>()
-    val isColorEmpty: Boolean
-        get() = mColorNameStateMap.isEmpty()
+    private val mColorNameStateMap = ConcurrentHashMap<String, ColorState>()
+    private val mColorCaches = ConcurrentHashMap<Int, WeakReference<ColorStateList>>()
+    
+    @Volatile
+    var isColorEmpty: Boolean = true
+        private set
 
-    private val mDrawablePathAndAngleMap = HashMap<String, String>()
-    private val mDrawableCacheLock = Object()
-    private val mDrawableCaches = WeakHashMap<Int, WeakReference<Drawable>>()
-    val isDrawableEmpty: Boolean
-        get() = mDrawablePathAndAngleMap.isEmpty()
+    private val mDrawablePathAndAngleMap = ConcurrentHashMap<String, String>()
+    private val mDrawableCaches = ConcurrentHashMap<Int, WeakReference<Drawable>>()
+    
+    @Volatile
+    var isDrawableEmpty: Boolean = true
+        private set
 
     private const val TAG = "SkinCompatUserThemeManager"
     private const val KEY_TYPE = "type"
@@ -96,6 +98,9 @@ internal object SkinUserThemeManager {
                 }
             }
         }
+        
+        isColorEmpty = mColorNameStateMap.isEmpty()
+        isDrawableEmpty = mDrawablePathAndAngleMap.isEmpty()
     }
 
     fun apply() {
@@ -136,6 +141,7 @@ internal object SkinUserThemeManager {
         if (!TextUtils.isEmpty(entry) && state != null) {
             state.colorName = entry!!
             mColorNameStateMap[entry] = state
+            isColorEmpty = false
             removeColorInCache(colorRes)
         }
     }
@@ -147,6 +153,7 @@ internal object SkinUserThemeManager {
         val entry = getEntryName(colorRes, KEY_TYPE_COLOR)
         if (!TextUtils.isEmpty(entry)) {
             mColorNameStateMap[entry!!] = ColorState(entry, colorDefault)
+            isColorEmpty = false
             removeColorInCache(colorRes)
         }
     }
@@ -155,6 +162,7 @@ internal object SkinUserThemeManager {
         val entry = getEntryName(colorRes, KEY_TYPE_COLOR)
         if (!TextUtils.isEmpty(entry)) {
             mColorNameStateMap.remove(entry)
+            isColorEmpty = mColorNameStateMap.isEmpty()
             removeColorInCache(colorRes)
         }
     }
@@ -162,6 +170,7 @@ internal object SkinUserThemeManager {
     internal fun removeColorState(colorName: String) {
         if (!TextUtils.isEmpty(colorName)) {
             mColorNameStateMap.remove(colorName)
+            isColorEmpty = mColorNameStateMap.isEmpty()
         }
     }
 
@@ -202,6 +211,7 @@ internal object SkinUserThemeManager {
             val angle = getImageRotateAngle(drawablePath)
             val drawablePathAndAngle = "$drawablePath:$angle"
             mDrawablePathAndAngleMap[entry!!] = drawablePathAndAngle
+            isDrawableEmpty = false
             removeDrawableInCache(drawableRes)
         }
     }
@@ -214,6 +224,7 @@ internal object SkinUserThemeManager {
         if (!TextUtils.isEmpty(entry)) {
             val drawablePathAndAngle = "$drawablePath:$angle"
             mDrawablePathAndAngleMap[entry!!] = drawablePathAndAngle
+            isDrawableEmpty = false
             removeDrawableInCache(drawableRes)
         }
     }
@@ -222,6 +233,7 @@ internal object SkinUserThemeManager {
         val entry = getEntryName(drawableRes, KEY_TYPE_DRAWABLE)
         if (!TextUtils.isEmpty(entry)) {
             mDrawablePathAndAngleMap.remove(entry)
+            isDrawableEmpty = mDrawablePathAndAngleMap.isEmpty()
             removeDrawableInCache(drawableRes)
         }
     }
@@ -289,12 +301,14 @@ internal object SkinUserThemeManager {
 
     fun clearColors() {
         mColorNameStateMap.clear()
+        isColorEmpty = true
         clearColorCaches()
         apply()
     }
 
     fun clearDrawables() {
         mDrawablePathAndAngleMap.clear()
+        isDrawableEmpty = true
         clearDrawableCaches()
         apply()
     }
@@ -305,27 +319,21 @@ internal object SkinUserThemeManager {
     }
 
     private fun clearColorCaches() {
-        synchronized(mColorCacheLock) {
-            mColorCaches.clear()
-        }
+        mColorCaches.clear()
     }
 
     private fun clearDrawableCaches() {
-        synchronized(mDrawableCacheLock) {
-            mDrawableCaches.clear()
-        }
+        mDrawableCaches.clear()
     }
 
     private fun getCachedColor(@ColorRes colorRes: Int): ColorStateList? {
-        synchronized(mColorCacheLock) {
-            val colorRef = mColorCaches[colorRes]
-            if (colorRef != null) {
-                val colorStateList = colorRef.get()
-                if (colorStateList != null) {
-                    return colorStateList
-                } else {
-                    mColorCaches.remove(colorRes)
-                }
+        val colorRef = mColorCaches[colorRes]
+        if (colorRef != null) {
+            val colorStateList = colorRef.get()
+            if (colorStateList != null) {
+                return colorStateList
+            } else {
+                mColorCaches.remove(colorRes)
             }
         }
         return null
@@ -333,28 +341,22 @@ internal object SkinUserThemeManager {
 
     private fun addColorToCache(@ColorRes colorRes: Int, colorStateList: ColorStateList?) {
         if (colorStateList != null) {
-            synchronized(mColorCacheLock) {
-                mColorCaches.put(colorRes, WeakReference(colorStateList))
-            }
+            mColorCaches[colorRes] = WeakReference(colorStateList)
         }
     }
 
     private fun removeColorInCache(@ColorRes colorRes: Int) {
-        synchronized(mColorCacheLock) {
-            mColorCaches.remove(colorRes)
-        }
+        mColorCaches.remove(colorRes)
     }
 
     private fun getCachedDrawable(@DrawableRes drawableRes: Int): Drawable? {
-        synchronized(mDrawableCacheLock) {
-            val drawableRef = mDrawableCaches[drawableRes]
-            if (drawableRef != null) {
-                val drawable = drawableRef.get()
-                if (drawable != null) {
-                    return drawable
-                } else {
-                    mDrawableCaches.remove(drawableRes)
-                }
+        val drawableRef = mDrawableCaches[drawableRes]
+        if (drawableRef != null) {
+            val drawable = drawableRef.get()
+            if (drawable != null) {
+                return drawable
+            } else {
+                mDrawableCaches.remove(drawableRes)
             }
         }
         return null
@@ -362,16 +364,12 @@ internal object SkinUserThemeManager {
 
     private fun addDrawableToCache(@DrawableRes drawableRes: Int, drawable: Drawable?) {
         if (drawable != null) {
-            synchronized(mDrawableCacheLock) {
-                mDrawableCaches.put(drawableRes, WeakReference(drawable))
-            }
+            mDrawableCaches[drawableRes] = WeakReference(drawable)
         }
     }
 
     private fun removeDrawableInCache(@DrawableRes drawableRes: Int) {
-        synchronized(mDrawableCacheLock) {
-            mDrawableCaches.remove(drawableRes)
-        }
+        mDrawableCaches.remove(drawableRes)
     }
 
     private fun getEntryName(resId: Int, entryType: String): String? {

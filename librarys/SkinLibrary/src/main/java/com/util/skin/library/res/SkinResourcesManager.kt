@@ -27,7 +27,7 @@ object SkinResourcesManager {
 
     /**默认皮肤*/
     val isDefaultSkin: Boolean
-        get() = resource.get() != null
+        get() = resource.get() == null
 
     fun addSkinResources(resources: SkinResources) {
         mSkinResources.add(resources)

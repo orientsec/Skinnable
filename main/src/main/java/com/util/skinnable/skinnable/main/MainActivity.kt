@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import com.util.skin.library.SkinManager
 import com.util.skin.library.loader.SkinStrategy
+import com.util.skin.library.loadSkinSuspend
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import com.util.skinnable.skinnable.main.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +20,14 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.apply {
+            tvText1.setOnClickListener {
+                SkinManager.restoreDefaultSkin()
+            }
+            tvText2.setOnClickListener {
+                lifecycleScope.launch {
+                    SkinManager.loadSkinSuspend(SkinStrategy.BuildIn("night"))
+                }
+            }
             tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     when (tab!!.position) {
@@ -24,10 +35,14 @@ class MainActivity : AppCompatActivity() {
                             SkinManager.restoreDefaultSkin()
                         }
                         1 -> {
-                            SkinManager.loadSkin(SkinStrategy.BuildIn("night"))
+                            lifecycleScope.launch {
+                                SkinManager.loadSkinSuspend(SkinStrategy.BuildIn("night"))
+                            }
                         }
                         2 -> {
-                            SkinManager.loadSkin(SkinStrategy.Assets("skin.night"))
+                            lifecycleScope.launch {
+                                SkinManager.loadSkinSuspend(SkinStrategy.PrefixBuildIn("night"))
+                            }
                         }
                     }
                 }
@@ -38,6 +53,11 @@ class MainActivity : AppCompatActivity() {
                 override fun onTabReselected(tab: TabLayout.Tab?) {
                 }
             })
+            
+            // 动态添加一个 Fragment 来演示 SkinLifecycleObserver 的运作情况
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, TestFragment())
+                .commit()
         }
 
     }

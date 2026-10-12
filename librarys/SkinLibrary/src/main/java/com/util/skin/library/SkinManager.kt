@@ -20,15 +20,20 @@ object SkinManager : SkinObservable() {
      */
     fun restoreDefaultSkin() {
         SkinResourcesManager.resetDefault()
-        notifyUpdateSkin()
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+            notifyUpdateSkin()
+        } else {
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                notifyUpdateSkin()
+            }
+        }
     }
 
     /**
      * 加载皮肤
      */
     fun loadSkin() {
-        SkinResourcesManager.defaultStrategy()
-            ?.apply { loadSkin(this) }
+        SkinResourcesManager.defaultStrategy()?.let { loadSkin(it) }
     }
 
     /**
@@ -39,7 +44,13 @@ object SkinManager : SkinObservable() {
         listener: SkinLoaderListener? = null
     ) {
         addSkinLoader(strategy, listener)
-        notifyUpdateSkin()
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+            notifyUpdateSkin()
+        } else {
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                notifyUpdateSkin()
+            }
+        }
     }
 
     private fun addSkinLoader(
@@ -54,7 +65,7 @@ object SkinManager : SkinObservable() {
         } catch (e: Exception) {
             SkinResourcesManager.resetDefault()
             listener?.onFailed("皮肤资源获取失败:$e")
-            e.printStackTrace()
+            com.util.skin.library.utils.Slog.e("SkinManager", "Load failed", e)
         } finally {
             listener?.onFinish()
         }
