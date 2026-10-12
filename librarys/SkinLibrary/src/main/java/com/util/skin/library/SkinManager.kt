@@ -34,6 +34,36 @@ object SkinManager : SkinObservable() {
     val skinStateFlow: StateFlow<SkinState> get() = _skinStateFlow.asStateFlow()
 
     /**
+     * 异常监控与埋点跟踪器 [ISkinErrorTracker]
+     */
+    var errorTracker: com.util.skin.library.fallback.ISkinErrorTracker? = null
+        set(value) {
+            field = value
+            SkinResourcesManager.setErrorTracker(value)
+        }
+
+    /**
+     * 动态设置全局换肤异常监控与降级兜底监听器
+     */
+    var errorListener: com.util.skin.library.exception.SkinErrorListener?
+        get() = _config?.errorListener
+        set(value) {
+            _config?.errorListener = value
+        }
+
+    internal fun reportError(
+        type: com.util.skin.library.exception.SkinErrorType,
+        message: String,
+        cause: Throwable? = null
+    ) {
+        errorListener?.onError(type, message, cause)
+    }
+
+    internal fun reportFallbackToDefault(reason: String) {
+        errorListener?.onFallbackToDefault(reason)
+    }
+
+    /**
      * 恢复应用默认主题，清除当前已加载的外部插件皮肤或后缀/前缀配置。
      */
     fun restoreDefaultSkin() {
@@ -148,17 +178,21 @@ object SkinManager : SkinObservable() {
         }
     }
 
-    private fun notifySkinChanged() {
+    fun notifySkinChanged() {
         val strategy = SkinResourcesManager.defaultStrategy()
         _skinStateFlow.value = SkinState(strategy, System.currentTimeMillis())
 
         if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
-            notifyUpdateSkin()
+            super.notifyUpdateSkin()
         } else {
             android.os.Handler(android.os.Looper.getMainLooper()).post {
-                notifyUpdateSkin()
+                super.notifyUpdateSkin()
             }
         }
+    }
+
+    override fun notifyUpdateSkin() {
+        notifySkinChanged()
     }
 
     private fun addSkinLoader(
@@ -166,16 +200,41 @@ object SkinManager : SkinObservable() {
         listener: SkinLoaderListener? = null
     ) {
         listener?.onStart()
-        try {
-            // 加载资源
-            loadTask(strategy)
-            listener?.onSuccess()
-        } catch (e: Exception) {
-            SkinResourcesManager.resetDefault()
-            listener?.onFailed("皮肤资源获取失败:$e")
-            com.util.skin.library.utils.Slog.e("SkinManager", "Load failed", e)
-        } finally {
-            listener?.onFinish()
+
+        val result = SkinResourcesManager.fallbackManager.executeTransaction(
+            targetStrategy = strategy,
+            rollbackAction = { previousStrategy ->
+                if (previousStrategy != null) {
+                    loadTask(previousStrategy)
+                } else {
+                    SkinResourcesManager.resetDefault()
+                }
+            },
+            block = {
+                loadTask(strategy)
+                !SkinResourcesManager.isDefaultSkin
+            }
+        )
+
+        when (result) {
+            is com.util.skin.library.fallback.SkinTransactionResult.Success -> {
+                listener?.onSuccess()
+                listener?.onFinish()
+            }
+            is com.util.skin.library.fallback.SkinTransactionResult.FailedRolledBack -> {
+                val errorMsg = "换肤事务失败并已回滚: ${result.reason}"
+                reportError(com.util.skin.library.exception.SkinErrorType.LOAD_FAILED, errorMsg, result.cause)
+                reportFallbackToDefault(errorMsg)
+                listener?.onFailed(errorMsg)
+                listener?.onFinish()
+            }
+            is com.util.skin.library.fallback.SkinTransactionResult.CircuitBroken -> {
+                val errorMsg = "熔断器已锁定: ${result.reason}"
+                reportError(com.util.skin.library.exception.SkinErrorType.LOAD_FAILED, errorMsg)
+                reportFallbackToDefault(errorMsg)
+                listener?.onFailed(errorMsg)
+                listener?.onFinish()
+            }
         }
     }
 

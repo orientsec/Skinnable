@@ -279,7 +279,7 @@ internal object SkinCompatDrawableManager {
                 if (tv.string != null && tv.string.toString().endsWith(".xml")) {
                     // If the resource is an XML file, let's try and parse it
                     try {
-                        val parser = SkinResourcesManager.getXml(context, resId)
+                        val parser = SkinResourcesManager.getXml(context, resId) ?: return null
                         val attrs = Xml.asAttributeSet(parser)
                         var type = parser.next()
                         while (type != XmlPullParser.START_TAG

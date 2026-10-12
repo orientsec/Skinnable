@@ -34,4 +34,8 @@ object Slog {
     fun e(subtag: String, msg: String, t: Throwable? = null) {
         logger?.log(Log.ERROR, TAG, "$subtag: $msg", t) ?: Log.e(TAG, "$subtag: $msg", t)
     }
+
+    fun w(subtag: String, msg: String, t: Throwable? = null) {
+        logger?.log(Log.WARN, TAG, "$subtag: $msg", t) ?: Log.w(TAG, "$subtag: $msg", t)
+    }
 }

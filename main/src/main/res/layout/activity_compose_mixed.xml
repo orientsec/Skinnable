@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/container_bg"
+    android:orientation="vertical"
+    android:padding="16dp"
+    app:skinnable="true">
+
+    <!-- 1. 传统 Android View 控件层 -->
+    <TextView
+        android:id="@+id/tvNativeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1. 传统 View 控件 (LayoutInflater.Factory2 拦截)"
+        android:textColor="@color/demo_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:skinnable="true" />
+
+    <TextView
+        android:id="@+id/tvNativeSub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="当前属于原生 View 架构"
+        android:textColor="@color/demo_hint"
+        android:textSize="13sp"
+        app:skinnable="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSwitchPink"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="粉色主题" />
+
+        <Button
+            android:id="@+id/btnSwitchGreen"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="绿色主题" />
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="重置" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="16dp"
+        android:background="#CCCCCC" />
+
+    <!-- 2. 嵌合的 ComposeView 区域 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2. 嵌入式 ComposeView (SkinTheme 桥接)"
+        android:textColor="@color/demo_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:skinnable="true" />
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeViewInNative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

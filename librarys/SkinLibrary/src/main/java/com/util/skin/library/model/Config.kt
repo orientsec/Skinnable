@@ -43,7 +43,19 @@ class SkinConfig private constructor(
     /**
      * 跟随系统深色模式时的换肤策略
      */
-    var systemDarkStrategy: SkinStrategy
+    var systemDarkStrategy: SkinStrategy,
+    /**
+     * 是否开启换肤异常自动降级 Fallback 回退默认皮肤
+     */
+    val enableAutoFallback: Boolean = true,
+    /**
+     * 触发降级的连续异常/缺失资源阈值（默认 10 次）
+     */
+    val maxErrorThreshold: Int = 10,
+    /**
+     * 换肤全局异常监控与降级回调
+     */
+    var errorListener: com.util.skin.library.exception.SkinErrorListener? = null
 ) {
     data class Builder(
         /**
@@ -65,7 +77,13 @@ class SkinConfig private constructor(
 
         var systemLightStrategy: SkinStrategy = SkinStrategy.BuildIn(""),
 
-        var systemDarkStrategy: SkinStrategy = SkinStrategy.BuildIn("night")
+        var systemDarkStrategy: SkinStrategy = SkinStrategy.BuildIn("night"),
+
+        var enableAutoFallback: Boolean = true,
+
+        var maxErrorThreshold: Int = 10,
+
+        var errorListener: com.util.skin.library.exception.SkinErrorListener? = null
     ) {
         fun setAllActivity(allActivity: Boolean) = apply { this.allActivity = allActivity }
 
@@ -86,6 +104,12 @@ class SkinConfig private constructor(
             this.systemDarkStrategy = darkStrategy
         }
 
+        fun setEnableAutoFallback(enable: Boolean) = apply { this.enableAutoFallback = enable }
+
+        fun setMaxErrorThreshold(threshold: Int) = apply { this.maxErrorThreshold = threshold }
+
+        fun setErrorListener(listener: com.util.skin.library.exception.SkinErrorListener) = apply { this.errorListener = listener }
+
         fun build() = SkinConfig(
             allActivity,
             windowBackground,
@@ -93,7 +117,10 @@ class SkinConfig private constructor(
             logger,
             followSystemDarkMode,
             systemLightStrategy,
-            systemDarkStrategy
+            systemDarkStrategy,
+            enableAutoFallback,
+            maxErrorThreshold,
+            errorListener
         )
     }
 

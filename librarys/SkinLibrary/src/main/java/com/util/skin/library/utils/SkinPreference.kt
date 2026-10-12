@@ -21,10 +21,10 @@ internal object SkinPreference {
     }
 
     val userTheme: String
-        get() = mPref.getString(KEY_SKIN_USER_THEME, "") ?: ""
+        get() = if (::mPref.isInitialized) mPref.getString(KEY_SKIN_USER_THEME, "") ?: "" else ""
 
     private val keyRes: String
-        get() = mPref.getString(KEY_SKIN_RESOURCES, "") ?: ""
+        get() = if (::mPref.isInitialized) mPref.getString(KEY_SKIN_RESOURCES, "") ?: "" else ""
 
     /**
      * 获取当前换肤策略
@@ -44,35 +44,45 @@ internal object SkinPreference {
     }
 
     fun setUserTheme(themeJson: String): SkinPreference {
-        mEditor.putString(KEY_SKIN_USER_THEME, themeJson)
+        if (::mEditor.isInitialized) {
+            mEditor.putString(KEY_SKIN_USER_THEME, themeJson)
+        }
         return this
     }
 
     fun addResources(value: String): SkinPreference {
-        val set = keyRes.split(";").toHashSet()
-        if (set.contains(value)) return this
-        set.add(value)
-        val saveValue = set.fold("") { acc, s -> "$acc$s;" }
-        mEditor.putString(KEY_SKIN_RESOURCES, saveValue)
+        if (::mEditor.isInitialized) {
+            val set = keyRes.split(";").toHashSet()
+            if (set.contains(value)) return this
+            set.add(value)
+            val saveValue = set.fold("") { acc, s -> "$acc$s;" }
+            mEditor.putString(KEY_SKIN_RESOURCES, saveValue)
+        }
         return this
     }
 
     fun removeResources(value: String): SkinPreference {
-        val set = keyRes.split(";").toHashSet()
-        if (!set.contains(value)) return this
-        set.remove(value)
-        val saveValue = set.fold("") { acc, s -> "$acc$s;" }
-        mEditor.putString(KEY_SKIN_RESOURCES, saveValue)
+        if (::mEditor.isInitialized) {
+            val set = keyRes.split(";").toHashSet()
+            if (!set.contains(value)) return this
+            set.remove(value)
+            val saveValue = set.fold("") { acc, s -> "$acc$s;" }
+            mEditor.putString(KEY_SKIN_RESOURCES, saveValue)
+        }
         return this
     }
 
     fun resetResources(): SkinPreference {
-        mEditor.putString(KEY_SKIN_RESOURCES, "")
+        if (::mEditor.isInitialized) {
+            mEditor.putString(KEY_SKIN_RESOURCES, "")
+        }
         return this
     }
 
     fun commitEditor() {
-        mEditor.apply()
+        if (::mEditor.isInitialized) {
+            mEditor.apply()
+        }
     }
 
     private fun initialStrategy(skinName: String, simpleName: String): SkinStrategy {

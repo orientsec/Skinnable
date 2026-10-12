@@ -16,6 +16,10 @@ android {
         compose = true
     }
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -29,9 +33,15 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
     compileOnly(libs.compose.runtime)
+    compileOnly(libs.composeUi)
+    compileOnly(libs.composeFoundation)
+    compileOnly(libs.composeMaterial3)
     implementation(libs.coroutines.android)
     implementation(libs.lifecycle.common)
     testImplementation(libs.junit)
+    testImplementation(libs.compose.runtime)
+    testImplementation(libs.composeUi)
+    testImplementation(libs.composeFoundation)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.espresso.core)
 }

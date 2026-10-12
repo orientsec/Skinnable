@@ -16,7 +16,7 @@ open class SkinObservable {
         observers.remove(o)
     }
 
-    fun notifyUpdateSkin() {
+    open fun notifyUpdateSkin() {
         val arrLocal: Array<SkinObserver>
 
         synchronized(this) {

@@ -3,14 +3,14 @@ package com.util.skin.library.res
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.XmlResourceParser
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.annotation.AnyRes
-import androidx.core.content.res.ResourcesCompat
 import com.util.skin.library.R
-import com.util.skin.library.helpers.SkinHelper.Companion.INVALID_ID
+import com.util.skin.library.fallback.ISkinErrorTracker
+import com.util.skin.library.fallback.SafeSkinResources
+import com.util.skin.library.fallback.SkinFallbackManager
 import com.util.skin.library.loader.ResourceLoader
 import com.util.skin.library.loader.ResourceLoaderImpl
 import com.util.skin.library.loader.SkinStrategy
@@ -19,11 +19,17 @@ import com.util.skin.library.utils.SkinPreference
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * 换肤资源管理
+ * 换肤资源管理，集成 SafeSkinResources 三级代理与 SkinFallbackManager 事务熔断器。
  */
 object SkinResourcesManager {
     private val mSkinResources = ArrayList<SkinResources>()
     private val resource = AtomicReference<ResourceLoader>()
+
+    val fallbackManager = SkinFallbackManager()
+    val safeResources = SafeSkinResources(fallbackManager = fallbackManager)
+
+    var currentStrategyKey: String = ""
+        private set
 
     /**默认皮肤*/
     val isDefaultSkin: Boolean
@@ -33,12 +39,18 @@ object SkinResourcesManager {
         mSkinResources.add(resources)
     }
 
+    fun setErrorTracker(tracker: ISkinErrorTracker?) {
+        safeResources.setTracker(tracker)
+    }
+
     /**
-     * 初始化Resource
+     * 初始化 Resource
      */
     fun setupResource(strategy: SkinStrategy) {
+        currentStrategyKey = strategy.key
         val resourceLoader = ResourceLoaderImpl(strategy.loaderStrategy)
-        resourceLoader.initStrategy(appContext)
+        val skinRes = resourceLoader.initStrategy(appContext)
+        checkNotNull(skinRes) { "SkinResource initialization returned null for strategy: ${strategy.key}" }
         resource.set(resourceLoader)
         SkinPreference.addResources(strategy.key).commitEditor()
     }
@@ -54,6 +66,7 @@ object SkinResourcesManager {
      * 恢复默认皮肤
      */
     fun resetDefault() {
+        currentStrategyKey = ""
         resource.set(null)
         SkinPreference.resetResources().commitEditor()
         SkinUserThemeManager.clearCaches()
@@ -62,91 +75,24 @@ object SkinResourcesManager {
         }
     }
 
-    /**
-     * 获取颜色
-     */
-    private fun getSkinColor(context: Context, resId: Int): Int {
-        if (!SkinUserThemeManager.isColorEmpty) {
-            SkinUserThemeManager.getColorStateList(resId)
-                ?.apply {
-                    return defaultColor
-                }
-        }
-        resource.get()
-            ?.getColor(context, resId)
-            ?.let {
-                if (it != INVALID_ID) {
-                    return it
-                }
-            }
-        return ResourcesCompat.getColor(context.resources, resId, context.theme)
-    }
-
-    /**
-     * 获取ColorStateList
-     */
-    private fun getSkinColorStateList(context: Context, resId: Int): ColorStateList? {
-        if (!SkinUserThemeManager.isColorEmpty) {
-            SkinUserThemeManager.getColorStateList(resId)
-                ?.let { return it }
-        }
-        return resource.get()?.getColorStateList(context, resId)
-            ?: ResourcesCompat.getColorStateList(context.resources, resId, context.theme)
-    }
-
-    /**
-     * 获取Drawable
-     */
-    private fun getSkinDrawable(context: Context, resId: Int): Drawable? {
-        if (!SkinUserThemeManager.isColorEmpty) {
-            SkinUserThemeManager.getColorStateList(resId)
-                ?.apply {
-                    return ColorDrawable(defaultColor)
-                }
-        }
-        if (!SkinUserThemeManager.isDrawableEmpty) {
-            SkinUserThemeManager.getDrawable(resId)
-                ?.let {
-                    return it
-                }
-        }
-        // 使用每种策略中的resource加载资源
-        return resource.get()?.getDrawable(context, resId)
-            ?: ResourcesCompat.getDrawable(context.resources!!, resId, context.theme)
-    }
-
-    private fun getSkinXml(context: Context, resId: Int): XmlResourceParser {
-        return resource.get()?.getXml(context, resId) ?: context.resources.getXml(resId)
-    }
-
-    private fun getSkinValue(
-        context: Context,
-        @AnyRes resId: Int,
-        outValue: TypedValue,
-        resolveRefs: Boolean
-    ) {
-        resource.get()?.getValue(context, resId, outValue, resolveRefs)
-            ?: context.resources.getValue(resId, outValue, resolveRefs)
-    }
-
     fun getColor(context: Context, resId: Int): Int {
-        return getSkinColor(context, resId)
+        return safeResources.getColor(context, resId, resource.get(), currentStrategyKey)
     }
 
     fun getColorStateList(context: Context, resId: Int): ColorStateList? {
-        return getSkinColorStateList(context, resId)
+        return safeResources.getColorStateList(context, resId, resource.get(), currentStrategyKey)
     }
 
     fun getDrawable(context: Context, resId: Int): Drawable? {
-        return getSkinDrawable(context, resId)
+        return safeResources.getDrawable(context, resId, resource.get(), currentStrategyKey)
     }
 
-    fun getXml(context: Context, resId: Int): XmlResourceParser {
-        return getSkinXml(context, resId)
+    fun getXml(context: Context, resId: Int): XmlResourceParser? {
+        return safeResources.getXml(context, resId, resource.get(), currentStrategyKey)
     }
 
     fun getValue(context: Context, @AnyRes resId: Int, outValue: TypedValue, resolveRefs: Boolean) {
-        getSkinValue(context, resId, outValue, resolveRefs)
+        safeResources.getValue(context, resId, outValue, resolveRefs, resource.get(), currentStrategyKey)
     }
 
     fun parseSkinnable(

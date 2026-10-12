@@ -84,30 +84,38 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // 演示 Feature 3: Jetpack Compose 与 Skinnable 框架无缝集成 (SkinnableTheme)
+            // 演示 Feature 3: Jetpack Compose 与 Skinnable 框架无缝集成 (SkinnableTheme & SkinTokens)
             composeView.setContent {
-                SkinnableTheme {
-                    val context = LocalContext.current
-                    val primaryColorInt = SkinResourcesManager.getColor(context, R.color.demo_primary)
-                    val textColorInt = SkinResourcesManager.getColor(context, R.color.demo_text)
+                SkinnableTheme(
+                    colorResourceMapping = mapOf(
+                        "primary" to R.color.demo_primary,
+                        "surface" to R.color.demo_surface,
+                        "textPrimary" to R.color.demo_text
+                    )
+                ) {
+                    val dynamicPrimary = com.util.skin.library.compose.skinColorResource(R.color.demo_primary)
+                    val dynamicText = com.util.skin.library.compose.skinColorResource(R.color.demo_text)
 
                     Surface(
-                        color = Color(primaryColorInt).copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(8.dp),
+                        color = dynamicPrimary.copy(alpha = 0.15f),
+                        shape = SkinnableTheme.shapes.medium,
+                        onClick = {
+                            startActivity(android.content.Intent(this@MainActivity, ComposeMixedActivity::class.java))
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
                             Text(
-                                text = "Compose Composable 视图组件",
-                                color = Color(textColorInt),
+                                text = "Compose Composable 视图组件 (点击打开混排 Demo 页面)",
+                                color = dynamicText,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "订阅 Skinnable StateFlow，当皮肤/自定义主题更新时自动触发重绘!",
-                                color = Color(primaryColorInt),
+                                text = "订阅 Skinnable StateFlow & SkinTokens，换肤/调色时自动局部重绘!",
+                                color = dynamicPrimary,
                                 fontSize = 12.sp,
                                 modifier = Modifier.padding(top = 4.dp)
                             )
