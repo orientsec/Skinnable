@@ -324,6 +324,135 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- 🛠️ 高级表单与选择控件换肤 (Form &amp; Selection Controls) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/demo_surface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:skinnable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🛠️ 表单与选择控件换肤 (Form &amp; Selection Controls)"
+                        android:textColor="@color/demo_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:skinnable="true" />
+
+                    <!-- Material TextInputLayout + TextInputEditText -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:hint="Material TextInputLayout"
+                        app:boxStrokeColor="@color/demo_primary"
+                        app:hintTextColor="@color/demo_primary"
+                        app:skinnable="true">
+
+                        <com.util.skinnable.support.design.widget.SkinMaterialTextInputEditText
+                            android:id="@+id/etMaterialInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/demo_text"
+                            app:skinnable="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- AutoCompleteTextView -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="AutoCompleteTextView (自动补全输入框):"
+                        android:textColor="@color/demo_text"
+                        android:textSize="13sp"
+                        app:skinnable="true" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/demoAutoComplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:backgroundTint="@color/demo_primary"
+                        android:hint="输入 'Skin' 查看建议..."
+                        android:textColor="@color/demo_text"
+                        android:textColorHint="@color/demo_hint"
+                        app:skinnable="true" />
+
+                    <!-- Spinner -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Spinner (下拉选择框):"
+                        android:textColor="@color/demo_text"
+                        android:textSize="13sp"
+                        app:skinnable="true" />
+
+                    <Spinner
+                        android:id="@+id/demoSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:backgroundTint="@color/demo_primary"
+                        app:skinnable="true" />
+
+                    <!-- SeekBar -->
+                    <TextView
+                        android:id="@+id/tvSeekBarVal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="SeekBar (滑块控制): 50%"
+                        android:textColor="@color/demo_text"
+                        android:textSize="13sp"
+                        app:skinnable="true" />
+
+                    <SeekBar
+                        android:id="@+id/demoSeekBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:max="100"
+                        android:progress="50"
+                        android:progressTint="@color/demo_primary"
+                        android:thumbTint="@color/demo_primary"
+                        app:skinnable="true" />
+
+                    <!-- RatingBar -->
+                    <TextView
+                        android:id="@+id/tvRatingVal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="RatingBar (星级评分): 3.5 🌟"
+                        android:textColor="@color/demo_text"
+                        android:textSize="13sp"
+                        app:skinnable="true" />
+
+                    <RatingBar
+                        android:id="@+id/demoRatingBar"
+                        style="?android:attr/ratingBarStyleIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:numStars="5"
+                        android:rating="3.5"
+                        android:progressTint="@color/demo_primary"
+                        app:skinnable="true" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- ProgressBar Row -->
             <TextView
                 android:layout_width="wrap_content"

@@ -12,6 +12,7 @@ testRunner = "1.7.0"
 testEspresso = "3.7.0"
 coroutines = "1.11.0"
 lifecycle = "2.11.0"
+lottie = "6.7.1"
 
 [libraries]
 androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
@@ -27,6 +28,7 @@ activityCompose = { group = "androidx.activity", name = "activity-compose", vers
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "lifecycle" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }

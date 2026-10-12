@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SkinLottieAnimationView">
+        <attr name="skin_lottie_rawRes" format="reference"/>
+        <attr name="skin_lottie_color_res" format="reference"/>
+        <attr name="skin_lottie_color_attr" format="reference"/>
+        <attr name="skin_lottie_color_path" format="string"/>
+        <attr name="skin_lottie_auto_color" format="boolean"/>
+        <attr name="skin_lottie_enable_image_delegate" format="boolean"/>
+    </declare-styleable>
+</resources>

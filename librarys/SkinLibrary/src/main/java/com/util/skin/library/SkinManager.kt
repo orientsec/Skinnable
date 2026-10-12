@@ -22,8 +22,12 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 object SkinManager : SkinObservable() {
     internal var _config: SkinConfig? = null
-    internal val config: SkinConfig
+    val config: SkinConfig
         get() = _config ?: throw IllegalArgumentException("config not init, pls init first")
+
+    fun init(config: SkinConfig) {
+        _config = config
+    }
 
     private val _skinStateFlow = MutableStateFlow(SkinState())
 

@@ -25,22 +25,12 @@ internal object SkinCompatDrawableUtils {
      * there is a known issue in the given drawable's implementation.
      */
     fun canSafelyMutateDrawable(drawable: Drawable): Boolean {
-        if (Build.VERSION.SDK_INT < 15 && drawable is InsetDrawable) {
-            return false
-        } else if (Build.VERSION.SDK_INT < 15 && drawable is GradientDrawable) {
-            // GradientDrawable has a bug pre-ICS which results in mutate() resulting
-            // in loss of color
-            return false
-        } else if (Build.VERSION.SDK_INT < 17 && drawable is LayerDrawable) {
-            return false
-        }
-
         if (drawable is DrawableContainer) {
             // If we have a DrawableContainer, let's traverse it's child array
             val state = drawable.getConstantState()
             if (state is DrawableContainer.DrawableContainerState) {
                 for (child in state.children) {
-                    if (!canSafelyMutateDrawable(child)) {
+                    if (child != null && !canSafelyMutateDrawable(child)) {
                         return false
                     }
                 }

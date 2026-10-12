@@ -53,6 +53,10 @@ object SkinResourcesManager {
         checkNotNull(skinRes) { "SkinResource initialization returned null for strategy: ${strategy.key}" }
         resource.set(resourceLoader)
         SkinPreference.addResources(strategy.key).commitEditor()
+        SkinUserThemeManager.clearCaches()
+        for (skinResources in mSkinResources) {
+            skinResources.clear()
+        }
     }
 
     /**

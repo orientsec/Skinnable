@@ -8,12 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,14 +69,23 @@ class MainActivity : AppCompatActivity() {
             // 演示 Feature 2: 协程异步挂起加载 (loadSkinSuspend)
             btnAsyncSkin.setOnClickListener {
                 lifecycleScope.launch {
-                    Toast.makeText(this@MainActivity, "开始协程异步加载皮肤...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "开始协程异步加载皮肤...", Toast.LENGTH_SHORT)
+                        .show()
                     try {
                         val success = SkinManager.loadSkinSuspend(SkinStrategy.BuildIn("night"))
                         if (success) {
-                            Toast.makeText(this@MainActivity, "协程异步换肤成功!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                "协程异步换肤成功!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } catch (e: Exception) {
-                        Toast.makeText(this@MainActivity, "异步换肤失败: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "异步换肤失败: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -93,14 +99,21 @@ class MainActivity : AppCompatActivity() {
                         "textPrimary" to R.color.demo_text
                     )
                 ) {
-                    val dynamicPrimary = com.util.skin.library.compose.skinColorResource(R.color.demo_primary)
-                    val dynamicText = com.util.skin.library.compose.skinColorResource(R.color.demo_text)
+                    val dynamicPrimary =
+                        com.util.skin.library.compose.skinColorResource(R.color.demo_primary)
+                    val dynamicText =
+                        com.util.skin.library.compose.skinColorResource(R.color.demo_text)
 
                     Surface(
                         color = dynamicPrimary.copy(alpha = 0.15f),
                         shape = SkinnableTheme.shapes.medium,
                         onClick = {
-                            startActivity(android.content.Intent(this@MainActivity, ComposeMixedActivity::class.java))
+                            startActivity(
+                                android.content.Intent(
+                                    this@MainActivity,
+                                    ComposeMixedActivity::class.java
+                                )
+                            )
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -182,6 +195,52 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            // 演示 Feature 7: 表单与选择控件换肤 (Form & Selection Controls: Spinner, AutoCompleteTextView, SeekBar, RatingBar)
+            val spinnerItems = listOf(
+                "默认主题 (Default Theme)",
+                "内置夜间主题 (Built-in Night)",
+                "自定义动态调色盘 (Custom Palette)"
+            )
+            val spinnerAdapter = android.widget.ArrayAdapter(
+                this@MainActivity,
+                android.R.layout.simple_spinner_dropdown_item,
+                spinnerItems
+            )
+            demoSpinner.adapter = spinnerAdapter
+
+            val autoItems = listOf(
+                "SkinManager",
+                "SkinUserThemeManager",
+                "SkinCompatCheckBox",
+                "SkinCompatRadioButton",
+                "SkinCompatSeekBar",
+                "SkinCompatRatingBar"
+            )
+            val autoAdapter = android.widget.ArrayAdapter(
+                this@MainActivity,
+                android.R.layout.simple_dropdown_item_1line,
+                autoItems
+            )
+            demoAutoComplete.setAdapter(autoAdapter)
+
+            demoSeekBar.setOnSeekBarChangeListener(object :
+                android.widget.SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: android.widget.SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    tvSeekBarVal.text = "SeekBar (滑块控制): $progress%"
+                }
+
+                override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
+                override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            })
+
+            demoRatingBar.setOnRatingBarChangeListener { _, rating, _ ->
+                tvRatingVal.text = "RatingBar (星级评分): $rating 🌟"
+            }
+
             // 演示 Feature 4: 代码 View DSL 换肤绑定 (bindSkinCustom / bindSkinColor)
             tvText1.bindSkinCustom {
                 setOnClickListener {
@@ -203,6 +262,7 @@ class MainActivity : AppCompatActivity() {
                         0 -> {
                             SkinManager.restoreDefaultSkin()
                         }
+
                         1 -> {
                             SkinManager.loadSkinWithTransition(
                                 activity = this@MainActivity,
@@ -210,6 +270,7 @@ class MainActivity : AppCompatActivity() {
                                 duration = 300L
                             )
                         }
+
                         2 -> {
                             SkinManager.loadSkinWithTransition(
                                 activity = this@MainActivity,

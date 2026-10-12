@@ -22,6 +22,7 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(libs.androidx.appcompat)
+    api(libs.lottie)
     implementation(project(":librarys:skin-base"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.runner)

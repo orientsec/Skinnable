@@ -57,6 +57,16 @@ class SkinConfig private constructor(
      */
     var errorListener: com.util.skin.library.exception.SkinErrorListener? = null
 ) {
+    /**
+     * 动态追加 View 膨胀拦截器 / 工厂
+     */
+    fun addFactory(factory: SkinFactory) {
+        if (factories is MutableList<SkinFactory>) {
+            if (!factories.contains(factory)) {
+                factories.add(factory)
+            }
+        }
+    }
     data class Builder(
         /**
          * 是否支持所有页面
