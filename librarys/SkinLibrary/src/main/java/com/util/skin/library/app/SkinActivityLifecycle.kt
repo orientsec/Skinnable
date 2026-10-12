@@ -7,6 +7,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.LayoutInflater.Factory2
+import android.view.View
+import androidx.core.view.LayoutInflaterCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.util.skin.library.SkinManager
 import com.util.skin.library.annotation.Skinnable
 import com.util.skin.library.factory.SkinFactory2Impl
@@ -14,10 +19,10 @@ import com.util.skin.library.helpers.SkinHelper.Companion.checkResourceIdValid
 import com.util.skin.library.observe.LazySkinObserver
 import com.util.skin.library.res.SkinResourcesManager
 import com.util.skin.library.res.SkinThemeUtils
+import com.util.skin.library.utils.applySkinToViewTree
 import com.util.skin.library.widget.SkinSupportable
 import java.lang.ref.WeakReference
 import java.util.*
-import androidx.core.view.LayoutInflaterCompat
 
 internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
     private val mSkinFactoryMap: WeakHashMap<Context, SkinFactory2Impl> = WeakHashMap()
@@ -39,10 +44,56 @@ internal object SkinActivityLifecycle : Application.ActivityLifecycleCallbacks {
         if (isContextSkinEnable(activity)) {
             installLayoutFactory(activity)
             updateWindowBackground(activity)
+            registerFragmentLifecycleCallbacks(activity)
             if (activity is SkinSupportable && activity.skinnable) {
                 (activity as SkinSupportable).applySkin()
             }
         }
+    }
+
+    private fun registerFragmentLifecycleCallbacks(activity: Activity) {
+        if (activity is FragmentActivity) {
+            activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
+                object : FragmentManager.FragmentLifecycleCallbacks() {
+                    override fun onFragmentViewCreated(
+                        fm: FragmentManager,
+                        f: Fragment,
+                        v: View,
+                        savedInstanceState: Bundle?
+                    ) {
+                        applySkinToViewTree(v)
+                        if (f is SkinSupportable && f.skinnable) {
+                            f.applySkin()
+                        }
+                    }
+
+                    override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
+                        f.view?.let { view ->
+                            applySkinToViewTree(view)
+                        }
+                        if (f is SkinSupportable && f.skinnable) {
+                            f.applySkin()
+                        }
+                    }
+                },
+                true // recursive = true 递归监控所有 ChildFragmentManager 中的 Fragment
+            )
+        }
+    }
+
+    fun applySkinToFragments(activity: FragmentActivity) {
+        fun refreshFragmentManager(fm: FragmentManager) {
+            for (f in fm.fragments) {
+                if (f != null && f.isAdded) {
+                    f.view?.let { applySkinToViewTree(it) }
+                    if (f is SkinSupportable && f.skinnable) {
+                        f.applySkin()
+                    }
+                    refreshFragmentManager(f.childFragmentManager)
+                }
+            }
+        }
+        refreshFragmentManager(activity.supportFragmentManager)
     }
 
     override fun onActivityStarted(activity: Activity) {

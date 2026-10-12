@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@color/demo_surface"
+    app:skinnable="true">
+
+    <TextView
+        android:id="@+id/tv_child_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Child Fragment Page"
+        android:textColor="@color/demo_text"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:skinnable="true" />
+
+    <TextView
+        android:id="@+id/tv_child_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="This is a nested child fragment inside ViewPager2."
+        android:textColor="@color/demo_hint"
+        android:textSize="13sp"
+        app:skinnable="true" />
+
+    <Button
+        android:id="@+id/btn_child_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/demo_primary"
+        android:text="Child Fragment Button"
+        android:textColor="@android:color/white"
+        app:skinnable="true" />
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.util.skin.library.observe
 
 import android.app.Activity
 import android.content.Context
+import androidx.fragment.app.FragmentActivity
 import com.util.skin.library.app.SkinActivityLifecycle
 import com.util.skin.library.utils.Slog
 import com.util.skin.library.widget.SkinSupportable
@@ -47,6 +48,9 @@ internal class LazySkinObserver constructor(private val mContext: Context?) : Sk
             SkinActivityLifecycle.updateWindowBackground(mContext)
         }
         SkinActivityLifecycle.skinFactory(mContext).applySkin()
+        if (mContext is FragmentActivity) {
+            SkinActivityLifecycle.applySkinToFragments(mContext)
+        }
         if (mContext is SkinSupportable && mContext.skinnable) {
             mContext.applySkin()
         }

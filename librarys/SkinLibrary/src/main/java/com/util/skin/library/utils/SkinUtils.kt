@@ -60,3 +60,19 @@ private fun getCacheDir(context: Context): String {
 fun isFileExists(path: String): Boolean {
     return !TextUtils.isEmpty(path) && File(path).exists()
 }
+
+/**
+ * 递归遍历 View 树并尝试刷新每一个支持换肤的 View。
+ * 可用于刷新 ViewPager、ViewPager2 或 Nested Fragment 中的动态 View 结构。
+ */
+fun applySkinToViewTree(view: android.view.View?) {
+    if (view == null) return
+    if (view is com.util.skin.library.widget.SkinSupportable && view.skinnable) {
+        view.applySkin()
+    }
+    if (view is android.view.ViewGroup) {
+        for (i in 0 until view.childCount) {
+            applySkinToViewTree(view.getChildAt(i))
+        }
+    }
+}

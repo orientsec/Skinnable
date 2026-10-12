@@ -19,7 +19,7 @@ internal class SkinFactory2Impl : LayoutInflater.Factory2 {
     }
 
     override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        return null
+        return onCreateView(null, name, context, attrs)
     }
 
     override fun onCreateView(

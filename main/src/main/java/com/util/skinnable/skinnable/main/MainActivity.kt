@@ -54,9 +54,9 @@ class MainActivity : AppCompatActivity() {
                 }
             })
             
-            // 动态添加一个 Fragment 来演示 SkinLifecycleObserver 的运作情况
+            // 动态添加 ParentViewPagerFragment (包含 ViewPager2 + 嵌套 ChildFragment)
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, TestFragment())
+                .replace(R.id.fragment_container, ParentViewPagerFragment())
                 .commit()
         }
 

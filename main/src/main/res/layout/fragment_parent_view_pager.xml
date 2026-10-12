@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/container_bg"
+    app:skinnable="true">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Parent Fragment (Contains ViewPager2 &amp; Nested Fragments)"
+        android:textColor="@color/demo_text"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        app:skinnable="true" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout_nested"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/text_background"
+        app:tabTextColor="@color/text_color"
+        app:tabSelectedTextColor="@color/demo_primary"
+        app:tabIndicatorColor="@color/demo_primary"
+        app:skinnable="true" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager2_nested"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
