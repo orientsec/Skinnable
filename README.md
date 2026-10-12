@@ -10,7 +10,7 @@
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.github.Orientsec.Skinnable:SkinLibrary:1.0.0'
+    implementation 'com.github.Orientsec.Skinnable:SkinLibrary:2.1.0'
 }
 ```
 
@@ -20,19 +20,19 @@ dependencies {
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.github.Orientsec.Skinnable:SkinLibrary:1.0.0'
+    implementation 'com.github.Orientsec.Skinnable:SkinLibrary:2.1.0'
 
     // 支持appcompat
-    implementation 'androidx.appcompat:appcompat:1.5.0'
-    implementation 'com.github.Orientsec.Skinnable:SkinSupportCompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'com.github.Orientsec.Skinnable:SkinSupportCompat:2.1.0'
 
     // 支持material View
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'com.github.Orientsec.Skinnable:SkinSupportDesign:1.0.0'
+    implementation 'com.google.android.material:material:1.14.0'
+    implementation 'com.github.Orientsec.Skinnable:SkinSupportDesign:2.1.0'
 
     // 支持ConstraintLayout
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.github.Orientsec.Skinnable:SkinSupportConstraintLayout:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.2'
+    implementation 'com.github.Orientsec.Skinnable:SkinSupportConstraintLayout:2.1.0'
 }
 ```
 
@@ -124,3 +124,12 @@ sourceSets {
 // 指定皮肤插件
 SkinManager.loadSkin(SkinStrategy.Assets("skin.night"))
 ```
+
+# 更新日志 (Changelog)
+
+### v2.1.0
+- **新增**: 新增 `loadSkinSuspend` 协程换肤方法，支持非阻塞后台换肤
+- **新增**: 新增 `SkinLifecycleObserver` 自动绑定换肤生命周期感知，在 Fragment/Dialog 重建时能够自动恢复当前皮肤
+- **优化**: 全面升级了官方 Demo 示例（涵盖 Material Component，展示所有核心控件在深色模式下的实时切换）
+- **修复**: 修复 `SkinCompatLinearLayout` 继承关系导致应用内的强转崩溃 (`ClassCastException`) 问题
+- **优化**: 内部换肤事件 `notifyUpdateSkin` 在异步线程分发时增加主线程检查回调，提升了多线程环境的可靠性

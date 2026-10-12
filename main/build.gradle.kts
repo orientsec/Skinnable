@@ -9,8 +9,8 @@ android {
         applicationId = "com.util.skinnable.main"
         minSdk = 23
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.1"
+        versionCode = 210
+        versionName = "2.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
