@@ -19,7 +19,7 @@ Skinnable 是一套轻量级、无侵入、高可用、生产级的 Android 动�
   - **增量局部重组**：通过 `collectSkinStateAsState()` 订阅换肤状态流，配合 `skinColorResource` 与 `skinPainterResource` 实现局部高性能重组。
   - **Material 3 自动映射**：自动将 `AppColors` 同步桥接至 Compose Material 3 `MaterialTheme` (`darkColorScheme` / `lightColorScheme`)。
 - **丰富的控件支持**：
-  - **SkinSupportCompat**：支持原生 View、`TextView`、`ImageView`、`Button`、`EditText`、`SeekBar`、`ProgressBar`、`Toolbar` 等。
+  - **SkinSupportCompat**：支持原生 View、`TextView`、`ImageView`、`Button`、`EditText`、`SeekBar`、`RatingBar`、`Spinner`、`AutoCompleteTextView`、`ProgressBar`、`Toolbar` 以及 **`SkinLottieAnimationView` (Lottie 矢量动画换肤)** 等。
   - **SkinSupportDesign**：支持 `MaterialCardView`、`FloatingActionButton`、`TabLayout`、`AppBarLayout`、`BottomNavigationView`、`TextInputLayout` 等。
   - **SkinSupportConstraintLayout**：支持 `ConstraintLayout` 换肤。
 - **灵活的换肤策略 (SkinStrategy)**：
@@ -42,19 +42,19 @@ Skinnable 是一套轻量级、无侵入、高可用、生产级的 Android 动�
 ```kotlin
 dependencies {
     // 核心库
-    implementation("com.github.Orientsec.Skinnable:SkinLibrary:2.2.0")
+    implementation("com.github.Orientsec.Skinnable:SkinLibrary:2.3.0")
 
     // 支持 AppCompat 控件换肤
     implementation("androidx.appcompat:appcompat:1.8.0")
-    implementation("com.github.Orientsec.Skinnable:SkinSupportCompat:2.2.0")
+    implementation("com.github.Orientsec.Skinnable:SkinSupportCompat:2.3.0")
 
     // 支持 Material Design 控件换肤
     implementation("com.google.android.material:material:1.14.0")
-    implementation("com.github.Orientsec.Skinnable:SkinSupportDesign:2.2.0")
+    implementation("com.github.Orientsec.Skinnable:SkinSupportDesign:2.3.0")
 
     // 支持 ConstraintLayout 换肤
     implementation("androidx.constraintlayout:constraintlayout:2.2.2")
-    implementation("com.github.Orientsec.Skinnable:SkinSupportConstraintLayout:2.2.2")
+    implementation("com.github.Orientsec.Skinnable:SkinSupportConstraintLayout:2.3.0")
 }
 ```
 
@@ -274,6 +274,12 @@ class TestFragment : Fragment() {
 ---
 
 ## 📝 更新日志 (Changelog)
+
+### v2.3.0 (Lottie 矢量动画换肤与全量表单控件增强升级)
+- **新增**: 新增 **`SkinLottieAnimationView` 控件与 Lottie 换肤体系**，支持按 KeyPath/属性注入主题色 ColorFilter、按图层动态替换 `ImageAssetDelegate` 资源以及关联合约 Raw Lottie 资源包/动画拦截器无缝换肤。
+- **新增**: 扩展表单与选择控件全量换肤支持，全面覆盖 `SeekBar` (滑块与进度 Tint)、`RatingBar` (星级评分 Tint)、`Spinner` (下拉弹框与背景)、`AutoCompleteTextView` / `MultiAutoCompleteTextView` 及 `CheckedTextView`。
+- **修复**: 彻底修复 View 构造阶段 (`super(...)`) 触发子类重写 Setter 方法时，因 `SkinHelper` 尚未完成初始化而引发的 `InflateException: Error inflating class` NPE 崩溃隐患。
+- **优化**: 优化 VectorDrawable 安全 mutate 与 ColorFilter 状态残留清理逻辑，完善官方 Demo 示例（包含 `Compose`、`WebView` 注入、动态调色盘与全量表单/选择控件演示）。
 
 ### v2.2.0 (生产级安全兜底与 Compose 重构升级)
 - **新增**: 重构推出 **SafeSkinResources 三级代理** (Layer 1 调色盘 -> Layer 2 插件包 -> Layer 3 宿主默认资源)，捕获一切外置包解析异常、缺失 ID、OOM 等，严禁向 View 层抛出未捕获崩溃。
